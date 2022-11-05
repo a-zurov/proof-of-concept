@@ -16,6 +16,7 @@ Thumbs.db
 
 # Executables
 *.exe
+/sfinae-Nicolai-Josuttis/sfinae
 
 # You can prepend a pattern with a double asterisk (= two consecutive asterisks)
 # to match file or directory anywhere in the repository / in all directories.

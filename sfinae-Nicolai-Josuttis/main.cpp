@@ -9,9 +9,11 @@
 #include <iostream>
 #include "macro.h"
 
+static constexpr ccn::conststr const& g_CxxVersionName(ccn::getCxxVersionName());
+
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::cout << "Hello Move Semantics with " << g_CxxVersionName << "!\n";
 
     checkpoint(0);
     cout_dump();
