@@ -7,8 +7,13 @@
 // ------------------------------------------------------------------------------------------------
 
 #include <iostream>
+#include "macro.h"
 
 int main()
 {
     std::cout << "Hello World!\n";
+
+    checkpoint(0);
+    cout_dump();
+    cout_dump_msg("Ish govna kakya!!");
 }
