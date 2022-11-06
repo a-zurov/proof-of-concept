@@ -8,8 +8,11 @@
 
 #include <iostream>
 #include "macro.h"
+#include "String.h"
 
 static constexpr ccn::conststr const& g_CxxVersionName(ccn::getCxxVersionName());
+
+using String = ccn::String;
 
 int main()
 {
@@ -18,4 +21,14 @@ int main()
     checkpoint(0);
     cout_dump();
     cout_dump_msg("Ish govna kakya!!");
+
+    checkpoint(1);
+    String szFirst;
+    String szSecond("xyz");
+    std::cout << szFirst << " " << szSecond << std::endl;
+    szFirst = szSecond;
+    std::cout << szFirst << " " << szSecond << std::endl;
+    szFirst = std::move(szSecond);
+    std::cout << szFirst << " " << szSecond << std::endl;
+
 }

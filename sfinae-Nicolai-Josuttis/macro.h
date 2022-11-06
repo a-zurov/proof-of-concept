@@ -30,6 +30,8 @@
 
 BEGIN_NAMESPACE_CCN
 
+
+
 class conststr
 {
     const char* m_pBuff;
@@ -51,12 +53,10 @@ public:
     constexpr std::size_t size() const { return m_nSize; }
 
     friend std::ostream& operator << (std::ostream& os, const conststr& s);
+
 };
 
-std::ostream& operator << (std::ostream& os, const conststr& s) {
-
-    return s.m_pBuff ? os.write(s.m_pBuff, s.m_nSize) : os << "\"nullptr\"";
-}
+std::ostream& operator << (std::ostream& os, const conststr& s);
 
 /**
 * The macro BOOST_CXX_VERSION is set to the C++ standard version -
