@@ -34,20 +34,31 @@ public:
 
 #ifdef _IS_CONVERTIBLE
 
-    template<   typename S1,
-        typename S2 = String,
-        typename = std::enable_if_t< std::is_convertible_v<S1, String> >
-    >
-    Cust(S1&& first, S2&& last = "", int id = 0)
+    template< typename S1
+        , typename S2 = String
+        , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
+    > Cust(S1&& first, S2&& last = "", int id = 0)
+        : m_szFirst(std::forward<S1>(first))
+        , m_szLast(std::forward<S2>(last))
+        , m_nID(id) {}
+
+#else
+
+    template< typename S1
+        , typename S2 = String
+        , typename = std::enable_if_t< !std::is_same<S1, Cust&>::value >
+    > Cust(S1&& first, S2&& last = "", int id = 0)
         : m_szFirst(std::forward<S1>(first))
         , m_szLast(std::forward<S2>(last))
         , m_nID(id) {}
 
 #endif
+
 };
 
 int main()
 {
+
     std::cout << "Hello Move Semantics with " << g_CxxVersionName << "!\n";
 
     checkpoint(0);
