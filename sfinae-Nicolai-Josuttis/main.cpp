@@ -14,21 +14,65 @@ static constexpr ccn::conststr const& g_CxxVersionName(ccn::getCxxVersionName())
 
 using String = ccn::String;
 
+#ifdef _MSC_VER
+#if ( _Cxx_14 <= __CXX_VER__ )
+#define _IS_CONVERTIBLE
+#endif
+#else
+#if ( _Cxx_17 <= __CXX_VER__ )
+#define _IS_CONVERTIBLE
+#endif
+#endif
+
+class Cust {
+
+    String  m_szFirst;
+    String  m_szLast;
+    int     m_nID;
+
+public:
+
+#ifdef _IS_CONVERTIBLE
+
+    template<   typename S1,
+        typename S2 = String,
+        typename = std::enable_if_t< std::is_convertible_v<S1, String> >
+    >
+    Cust(S1&& first, S2&& last = "", int id = 0)
+        : m_szFirst(std::forward<S1>(first))
+        , m_szLast(std::forward<S2>(last))
+        , m_nID(id) {}
+
+#endif
+};
+
 int main()
 {
     std::cout << "Hello Move Semantics with " << g_CxxVersionName << "!\n";
 
     checkpoint(0);
-    cout_dump();
-    cout_dump_msg("Ish govna kakya!!");
+    {
+        cout_dump();
+        cout_dump_msg("Ish govna kakya!!");
+    }
 
     checkpoint(1);
-    String szFirst;
-    String szSecond("xyz");
-    std::cout << szFirst << " " << szSecond << std::endl;
-    szFirst = szSecond;
-    std::cout << szFirst << " " << szSecond << std::endl;
-    szFirst = std::move(szSecond);
-    std::cout << szFirst << " " << szSecond << std::endl;
+    {
+        String szFirst;
+        String szSecond("xyz");
+        std::cout << szFirst << " " << szSecond << std::endl;
+        szFirst = szSecond;
+        std::cout << szFirst << " " << szSecond << std::endl;
+        szFirst = std::move(szSecond);
+        std::cout << szFirst << " " << szSecond << std::endl; // used a moved object
+    }
 
+    checkpoint(3);
+    {
+        Cust c{ "Joe", "Fix", 42 };
+        Cust f{ "Nico" };
+        Cust g{ f };
+        const Cust cc{ "Jim" };
+        Cust h{ cc };
+    }
 }

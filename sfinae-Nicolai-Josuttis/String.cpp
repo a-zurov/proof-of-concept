@@ -6,6 +6,12 @@ BEGIN_NAMESPACE_CCN
 // The Rule of Three
 //-------------------------------------------------
 
+String::~String()
+{
+    cout_dump();
+    delete[] m_pBuff;
+}
+
 String::String()
     : m_pBuff(nullptr)
     , m_nSize(0)
@@ -69,12 +75,6 @@ String& String::operator= (const String& rhs) // assignment operator
 //-------------------------------------------------
 // The Rule of Five (move semantics)
 //-------------------------------------------------
-
-String::~String()
-{
-    cout_dump();
-    delete[] m_pBuff;
-}
 
 String::String(String&& rhs) noexcept
     : m_nSize(rhs.m_nSize)

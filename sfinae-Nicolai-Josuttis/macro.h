@@ -30,8 +30,6 @@
 
 BEGIN_NAMESPACE_CCN
 
-
-
 class conststr
 {
     const char* m_pBuff;
