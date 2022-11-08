@@ -28,9 +28,24 @@ class Cust {
 
     String  m_szFirst;
     String  m_szLast;
-    int     m_nID;
+    int     m_nID = 0;
 
 public:
+    Cust() = default;
+
+    template< class T
+        , typename = std::enable_if_t < std::is_same<T, String>::value >
+    > void foo(T s)
+    {
+        cout_dump_msg(s);
+    }
+
+    template< class T
+        , typename = std::enable_if_t< std::is_same<T, String>::value >
+    > void boo(T&& s)
+    {
+        cout_dump_msg(std::forward<T>(s));
+    }
 
 #ifdef _IS_CONVERTIBLE
 
@@ -56,6 +71,7 @@ public:
 
 };
 
+
 int main()
 {
 
@@ -79,6 +95,20 @@ int main()
     }
 
     checkpoint(3);
+    {
+        Cust a;
+        String x("Bob");
+        const String& y = x;
+        a.foo(std::move(String("Tim")));
+        a.foo(x);
+        a.foo(y); // by value
+
+        a.boo(String("Rob"));
+        a.boo(std::move(String("Den")));
+        a.boo(std::move(x));
+    }
+
+    checkpoint(4);
     {
         Cust c{ "Joe", "Fix", 42 };
         Cust f{ "Nico" };

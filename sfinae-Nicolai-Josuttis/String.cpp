@@ -8,7 +8,8 @@ BEGIN_NAMESPACE_CCN
 
 String::~String()
 {
-    cout_dump();
+    cout_dump_msg(*this);
+
     delete[] m_pBuff;
 }
 
