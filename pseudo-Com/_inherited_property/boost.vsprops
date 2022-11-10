@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<VisualStudioPropertySheet
+    ProjectType="Visual C++"
+    Version="8.00"
+    Name="boost"
+    >
+    <UserMacro
+        Name="BoostPath"
+        Value="$(BOOST_ROOT)"
+    />
+    <UserMacro
+        Name="BoostIncludePath"
+        Value="$(BoostPath)"
+    />
+    <UserMacro
+        Name="BoostPathLib"
+        Value="$(BoostPath)/libraries_x86"
+    />
+    <UserMacro
+        Name="BoostPathLib64"
+        Value="$(BoostPath)/libraries"
+    />
+</VisualStudioPropertySheet>
