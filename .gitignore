@@ -16,7 +16,11 @@ Thumbs.db
 
 # Executables
 *.exe
+
 /sfinae-Nicolai-Josuttis/sfinae
+/cross_template_kit/
+/external_sdk/boost/
+/pseudo-Com/_compiled_x64/
 
 # You can prepend a pattern with a double asterisk (= two consecutive asterisks)
 # to match file or directory anywhere in the repository / in all directories.
