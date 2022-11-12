@@ -16,4 +16,8 @@
 #include "IBase.h"
 #include "CSmartPtr.h"
 
+#include "ILogHandler.h"
+#include "IConnectionPoint.h"
+#include "CLogHandlerImpl.h"
+
 #endif //PCH_H

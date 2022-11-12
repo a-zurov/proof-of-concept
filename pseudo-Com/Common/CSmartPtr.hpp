@@ -5,6 +5,9 @@
 #ifndef __GCN_CSMART_PTR_HPP__
 #define __GCN_CSMART_PTR_HPP__
 
+#include "ILogHandler.h"
+#include "CLogHandlerImpl.h"
+
 //////////////////////////////////////////////////////////////////////////
 
 GCN_NAMESPACE_BEGIN
@@ -14,7 +17,7 @@ GCN_NAMESPACE_BEGIN
 template< typename T >
 CSmartPtr< T >::CSmartPtr()
 {
-    cout_dump_this();
+    DUMP_FUNCTION();
 
     m_pT = nullptr;
 }
@@ -22,7 +25,7 @@ CSmartPtr< T >::CSmartPtr()
 template< typename T >
 CSmartPtr< T >::CSmartPtr(T* pT)
 {
-    cout_dump_this();
+    DUMP_FUNCTION();
 
     m_pT = pT;
 
@@ -35,7 +38,7 @@ CSmartPtr< T >::CSmartPtr(T* pT)
 template< typename T >
 CSmartPtr< T >::CSmartPtr(const CSmartPtr< T >& spT)
 {
-    cout_dump_this();
+    DUMP_FUNCTION();
 
     m_pT = spT.m_pT;
 
@@ -48,7 +51,7 @@ CSmartPtr< T >::CSmartPtr(const CSmartPtr< T >& spT)
 template< typename T >
 CSmartPtr< T >::~CSmartPtr()
 {
-    cout_dump_this();
+    DUMP_FUNCTION();
 
     if (nullptr != m_pT)
     {
@@ -59,7 +62,7 @@ CSmartPtr< T >::~CSmartPtr()
 template< typename T >
 const CSmartPtr< T >& CSmartPtr< T >::operator= (T* pT)
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     if (m_pT != pT)
     {
@@ -82,7 +85,7 @@ const CSmartPtr< T >& CSmartPtr< T >::operator= (T* pT)
 template< typename T >
 const CSmartPtr< T >& CSmartPtr< T >::operator= (const CSmartPtr< T >& spT)
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     if (this != &spT && m_pT != spT.m_pT)
     {
@@ -161,7 +164,7 @@ bool CSmartPtr< T >::operator!= (T* pT) const
 template< typename T >
 _NoAddRefReleaseOnCPtr<T>* CSmartPtr<T>::operator-> () const
 {
-    return static_cast< _NoAddRefReleaseOnCPtr<T>* >(m_pT);
+    return static_cast<_NoAddRefReleaseOnCPtr<T>*>(m_pT);
 }
 
 template< typename T >

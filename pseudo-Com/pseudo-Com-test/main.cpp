@@ -5,12 +5,44 @@
 #include <thread>
 #include <chrono>
 #include <mutex>
+#include <sstream>
 
 #define MAKE_COUT_DUMP  // NOT thread-safe
 
 #include "../Common/IBase.h"
 #include "../Common/RefCounter.h"
 #include "../Common/CSmartPtr.h"
+#include "../Common/ILogHandler.h"
+#include "../Common/IConnectionPoint.h"
+
+#define THROW_EXCEPTION( sMessage ) {                                                           \
+    std::ostringstream sMessageStream;                                                          \
+    sMessageStream << __LINE__ << ":" __FILE__ << "::" << __FUNCTION__ << "(): " << sMessage;   \
+    std::string sMsg( sMessageStream.str() );                                                   \
+    throw std::runtime_error( sMsg ); }
+
+class CLogHandlerEventsImpl
+    : public gcn::ILogHandlerEvents
+{
+public:
+    void FireLogMessage(const char* pchMessage)
+    {
+        std::cout << pchMessage << std::endl;
+    }
+
+protected:
+    virtual void OnLogMessage(const gcn::LogLevel nLogLevel, const char* pchMessage)
+    {
+        FireLogMessage(pchMessage);
+    }
+};
+
+static CLogHandlerEventsImpl g_LogHandlerEventsDisp;
+
+/*
+#define DUMP_MESSAGE( __ex )    g_LogHandlerEventsDisp.FireLogMessage( __ex ) //??????????????
+#define DUMP_EXCEPTION( __ex )  DUMP_MESSAGE( __ex.what() )
+*/
 
 class IComObject
     : public gcn::IBase
@@ -97,8 +129,50 @@ void thread_func(ComObjectPtr_t sptr)
     }
 }
 
+typedef gcn::CSmartPtr< gcn::ILogger >     LoggerPtr_t;
+typedef gcn::CSmartPtr< gcn::ILogHandler > LogHandlerPtr_t;
+typedef gcn::CSmartPtr< gcn::IConnectionPoint > ConnectionPointPtr_t;
+
 int main()
 {
+    LoggerPtr_t spLogger;
+
+    spLogger.Attach(gcn::GetLogger());
+
+    LogHandlerPtr_t spLogHandler;
+
+    gcn::ILogHandler* pLogHandlerSingltone = nullptr;
+
+    gcn::ResultCode nResult = spLogger->QueryInterface(gcn::ILogHandlerSingltone_UUID, reinterpret_cast<void**>(&pLogHandlerSingltone));
+
+    if (gcn::CC_OK != nResult)
+    {
+        THROW_EXCEPTION("Cannot query LogHandler interface!");
+    }
+
+    ConnectionPointPtr_t spCPC;
+
+    if (gcn::CC_OK != (nResult = pLogHandlerSingltone->QueryInterface(gcn::GCN_ICP_UUID, reinterpret_cast<void**>(&spCPC))))
+    {
+        THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
+    }
+
+    /*
+    if (gcn::CC_OK != (nResult = spLogHandler->QueryInterface(gcn::GCN_ICP_UUID, reinterpret_cast<void**>(&spCPC))))
+    {
+        THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
+    }
+    */
+    if (gcn::CC_OK != (nResult = spCPC->Bind(gcn::ILogHandlerEvents_UUID,
+                        reinterpret_cast<void*>(static_cast<gcn::ILogHandlerEvents*>(&g_LogHandlerEventsDisp)))))
+    {
+        THROW_EXCEPTION("Cannot bind LogHandlerEvents interface!");
+    }
+
+    //spLogHandler->SetLogLevel(gcn::GCN_LL_FUNC);
+
+    pLogHandlerSingltone->SetLogLevel(gcn::GCN_LL_FUNC);
+
     checkpoint("Start");
 
     ComObjectPtr_t spComObject(static_cast<IComObject*>(new CComObjectImpl()));
@@ -125,4 +199,10 @@ int main()
     }
 
     checkpoint("Stop");
+
+    spCPC.Release();
+
+    spLogHandler.Release();
+
+    spLogger.Release();
 }

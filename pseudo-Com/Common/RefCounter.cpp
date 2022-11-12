@@ -32,7 +32,7 @@ long CRefCounter::Release()
 {
     long lRes = (long)sync::AtomicDec32(m_nRef) - 1;
 
-    if (0 == lRes)
+    if (0L == lRes)
     {
         Close();
 

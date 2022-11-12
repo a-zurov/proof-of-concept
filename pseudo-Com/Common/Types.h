@@ -136,6 +136,16 @@ struct GCN_UUID
     }
 };
 
+inline bool EqualsUUID(const GCN_UUID& uuid1, const GCN_UUID& uuid2)
+{
+    bool bRes = ( uuid1.nData1 == uuid2.nData1
+        && uuid1.nData2 == uuid2.nData2
+        && uuid1.nData3 == uuid2.nData3
+        && memcmp((const void*)uuid1.arrData, (const void*)uuid2.arrData, sizeof(uuid1.arrData)) == NULL );
+
+    return bRes;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 #define CC_RESULT_CODES                                         \
@@ -163,6 +173,9 @@ enum ResultCode { CC_RESULT_CODES };
 #define X( a, b ) a,
 enum LogLevel { GCN_LOG_LEVEL };
 #undef X
+
+
+
 
 //////////////////////////////////////////////////////////////////////////
 
