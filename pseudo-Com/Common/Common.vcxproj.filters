@@ -45,10 +45,13 @@
     <ClInclude Include="ILogHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CLogHandlerImpl.h">
+    <ClInclude Include="CLogDispatcherImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ILog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,7 +65,7 @@
     <ClCompile Include="RefCounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CLogHandlerImpl.cpp">
+    <ClCompile Include="CLogDispatcherImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -148,10 +148,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AtomicSync.h" />
-    <ClInclude Include="CLogHandlerImpl.h" />
+    <ClInclude Include="CLogDispatcherImpl.h" />
     <ClInclude Include="CSmartPtr.h" />
     <ClInclude Include="CSmartPtr.hpp" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ILog.h" />
     <ClInclude Include="IBase.h" />
     <ClInclude Include="IConnectionPoint.h" />
     <ClInclude Include="ILogHandler.h" />
@@ -161,7 +162,7 @@
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CLogHandlerImpl.cpp" />
+    <ClCompile Include="CLogDispatcherImpl.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

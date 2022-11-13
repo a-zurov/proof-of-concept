@@ -11,42 +11,42 @@ GCN_NAMESPACE_BEGIN
 
 //////////////////////////////////////////////////////////////////////////
 
-CLogHandlerImpl::~CLogHandlerImpl()
+CLogDispatcherImpl::~CLogDispatcherImpl()
 {
 
 }
 
-CLogHandlerImpl::CLogHandlerImpl()
+CLogDispatcherImpl::CLogDispatcherImpl()
 {
 
 }
 
-void CLogHandlerImpl::SetLogLevel(const LogLevel nLogLevel)
+void CLogDispatcherImpl::SetLogLevel(const LogLevel nLogLevel)
 {
     sync::AtomicWrite32(m_nLogLevel, (UINT32_t)nLogLevel);
 }
 
-long CLogHandlerImpl::AddRef()
+long CLogDispatcherImpl::AddRef()
 {
     return CRefCounter::AddRef();
 }
 
-long CLogHandlerImpl::Release()
+long CLogDispatcherImpl::Release()
 {
     return CRefCounter::Release();
 }
 
-void CLogHandlerImpl::Close()
+void CLogDispatcherImpl::Close()
 {
 
 }
 
-LogLevel CLogHandlerImpl::GetLogLevel()
+LogLevel CLogDispatcherImpl::GetLogLevel()
 {
     return (LogLevel)sync::AtomicRead32(m_nLogLevel);
 }
 
-void CLogHandlerImpl::FireLogMessage(const LogLevel nLogLevel, const std::string& szMessage)
+void CLogDispatcherImpl::FireLogMessage(const LogLevel nLogLevel, const std::string& szMessage)
 {
 
     auto nLevel = GetLogLevel();
@@ -58,7 +58,7 @@ void CLogHandlerImpl::FireLogMessage(const LogLevel nLogLevel, const std::string
 
     sync::upgrade_guard_t upLock(m_RWEventsLock);
 
-    if (m_setEvents.empty()) {
+    if (m_setLogHandlers.empty()) {
 
         sync::upto_write_guard_t wLock(upLock);
 
@@ -67,9 +67,9 @@ void CLogHandlerImpl::FireLogMessage(const LogLevel nLogLevel, const std::string
         return;
     }
 
-    for (EventsSet_t::iterator it = m_setEvents.begin(), end = m_setEvents.end(); it != end; ++it)
+    for (LogHandlersSet_t::const_iterator it = m_setLogHandlers.begin(), end = m_setLogHandlers.end(); it != end; ++it)
     {
-        ILogHandlerEvents* pEvent = *it;
+        ILogHandler* pEvent = *it;
 
         sync::upto_write_guard_t wLock(upLock);
 
@@ -77,16 +77,16 @@ void CLogHandlerImpl::FireLogMessage(const LogLevel nLogLevel, const std::string
     }
 }
 
-ResultCode CLogHandlerImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
+ResultCode CLogDispatcherImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
 {
     if (NULL == ppInterface)
     {
         return CC_INVALID_PARAMETER;
     }
 
-    if (EqualsUUID(uuid, GCN_ICP_UUID))
+    if (EqualsUUID(uuid, IConnectionPointContainer_UUID))
     {
-        IConnectionPoint* pCPC = static_cast<IConnectionPoint*>(this);
+        IConnectionPointContainer* pCPC = static_cast<IConnectionPointContainer*>(this);
 
         (*ppInterface) = reinterpret_cast<void*>(pCPC);
 
@@ -96,13 +96,13 @@ ResultCode CLogHandlerImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterf
     return CC_UNKNOWN_INTERFACE;
 }
 
-ResultCode CLogHandlerImpl::Bind(const GCN_UUID& uuid, void* pInterface)
+ResultCode CLogDispatcherImpl::Bind(const GCN_UUID& uuid, void* pInterface)
 {
     if (NULL != pInterface)
     {
-        if (EqualsUUID(uuid, ILogHandlerEvents_UUID))
+        if (EqualsUUID(uuid, ILogHandler_UUID))
         {
-            AddEvents(reinterpret_cast<ILogHandlerEvents*>(pInterface));
+            AddLogHandler(reinterpret_cast<ILogHandler*>(pInterface));
 
             return CC_OK;
         }
@@ -111,13 +111,13 @@ ResultCode CLogHandlerImpl::Bind(const GCN_UUID& uuid, void* pInterface)
     return CC_UNKNOWN_INTERFACE;
 }
 
-ResultCode CLogHandlerImpl::Unbind(const GCN_UUID& uuid, void* pInterface)
+ResultCode CLogDispatcherImpl::Unbind(const GCN_UUID& uuid, void* pInterface)
 {
     if (NULL != pInterface)
     {
-        if (EqualsUUID(uuid, ILogHandlerEvents_UUID))
+        if (EqualsUUID(uuid, ILogHandler_UUID))
         {
-            RemoveEvents(reinterpret_cast<ILogHandlerEvents*>(pInterface));
+            RemoveLogHandler(reinterpret_cast<ILogHandler*>(pInterface));
 
             return CC_OK;
         }
@@ -126,57 +126,57 @@ ResultCode CLogHandlerImpl::Unbind(const GCN_UUID& uuid, void* pInterface)
     return CC_UNKNOWN_INTERFACE;
 }
 
-void CLogHandlerImpl::AddEvents(ILogHandlerEvents* pEvents)
+void CLogDispatcherImpl::AddLogHandler(ILogHandler* pEvents)
 {
     sync::write_guard_t wLock(m_RWEventsLock);
 
-    m_setEvents.insert(pEvents);
+    m_setLogHandlers.insert(pEvents);
 }
 
-void CLogHandlerImpl::RemoveEvents(ILogHandlerEvents* pEvents)
+void CLogDispatcherImpl::RemoveLogHandler(ILogHandler* pEvents)
 {
     sync::write_guard_t wLock(m_RWEventsLock);
 
-    m_setEvents.erase(pEvents);
+    m_setLogHandlers.erase(pEvents);
 }
 
-CLoggerImpl::~CLoggerImpl()
+CLogImpl::~CLogImpl()
 {
 
 }
 
-CLoggerImpl::CLoggerImpl()
+CLogImpl::CLogImpl()
 {
 
 }
 
-long CLoggerImpl::AddRef()
+long CLogImpl::AddRef()
 {
     return CRefCounter::AddRef();
 }
 
-long CLoggerImpl::Release()
+long CLogImpl::Release()
 {
     return CRefCounter::Release();
 }
 
-void CLoggerImpl::Close()
+void CLogImpl::Close()
 {
 
 }
 
-ResultCode CLoggerImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
+ResultCode CLogImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
 {
     if (nullptr == ppInterface)
     {
         return CC_INVALID_PARAMETER;
     }
 
-    if (EqualsUUID(uuid, ILogHandler_UUID))
+    if (EqualsUUID(uuid, ILogDispatcher_UUID))
     {
-        if (!m_spLogHandler) m_spLogHandler = new CLogHandlerImpl();
+        if (!m_spLogDispatcher) m_spLogDispatcher = new CLogDispatcherImpl();
 
-        ILogHandler* pInterface = static_cast<ILogHandler*>(static_cast<CLogHandlerImpl*>(m_spLogHandler));
+        ILogDispatcher* pInterface = static_cast<ILogDispatcher*>(static_cast<CLogDispatcherImpl*>(m_spLogDispatcher));
 
         pInterface->AddRef();
 
@@ -185,9 +185,9 @@ ResultCode CLoggerImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
         return CC_OK;
     }
 
-    if (EqualsUUID(uuid, ILogHandlerSingltone_UUID))
+    if (EqualsUUID(uuid, ILogDispatcherSingltone_UUID))
     {
-        ILogHandler* pInterface = static_cast<ILogHandler*>(&LogHandlerSingltone::instance());
+        ILogDispatcher* pInterface = static_cast<ILogDispatcher*>(&LogDispatcherSingltone::instance());
 
         (*ppInterface) = reinterpret_cast<void*>(pInterface);
 

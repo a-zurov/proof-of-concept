@@ -21,8 +21,8 @@
     std::string sMsg( sMessageStream.str() );                                                   \
     throw std::runtime_error( sMsg ); }
 
-class CLogHandlerEventsImpl
-    : public gcn::ILogHandlerEvents
+class CLogHandlerImpl
+    : public gcn::ILogHandler
 {
 public:
     void FireLogMessage(const char* pchMessage)
@@ -37,10 +37,10 @@ protected:
     }
 };
 
-static CLogHandlerEventsImpl g_LogHandlerEventsDisp;
+static CLogHandlerImpl g_LogHandler;
 
 /*
-#define DUMP_MESSAGE( __ex )    g_LogHandlerEventsDisp.FireLogMessage( __ex ) //??????????????
+#define DUMP_MESSAGE( __ex )    g_LogHandler.FireLogMessage( __ex ) //??????????????
 #define DUMP_EXCEPTION( __ex )  DUMP_MESSAGE( __ex.what() )
 */
 
@@ -129,21 +129,21 @@ void thread_func(ComObjectPtr_t sptr)
     }
 }
 
-typedef gcn::CSmartPtr< gcn::ILogger >     LoggerPtr_t;
-typedef gcn::CSmartPtr< gcn::ILogHandler > LogHandlerPtr_t;
-typedef gcn::CSmartPtr< gcn::IConnectionPoint > ConnectionPointPtr_t;
+typedef gcn::CSmartPtr< gcn::ILog > LogPtr_t;
+typedef gcn::CSmartPtr< gcn::ILogDispatcher > LogDispatcherPtr_t;
+typedef gcn::CSmartPtr< gcn::IConnectionPointContainer > ConnectionPointPtr_t;
 
 int main()
 {
-    LoggerPtr_t spLogger;
+    LogPtr_t spLogger;
 
-    spLogger.Attach(gcn::GetLogger());
+    spLogger.Attach(gcn::CreateLog());
 
-    LogHandlerPtr_t spLogHandler;
+    LogDispatcherPtr_t spLogHandler;
 
-    gcn::ILogHandler* pLogHandlerSingltone = nullptr;
+    gcn::ILogDispatcher* pLogDispatcherSingltone = nullptr;
 
-    gcn::ResultCode nResult = spLogger->QueryInterface(gcn::ILogHandlerSingltone_UUID, reinterpret_cast<void**>(&pLogHandlerSingltone));
+    gcn::ResultCode nResult = spLogger->QueryInterface(gcn::ILogDispatcherSingltone_UUID, reinterpret_cast<void**>(&pLogDispatcherSingltone));
 
     if (gcn::CC_OK != nResult)
     {
@@ -152,7 +152,7 @@ int main()
 
     ConnectionPointPtr_t spCPC;
 
-    if (gcn::CC_OK != (nResult = pLogHandlerSingltone->QueryInterface(gcn::GCN_ICP_UUID, reinterpret_cast<void**>(&spCPC))))
+    if (gcn::CC_OK != (nResult = pLogDispatcherSingltone->QueryInterface(gcn::IConnectionPointContainer_UUID, reinterpret_cast<void**>(&spCPC))))
     {
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
     }
@@ -163,15 +163,15 @@ int main()
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
     }
     */
-    if (gcn::CC_OK != (nResult = spCPC->Bind(gcn::ILogHandlerEvents_UUID,
-                        reinterpret_cast<void*>(static_cast<gcn::ILogHandlerEvents*>(&g_LogHandlerEventsDisp)))))
+    if (gcn::CC_OK != (nResult = spCPC->Bind(gcn::ILogHandler_UUID,
+                        reinterpret_cast<void*>(static_cast<gcn::ILogHandler*>(&g_LogHandler)))))
     {
         THROW_EXCEPTION("Cannot bind LogHandlerEvents interface!");
     }
 
     //spLogHandler->SetLogLevel(gcn::GCN_LL_FUNC);
 
-    pLogHandlerSingltone->SetLogLevel(gcn::GCN_LL_FUNC);
+    pLogDispatcherSingltone->SetLogLevel(gcn::GCN_LL_FUNC);
 
     checkpoint("Start");
 
