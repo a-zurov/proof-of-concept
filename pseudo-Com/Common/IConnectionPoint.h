@@ -21,7 +21,6 @@ static const GCN_UUID IConnectionPointContainer_UUID =
 { 0x3c66446f, 0xe852, 0x4ea5, { 0x85, 0xed, 0x2a, 0x7c, 0xfb, 0xcc, 0x7d, 0x57 } };
 
 class IConnectionPointContainer
-    : public IBase
 {
 public:
     virtual ~IConnectionPointContainer() {}

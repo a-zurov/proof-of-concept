@@ -58,6 +58,7 @@ void CLogDispatcherImpl::FireLogMessage(const LogLevel nLogLevel, const std::str
 
     sync::upgrade_guard_t upLock(m_RWEventsLock);
 
+#ifdef ALLOW_PREBIND_DUMP
     if (m_setLogHandlers.empty()) {
 
         sync::upto_write_guard_t wLock(upLock);
@@ -66,14 +67,15 @@ void CLogDispatcherImpl::FireLogMessage(const LogLevel nLogLevel, const std::str
 
         return;
     }
+#endif //ALLOW_PREBIND_DUMP
 
     for (LogHandlersSet_t::const_iterator it = m_setLogHandlers.begin(), end = m_setLogHandlers.end(); it != end; ++it)
     {
-        ILogHandler* pEvent = *it;
+        ILogHandler* pLogHandler = *it;
 
         sync::upto_write_guard_t wLock(upLock);
 
-        if (pEvent != NULL) pEvent->OnLogMessage(nLogLevel, szMessage.c_str());
+        if ( nullptr != pLogHandler) pLogHandler->OnLogMessage(nLogLevel, szMessage.c_str());
     }
 }
 
@@ -185,6 +187,8 @@ ResultCode CLogImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
         return GCN_OK;
     }
 
+#ifdef ALLOW_SINGLTONE_LOG_DISPATCH
+
     if (EqualsUUID(uuid, ILogDispatcherSingltone_UUID))
     {
         ILogDispatcher* pInterface = static_cast<ILogDispatcher*>(&LogDispatcherSingltone::instance());
@@ -193,6 +197,8 @@ ResultCode CLogImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
 
         return GCN_OK;
     }
+
+#endif //ALLOW_SINGLTONE_LOG_DISPATCH
 
     return GCN_UNKNOWN_INTERFACE;
 }

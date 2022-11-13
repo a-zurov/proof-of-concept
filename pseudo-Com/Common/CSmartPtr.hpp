@@ -5,7 +5,7 @@
 #ifndef __GCN_CSMART_PTR_HPP__
 #define __GCN_CSMART_PTR_HPP__
 
-#include "CLogDispatcherImpl.h"
+#include "DumpFunction.hpp"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +16,7 @@ GCN_NAMESPACE_BEGIN
 template< typename T >
 CSmartPtr< T >::CSmartPtr()
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     m_pT = nullptr;
 }
@@ -24,7 +24,7 @@ CSmartPtr< T >::CSmartPtr()
 template< typename T >
 CSmartPtr< T >::CSmartPtr(T* pT)
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     m_pT = pT;
 
@@ -37,7 +37,7 @@ CSmartPtr< T >::CSmartPtr(T* pT)
 template< typename T >
 CSmartPtr< T >::CSmartPtr(const CSmartPtr< T >& spT)
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     m_pT = spT.m_pT;
 
@@ -50,7 +50,7 @@ CSmartPtr< T >::CSmartPtr(const CSmartPtr< T >& spT)
 template< typename T >
 CSmartPtr< T >::~CSmartPtr()
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     if (nullptr != m_pT)
     {
@@ -61,7 +61,7 @@ CSmartPtr< T >::~CSmartPtr()
 template< typename T >
 const CSmartPtr< T >& CSmartPtr< T >::operator= (T* pT)
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     if (m_pT != pT)
     {
@@ -84,7 +84,7 @@ const CSmartPtr< T >& CSmartPtr< T >::operator= (T* pT)
 template< typename T >
 const CSmartPtr< T >& CSmartPtr< T >::operator= (const CSmartPtr< T >& spT)
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     if (this != &spT && m_pT != spT.m_pT)
     {
@@ -107,7 +107,7 @@ const CSmartPtr< T >& CSmartPtr< T >::operator= (const CSmartPtr< T >& spT)
 template< typename T >
 CSmartPtr< T >::operator T* () const
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     return m_pT;
 }
@@ -115,7 +115,7 @@ CSmartPtr< T >::operator T* () const
 template< typename T >
 T& CSmartPtr< T >::operator* () const
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     return *m_pT;
 }
@@ -123,7 +123,7 @@ T& CSmartPtr< T >::operator* () const
 template< typename T >
 T** CSmartPtr< T >::operator& ()
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     return &m_pT;
 }
@@ -131,7 +131,7 @@ T** CSmartPtr< T >::operator& ()
 template< typename T >
 bool CSmartPtr< T >::operator! () const
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     return (nullptr == m_pT);
 }
@@ -139,7 +139,7 @@ bool CSmartPtr< T >::operator! () const
 template< typename T >
 bool CSmartPtr< T >::operator< (T* pT) const
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     return (m_pT < pT);
 }
@@ -147,7 +147,7 @@ bool CSmartPtr< T >::operator< (T* pT) const
 template< typename T >
 bool CSmartPtr< T >::operator== (T* pT) const
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     return (m_pT == pT);
 }
@@ -155,7 +155,7 @@ bool CSmartPtr< T >::operator== (T* pT) const
 template< typename T >
 bool CSmartPtr< T >::operator!= (T* pT) const
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     return !(operator== (pT));
 }
@@ -169,7 +169,7 @@ _NoAddRefReleaseOnCPtr<T>* CSmartPtr<T>::operator-> () const
 template< typename T >
 void CSmartPtr< T >::Attach(T* pT)
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     if (m_pT != pT)
     {
@@ -185,7 +185,7 @@ void CSmartPtr< T >::Attach(T* pT)
 template< typename T >
 T* CSmartPtr< T >::Detach()
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     T* pT = m_pT;
     m_pT = nullptr;
@@ -196,7 +196,7 @@ T* CSmartPtr< T >::Detach()
 template< typename T >
 void CSmartPtr< T >::Release()
 {
-    DUMP_FUNCTION();
+    PREBIND_DUMP_FUNCTION();
 
     T* pT = m_pT;
 

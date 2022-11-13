@@ -16,6 +16,11 @@ GCN_NAMESPACE_BEGIN
 
 /////////////////////////////////////////////////////////////////////
 
+//#define ALLOW_PREBIND_DUMP
+
+#ifdef ALLOW_PREBIND_DUMP
+    #define ALLOW_SINGLTONE_LOG_DISPATCH
+#endif
 
 class ILog
     : public IBase
