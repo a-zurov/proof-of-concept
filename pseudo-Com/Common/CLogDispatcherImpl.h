@@ -19,6 +19,7 @@
 #include "Singleton.h"
 
 #include "ILog.h"
+#include "ILogHandler.h"
 #include "IConnectionPoint.h"
 
 //////////////////////////////////////////////////////////////////////////

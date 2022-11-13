@@ -5,7 +5,6 @@
 #ifndef __GCN_CSMART_PTR_HPP__
 #define __GCN_CSMART_PTR_HPP__
 
-#include "ILogHandler.h"
 #include "CLogDispatcherImpl.h"
 
 //////////////////////////////////////////////////////////////////////////
