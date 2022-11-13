@@ -96,52 +96,53 @@ private:
 class DumpFunction
 {
 public:
-    DumpFunction(const char* szSourceFile, int nSourceLine, const char* szFunctionName)
+    DumpFunction(const char* pchSourceFile, const char* pchFunctionName, int nSourceLine)
     {
-        m_sSourceFile.assign(szSourceFile);
+        m_szSourceFile.assign(pchSourceFile);
 
-        std::size_t nPos = m_sSourceFile.rfind(__DELIM__);
+        std::size_t nPos = m_szSourceFile.rfind(__DELIM__);
 
         if (std::string::npos != nPos)
         {
-            m_sSourceFile.assign(m_sSourceFile.substr(nPos + 1));
+            m_szSourceFile.assign(m_szSourceFile.substr(nPos + 1));
         }
 
         m_nSourceLine = nSourceLine;
-        m_sFunctionName = szFunctionName;
+        m_szFunctionName = pchFunctionName;
 
-        std::string sMessage("ThreadID: ");
-        sMessage.append(boost::lexical_cast<std::string>(boost::this_thread::get_id()));
-        sMessage.append(": Enter >> Source: ");
-        sMessage.append(m_sSourceFile);
-        sMessage.append("( ");
-        sMessage.append(boost::lexical_cast<std::string>(m_nSourceLine));
-        sMessage.append(" ) | ");
-        sMessage.append(m_sFunctionName);
-        LogHandlerSingltone::instance().FireLogMessage(GCN_LL_FUNC, sMessage);
+        std::string szMessage("ThreadID: ");
+        szMessage.append(boost::lexical_cast<std::string>(boost::this_thread::get_id()));
+        szMessage.append(": Enter >> Source: ");
+        szMessage.append(m_szSourceFile);
+        szMessage.append("( ");
+        szMessage.append(boost::lexical_cast<std::string>(m_nSourceLine));
+        szMessage.append(" ) | ");
+        szMessage.append(m_szFunctionName);
+        LogHandlerSingltone::instance().FireLogMessage(GCN_LL_FUNC, szMessage);
     }
 
     ~DumpFunction()
     {
-        std::string sMessage("ThreadID: ");
-        sMessage.append(boost::lexical_cast<std::string>(boost::this_thread::get_id()));
-        sMessage.append(": Exit <<< Source: ");
-        sMessage.append(m_sSourceFile);
-        sMessage.append("( ");
-        sMessage.append(boost::lexical_cast<std::string>(m_nSourceLine));
-        sMessage.append(" ) | ");
-        sMessage.append(m_sFunctionName);
-        LogHandlerSingltone::instance().FireLogMessage(GCN_LL_FUNC, sMessage);
+        std::string szMessage("ThreadID: ");
+        szMessage.append(boost::lexical_cast<std::string>(boost::this_thread::get_id()));
+        szMessage.append(": Exit <<< Source: ");
+        szMessage.append(m_szSourceFile);
+        szMessage.append("( ");
+        szMessage.append(boost::lexical_cast<std::string>(m_nSourceLine));
+        szMessage.append(" ) | ");
+        szMessage.append(m_szFunctionName);
+        LogHandlerSingltone::instance().FireLogMessage(GCN_LL_FUNC, szMessage);
     }
 
 private:
-    std::string m_sSourceFile;
+    std::string m_szSourceFile;
+    std::string m_szFunctionName;
+
     int m_nSourceLine;
-    std::string m_sFunctionName;
 };
 
 #define DUMP_FUNCTION()                                         \
-    DumpFunction DumpFunc( __FILE__, __LINE__, __FUNCTION__ )
+    DumpFunction DumpFunc( __FILE__, __FUNCTION__, __LINE__ )
 
 #define DUMP_EXCEPTION( ex ) {                                                              \
     std::string sMessage( "ThreadID: " );                                                   \

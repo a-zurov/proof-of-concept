@@ -46,7 +46,7 @@ LogLevel CLogHandlerImpl::GetLogLevel()
     return (LogLevel)sync::AtomicRead32(m_nLogLevel);
 }
 
-void CLogHandlerImpl::FireLogMessage(const LogLevel nLogLevel, const std::string& sMessage)
+void CLogHandlerImpl::FireLogMessage(const LogLevel nLogLevel, const std::string& szMessage)
 {
 
     auto nLevel = GetLogLevel();
@@ -56,22 +56,24 @@ void CLogHandlerImpl::FireLogMessage(const LogLevel nLogLevel, const std::string
         return;
     }
 
-    //sync::read_guard_t rGuard( m_RWEventsLock );
-
-    sync::upgrade_guard_t upGuard(m_RWEventsLock);
+    sync::upgrade_guard_t upLock(m_RWEventsLock);
 
     if (m_setEvents.empty()) {
 
-        sync::upto_write_guard_t lock(upGuard);
-        std::cout << sMessage << std::endl;
+        sync::upto_write_guard_t wLock(upLock);
+
+        std::cout << szMessage << std::endl;
+
         return;
     }
 
     for (EventsSet_t::iterator it = m_setEvents.begin(), end = m_setEvents.end(); it != end; ++it)
     {
-        ILogHandlerEvents* pEvents = *it;
+        ILogHandlerEvents* pEvent = *it;
 
-        if (pEvents != NULL) pEvents->OnLogMessage(nLogLevel, sMessage.c_str());
+        sync::upto_write_guard_t wLock(upLock);
+
+        if (pEvent != NULL) pEvent->OnLogMessage(nLogLevel, szMessage.c_str());
     }
 }
 

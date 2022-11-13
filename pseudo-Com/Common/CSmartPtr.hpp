@@ -108,7 +108,7 @@ const CSmartPtr< T >& CSmartPtr< T >::operator= (const CSmartPtr< T >& spT)
 template< typename T >
 CSmartPtr< T >::operator T* () const
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     return m_pT;
 }
@@ -116,7 +116,7 @@ CSmartPtr< T >::operator T* () const
 template< typename T >
 T& CSmartPtr< T >::operator* () const
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     return *m_pT;
 }
@@ -124,7 +124,7 @@ T& CSmartPtr< T >::operator* () const
 template< typename T >
 T** CSmartPtr< T >::operator& ()
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     return &m_pT;
 }
@@ -132,7 +132,7 @@ T** CSmartPtr< T >::operator& ()
 template< typename T >
 bool CSmartPtr< T >::operator! () const
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     return (nullptr == m_pT);
 }
@@ -140,7 +140,7 @@ bool CSmartPtr< T >::operator! () const
 template< typename T >
 bool CSmartPtr< T >::operator< (T* pT) const
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     return (m_pT < pT);
 }
@@ -148,7 +148,7 @@ bool CSmartPtr< T >::operator< (T* pT) const
 template< typename T >
 bool CSmartPtr< T >::operator== (T* pT) const
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     return (m_pT == pT);
 }
@@ -156,7 +156,7 @@ bool CSmartPtr< T >::operator== (T* pT) const
 template< typename T >
 bool CSmartPtr< T >::operator!= (T* pT) const
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     return !(operator== (pT));
 }
@@ -170,7 +170,7 @@ _NoAddRefReleaseOnCPtr<T>* CSmartPtr<T>::operator-> () const
 template< typename T >
 void CSmartPtr< T >::Attach(T* pT)
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     if (m_pT != pT)
     {
@@ -186,7 +186,7 @@ void CSmartPtr< T >::Attach(T* pT)
 template< typename T >
 T* CSmartPtr< T >::Detach()
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     T* pT = m_pT;
     m_pT = nullptr;
@@ -197,7 +197,7 @@ T* CSmartPtr< T >::Detach()
 template< typename T >
 void CSmartPtr< T >::Release()
 {
-    cout_dump();
+    DUMP_FUNCTION();
 
     T* pT = m_pT;
 
