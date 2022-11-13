@@ -145,14 +145,14 @@ int main()
 
     gcn::ResultCode nResult = spLogger->QueryInterface(gcn::ILogDispatcherSingltone_UUID, reinterpret_cast<void**>(&pLogDispatcherSingltone));
 
-    if (gcn::CC_OK != nResult)
+    if (gcn::GCN_OK != nResult)
     {
         THROW_EXCEPTION("Cannot query LogHandler interface!");
     }
 
     ConnectionPointPtr_t spCPC;
 
-    if (gcn::CC_OK != (nResult = pLogDispatcherSingltone->QueryInterface(gcn::IConnectionPointContainer_UUID, reinterpret_cast<void**>(&spCPC))))
+    if (gcn::GCN_OK != (nResult = pLogDispatcherSingltone->QueryInterface(gcn::IConnectionPointContainer_UUID, reinterpret_cast<void**>(&spCPC))))
     {
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
     }
@@ -163,7 +163,7 @@ int main()
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
     }
     */
-    if (gcn::CC_OK != (nResult = spCPC->Bind(gcn::ILogHandler_UUID,
+    if (gcn::GCN_OK != (nResult = spCPC->Bind(gcn::ILogHandler_UUID,
                         reinterpret_cast<void*>(static_cast<gcn::ILogHandler*>(&g_LogHandler)))))
     {
         THROW_EXCEPTION("Cannot bind LogHandlerEvents interface!");

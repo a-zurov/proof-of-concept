@@ -81,7 +81,7 @@ ResultCode CLogDispatcherImpl::QueryInterface(const GCN_UUID& uuid, void** ppInt
 {
     if (NULL == ppInterface)
     {
-        return CC_INVALID_PARAMETER;
+        return GCN_INVALID_PARAMETER;
     }
 
     if (EqualsUUID(uuid, IConnectionPointContainer_UUID))
@@ -90,10 +90,10 @@ ResultCode CLogDispatcherImpl::QueryInterface(const GCN_UUID& uuid, void** ppInt
 
         (*ppInterface) = reinterpret_cast<void*>(pCPC);
 
-        return CC_OK;
+        return GCN_OK;
     }
 
-    return CC_UNKNOWN_INTERFACE;
+    return GCN_UNKNOWN_INTERFACE;
 }
 
 ResultCode CLogDispatcherImpl::Bind(const GCN_UUID& uuid, void* pInterface)
@@ -104,11 +104,11 @@ ResultCode CLogDispatcherImpl::Bind(const GCN_UUID& uuid, void* pInterface)
         {
             AddLogHandler(reinterpret_cast<ILogHandler*>(pInterface));
 
-            return CC_OK;
+            return GCN_OK;
         }
     }
 
-    return CC_UNKNOWN_INTERFACE;
+    return GCN_UNKNOWN_INTERFACE;
 }
 
 ResultCode CLogDispatcherImpl::Unbind(const GCN_UUID& uuid, void* pInterface)
@@ -119,11 +119,11 @@ ResultCode CLogDispatcherImpl::Unbind(const GCN_UUID& uuid, void* pInterface)
         {
             RemoveLogHandler(reinterpret_cast<ILogHandler*>(pInterface));
 
-            return CC_OK;
+            return GCN_OK;
         }
     }
 
-    return CC_UNKNOWN_INTERFACE;
+    return GCN_UNKNOWN_INTERFACE;
 }
 
 void CLogDispatcherImpl::AddLogHandler(ILogHandler* pEvents)
@@ -169,7 +169,7 @@ ResultCode CLogImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
 {
     if (nullptr == ppInterface)
     {
-        return CC_INVALID_PARAMETER;
+        return GCN_INVALID_PARAMETER;
     }
 
     if (EqualsUUID(uuid, ILogDispatcher_UUID))
@@ -182,7 +182,7 @@ ResultCode CLogImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
 
         (*ppInterface) = reinterpret_cast<void*>(pInterface);
 
-        return CC_OK;
+        return GCN_OK;
     }
 
     if (EqualsUUID(uuid, ILogDispatcherSingltone_UUID))
@@ -191,10 +191,10 @@ ResultCode CLogImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
 
         (*ppInterface) = reinterpret_cast<void*>(pInterface);
 
-        return CC_OK;
+        return GCN_OK;
     }
 
-    return CC_UNKNOWN_INTERFACE;
+    return GCN_UNKNOWN_INTERFACE;
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -28,12 +28,12 @@ public:
 
     virtual ResultCode Bind(const GCN_UUID& uuid, void* pInterface)
     {
-        return CC_UNKNOWN_INTERFACE;
+        return GCN_UNKNOWN_INTERFACE;
     }
 
     virtual ResultCode Unbind(const GCN_UUID& uuid, void* pInterface)
     {
-        return CC_UNKNOWN_INTERFACE;
+        return GCN_UNKNOWN_INTERFACE;
     }
 };
 

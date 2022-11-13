@@ -148,16 +148,16 @@ inline bool EqualsUUID(const GCN_UUID& uuid1, const GCN_UUID& uuid2)
 
 //////////////////////////////////////////////////////////////////////////
 
-#define CC_RESULT_CODES                                         \
-    X( CC_OK = 0,                   "CC_OK"                )    \
-    X( CC_UNKNOWN_ERROR,            "CC_UNKNOWN_ERROR"     )    \
-    X( CC_INIT_ERROR,               "CC_INIT_ERROR"        )    \
-    X( CC_INVALID_PARAMETER,        "CC_INVALID_PARAMETER" )    \
-    X( CC_INVALID_HANDLE,           "CC_INVALID_HANDLE"    )    \
-    X( CC_UNKNOWN_INTERFACE = 1024, "CC_UNKNOWN_INTERFACE" )
+#define GCN_RESULT_CODES                                        \
+    X( GCN_OK = 0,                  "GCN_OK"               )    \
+    X( GCN_UNKNOWN_ERROR,           "GCN_UNKNOWN_ERROR"    )    \
+    X( GCN_INIT_ERROR,              "GCN_INIT_ERROR"       )    \
+    X( GCN_INVALID_PARAMETER,       "GCN_INVALID_PARAMETER")    \
+    X( GCN_INVALID_HANDLE,          "GCN_INVALID_HANDLE"   )    \
+    X( GCN_UNKNOWN_INTERFACE = 1024, "GCN_UNKNOWN_INTERFACE" )
 
 #define X( a, b ) a,
-enum ResultCode { CC_RESULT_CODES };
+enum ResultCode { GCN_RESULT_CODES };
 #undef X
 
 //////////////////////////////////////////////////////////////////////////
