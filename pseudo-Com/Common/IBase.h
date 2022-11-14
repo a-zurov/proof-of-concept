@@ -26,7 +26,7 @@ public:
 
     virtual ResultCode QueryInterface(const GCN_UUID& uuid, void** ppInterface)
     {
-        return GCN_UNKNOWN_INTERFACE;
+        return UNKNOWN_INTERFACE;
     }
 };
 

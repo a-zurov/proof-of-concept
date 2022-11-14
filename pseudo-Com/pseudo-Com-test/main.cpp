@@ -15,29 +15,35 @@
 #include "../Common/IConnectionPoint.h"
 #include "../Common/DumpFunction.hpp"
 
-#define THROW_EXCEPTION( sMessage ) {                                                           \
-    std::ostringstream sMessageStream;                                                          \
-    sMessageStream << __LINE__ << ":" __FILE__ << "::" << __FUNCTION__ << "(): " << sMessage;   \
-    std::string sMsg( sMessageStream.str() );                                                   \
-    throw std::runtime_error( sMsg ); }
+//////////////////////////////////////////////////////////////////////////
+
+#define THROW_EXCEPTION( message ) {                                                \
+    std::ostringstream oss;                                                         \
+    oss << __LINE__ << ":" __FILE__ << "::" << __FUNCTION__ << "(): " << message;   \
+    std::string szMessage( oss.str() );                                             \
+    throw std::runtime_error( szMessage ); }
+
+//////////////////////////////////////////////////////////////////////////
 
 class CLogHandlerImpl
     : public gcn::ILogHandler
 {
 public:
-    void FireLogMessage(const char* pchMessage)
+    void FireLogMessage(const char* pMessage)
     {
-        std::cout << pchMessage << std::endl;
+        std::cout << pMessage << std::endl;
     }
 
 protected:
-    virtual void OnLogMessage(const gcn::LogLevel nLogLevel, const char* pchMessage)
+    virtual void OnLogMessage(const gcn::LogLevel nLogLevel, const char* pMessage)
     {
-        FireLogMessage(pchMessage);
+        FireLogMessage(pMessage);
     }
 };
 
 static CLogHandlerImpl g_LogHandler;
+
+//////////////////////////////////////////////////////////////////////////
 
 class IComObject
     : public gcn::IBase
@@ -67,7 +73,7 @@ public:
 
     void Close() override
     {
-        DUMP_MESSAGE(gcn::GCN_LL_WARNING , "CComObjectImpl is destroyed");
+        DUMP_MESSAGE(gcn::LL_WARNING , "ThisRefCounter is destroying CComObjectImpl");
     };
 
     void Foo() const override
@@ -84,7 +90,7 @@ long CComObjectImpl::AddRef()
 {
     auto nRef = ThisRefCounter::AddRef();
 
-    DUMP_MESSAGE(gcn::GCN_LL_INFO, " ThisRefCounter = " << nRef);
+    DUMP_MESSAGE(gcn::LL_INFO, " ThisRefCounter = " << nRef);
 
     return nRef;
 }
@@ -93,7 +99,7 @@ long CComObjectImpl::Release()
 {
     auto nRef = ThisRefCounter::Release();
 
-    DUMP_MESSAGE(gcn::GCN_LL_INFO, " ThisRefCounter = " << nRef);
+    DUMP_MESSAGE(gcn::LL_INFO, " ThisRefCounter = " << nRef);
 
     return nRef;
 }
@@ -118,41 +124,43 @@ void thread_func(ComObjectPtr_t spObject, LogDispatcherPtr_t spLogDispatcher)
     }
 }
 
+
 int main()
 {
     LogPtr_t spLog;
+
     LogDispatcherPtr_t spLogDispatcher;
 
-    spLog.Attach(gcn::CreateLog());
+    spLog.Attach( gcn::CreateLog() );
 
-#ifdef ALLOW_SINGLETONE_DISPATCH_LOG
+#ifdef ALLOW_SINGLETON_DISPATCH_LOG
 
-    gcn::ILogDispatcher* pLogDispatcherSingltone = nullptr;
+    gcn::ILogDispatcher* pLogDispatcher = nullptr;
 
     gcn::ResultCode nResult = spLog->QueryInterface(gcn::ILogDispatcherSingleton_UUID,
-                                        reinterpret_cast<void**>(&pLogDispatcherSingltone));
+                                        reinterpret_cast<void**>(&pLogDispatcher));
 
-    if (gcn::GCN_OK != nResult)
+    if (gcn::OK != nResult)
     {
         THROW_EXCEPTION("Cannot query ILogDispatcher Singleton interface!");
     }
 
-    pLogDispatcherSingltone->SetLogLevel(gcn::GCN_LL_FUNC);
+    pLogDispatcher->SetLogLevel(gcn::LL_PREBIND);
 
     gcn::IConnectionPointContainer* pConnectionPointContainer = nullptr;
 
-    if (gcn::GCN_OK != (nResult = pLogDispatcherSingltone->QueryInterface(gcn::IConnectionPointContainer_UUID,
+    if (gcn::OK != (nResult = pLogDispatcher->QueryInterface(gcn::IConnectionPointContainer_UUID,
                                         reinterpret_cast<void**>(&pConnectionPointContainer))))
     {
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
     }
 
-#else //ALLOW_SINGLETONE_DISPATCH_LOG
+#else //ALLOW_SINGLETON_DISPATCH_LOG
 
     gcn::ResultCode nResult = spLog->QueryInterface(gcn::ILogDispatcher_UUID,
                                         reinterpret_cast<void**>(&spLogDispatcher));
 
-    if (gcn::GCN_OK != nResult)
+    if (gcn::OK != nResult)
     {
         THROW_EXCEPTION("Cannot query ILogDispatcher interface!");
     }
@@ -160,15 +168,15 @@ int main()
 
     gcn::IConnectionPointContainer* pConnectionPointContainer = nullptr;
 
-    if (gcn::GCN_OK != (nResult = spLogDispatcher->QueryInterface(gcn::IConnectionPointContainer_UUID,
+    if (gcn::OK != (nResult = spLogDispatcher->QueryInterface(gcn::IConnectionPointContainer_UUID,
                                                         reinterpret_cast<void**>(&pConnectionPointContainer))))
     {
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
     }
 
-#endif //ALLOW_SINGLETONE_DISPATCH_LOG
+#endif //ALLOW_SINGLETON_DISPATCH_LOG
 
-    if (gcn::GCN_OK != (nResult = pConnectionPointContainer->Bind(gcn::ILogHandler_UUID,
+    if (gcn::OK != (nResult = pConnectionPointContainer->Bind(gcn::ILogHandler_UUID,
                                                         reinterpret_cast<void*>(static_cast<gcn::ILogHandler*>(&g_LogHandler)))))
     {
         THROW_EXCEPTION("Cannot bind LogHandler interface!");
@@ -177,7 +185,7 @@ int main()
 
     checkpoint("Start");
 
-    ComObjectPtr_t spComObject(static_cast<IComObject*>(new CComObjectImpl()));
+    ComObjectPtr_t spComObject( static_cast<IComObject*>(new CComObjectImpl()) );
 
     {
         std::thread t1(thread_func, spComObject, spLogDispatcher),
@@ -195,3 +203,5 @@ int main()
 
     spLog.Release();
 }
+
+//////////////////////////////////////////////////////////////////////////

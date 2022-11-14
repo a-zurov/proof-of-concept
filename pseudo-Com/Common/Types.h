@@ -44,16 +44,16 @@ GCN_NAMESPACE_BEGIN
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef int8_t              INT8_t;
-typedef uint8_t             UINT8_t;
-typedef int16_t             INT16_t;
-typedef uint16_t            UINT16_t;
-typedef int32_t             INT32_t;
-typedef uint32_t            UINT32_t;
-typedef int64_t             INT64_t;
-typedef uint64_t            UINT64_t;
-typedef float               FLOAT_t;
-typedef double              DOUBLE_t;
+typedef int8_t      INT8_t;
+typedef uint8_t     UINT8_t;
+typedef int16_t     INT16_t;
+typedef uint16_t    UINT16_t;
+typedef int32_t     INT32_t;
+typedef uint32_t    UINT32_t;
+typedef int64_t     INT64_t;
+typedef uint64_t    UINT64_t;
+typedef float       FLOAT_t;
+typedef double      DOUBLE_t;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -148,13 +148,13 @@ inline bool EqualsUUID(const GCN_UUID& uuid1, const GCN_UUID& uuid2)
 
 //////////////////////////////////////////////////////////////////////////
 
-#define GCN_RESULT_CODES                                        \
-    X( GCN_OK = 0,                  "GCN_OK"               )    \
-    X( GCN_UNKNOWN_ERROR,           "GCN_UNKNOWN_ERROR"    )    \
-    X( GCN_INIT_ERROR,              "GCN_INIT_ERROR"       )    \
-    X( GCN_INVALID_PARAMETER,       "GCN_INVALID_PARAMETER")    \
-    X( GCN_INVALID_HANDLE,          "GCN_INVALID_HANDLE"   )    \
-    X( GCN_UNKNOWN_INTERFACE = 1024, "GCN_UNKNOWN_INTERFACE" )
+#define GCN_RESULT_CODES                                \
+    X( OK = 0,                  "OK"               )    \
+    X( UNKNOWN_ERROR,           "UNKNOWN_ERROR"    )    \
+    X( INIT_ERROR,              "INIT_ERROR"       )    \
+    X( INVALID_PARAMETER,       "INVALID_PARAMETER")    \
+    X( INVALID_HANDLE,          "INVALID_HANDLE"   )    \
+    X( UNKNOWN_INTERFACE = 1024, "UNKNOWN_INTERFACE" )
 
 #define X( a, b ) a,
 enum ResultCode { GCN_RESULT_CODES };
@@ -162,13 +162,13 @@ enum ResultCode { GCN_RESULT_CODES };
 
 //////////////////////////////////////////////////////////////////////////
 
-#define GCN_LOG_LEVEL                                     \
-    X( GCN_LL_FATAL = 2,        "GCN_LL_FATAL" )          \
-    X( GCN_LL_ERROR,            "GCN_LL_ERROR" )          \
-    X( GCN_LL_WARNING,          "GCN_LL_WARNING" )        \
-    X( GCN_LL_INFO,             "GCN_LL_INFO" )           \
-    X( GCN_LL_DEBUG,            "GCN_LL_DEBUG" )          \
-    X( GCN_LL_FUNC,             "GCN_LL_FUNC" )
+#define GCN_LOG_LEVEL                   \
+    X( LL_FATAL = 2,    "LL_FATAL" )    \
+    X( LL_ERROR,        "LL_ERROR" )    \
+    X( LL_WARNING,      "LL_WARNING" )  \
+    X( LL_INFO,         "LL_INFO" )     \
+    X( LL_DEBUG,        "LL_DEBUG" )    \
+    X( LL_PREBIND,      "LL_PREBIND" )
 
 #define X( a, b ) a,
 enum LogLevel { GCN_LOG_LEVEL };

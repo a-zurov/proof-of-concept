@@ -63,7 +63,7 @@ protected:
     void RemoveLogHandler(ILogHandler* pEvents);
 
 private:
-    volatile UINT32_t m_nLogLevel = GCN_LL_FUNC;
+    volatile UINT32_t m_nLogLevel = LL_PREBIND;
     LogHandlersSet_t m_setLogHandlers;
     boost::shared_mutex m_RWEventsLock;
 };
