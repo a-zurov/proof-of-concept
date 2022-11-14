@@ -12,7 +12,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_BEGIN
+XCOM_NAMESPACE_BEGIN
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -36,13 +36,13 @@ ILog* CreateLog();
 //////////////////////////////////////////////////////////////////////////
 // {920B6877-E906-4C39-8C4C-AF425F0D0BD6}
 
-static const GCN_UUID ILogDispatcherSingleton_UUID =
+static const XCOM_UUID ILogDispatcherSingleton_UUID =
 { 0x920b6877, 0xe906, 0x4c39, { 0x8c, 0x4c, 0xaf, 0x42, 0x5f, 0xd, 0xb, 0xd6 } };
 
 //////////////////////////////////////////////////////////////////////////
 // {1D07E1D2-99FD-45da-B12B-64D04C5C5BAF}
 
-static const GCN_UUID ILogDispatcher_UUID =
+static const XCOM_UUID ILogDispatcher_UUID =
 { 0x1d07e1d2, 0x99fd, 0x45da, { 0xb1, 0x2b, 0x64, 0xd0, 0x4c, 0x5c, 0x5b, 0xaf } };
 
 class ILogDispatcher
@@ -57,7 +57,7 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_END
+XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 

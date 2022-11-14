@@ -26,7 +26,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 class CLogHandlerImpl
-    : public gcn::ILogHandler
+    : public xcom::ILogHandler
 {
 public:
     void FireLogMessage(const char* pMessage)
@@ -35,7 +35,7 @@ public:
     }
 
 protected:
-    virtual void OnLogMessage(const gcn::LogLevel nLogLevel, const char* pMessage)
+    virtual void OnLogMessage(const xcom::LogLevel nLogLevel, const char* pMessage)
     {
         FireLogMessage(pMessage);
     }
@@ -46,7 +46,7 @@ static CLogHandlerImpl g_LogHandler;
 //////////////////////////////////////////////////////////////////////////
 
 class IComObject
-    : public gcn::IBase
+    : public xcom::IBase
 {
 public:
     virtual void Foo() const = 0;
@@ -54,9 +54,9 @@ public:
 
 class CComObjectImpl
     : public IComObject
-    , protected gcn::CRefCounter
+    , protected xcom::CRefCounter
 {
-    using ThisRefCounter = gcn::CRefCounter;
+    using ThisRefCounter = xcom::CRefCounter;
 
     mutable std::mutex m_mtxFooCounter;
 
@@ -73,7 +73,7 @@ public:
 
     void Close() override
     {
-        DUMP_MESSAGE(gcn::LL_WARNING , "ThisRefCounter is destroying CComObjectImpl");
+        DUMP_MESSAGE(xcom::LL_WARNING , "ThisRefCounter is destroying CComObjectImpl");
     };
 
     void Foo() const override
@@ -90,7 +90,7 @@ long CComObjectImpl::AddRef()
 {
     auto nRef = ThisRefCounter::AddRef();
 
-    DUMP_MESSAGE(gcn::LL_INFO, " ThisRefCounter = " << nRef);
+    DUMP_MESSAGE(xcom::LL_INFO, " ThisRefCounter = " << nRef);
 
     return nRef;
 }
@@ -99,15 +99,15 @@ long CComObjectImpl::Release()
 {
     auto nRef = ThisRefCounter::Release();
 
-    DUMP_MESSAGE(gcn::LL_INFO, " ThisRefCounter = " << nRef);
+    DUMP_MESSAGE(xcom::LL_INFO, " ThisRefCounter = " << nRef);
 
     return nRef;
 }
 
-using ComObjectPtr_t = gcn::CSmartPtr< IComObject >;
+using ComObjectPtr_t = xcom::CSmartPtr< IComObject >;
 
-typedef gcn::CSmartPtr< gcn::ILog > LogPtr_t;
-typedef gcn::CSmartPtr< gcn::ILogDispatcher > LogDispatcherPtr_t;
+typedef xcom::CSmartPtr< xcom::ILog > LogPtr_t;
+typedef xcom::CSmartPtr< xcom::ILogDispatcher > LogDispatcherPtr_t;
 
 
 void thread_func(ComObjectPtr_t spObject, LogDispatcherPtr_t spLogDispatcher)
@@ -131,25 +131,25 @@ int main()
 
     LogDispatcherPtr_t spLogDispatcher;
 
-    spLog.Attach( gcn::CreateLog() );
+    spLog.Attach( xcom::CreateLog() );
 
 #ifdef ALLOW_SINGLETON_DISPATCH_LOG
 
-    gcn::ILogDispatcher* pLogDispatcher = nullptr;
+    xcom::ILogDispatcher* pLogDispatcher = nullptr;
 
-    gcn::ResultCode nResult = spLog->QueryInterface(gcn::ILogDispatcherSingleton_UUID,
+    xcom::ResultCode nResult = spLog->QueryInterface(xcom::ILogDispatcherSingleton_UUID,
                                         reinterpret_cast<void**>(&pLogDispatcher));
 
-    if (gcn::OK != nResult)
+    if (xcom::OK != nResult)
     {
         THROW_EXCEPTION("Cannot query ILogDispatcher Singleton interface!");
     }
 
-    pLogDispatcher->SetLogLevel(gcn::LL_PREBIND);
+    pLogDispatcher->SetLogLevel(xcom::LL_PREBIND);
 
-    gcn::IConnectionPointContainer* pConnectionPointContainer = nullptr;
+    xcom::IConnectionPointContainer* pConnectionPointContainer = nullptr;
 
-    if (gcn::OK != (nResult = pLogDispatcher->QueryInterface(gcn::IConnectionPointContainer_UUID,
+    if (xcom::OK != (nResult = pLogDispatcher->QueryInterface(xcom::IConnectionPointContainer_UUID,
                                         reinterpret_cast<void**>(&pConnectionPointContainer))))
     {
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
@@ -157,18 +157,18 @@ int main()
 
 #else //ALLOW_SINGLETON_DISPATCH_LOG
 
-    gcn::ResultCode nResult = spLog->QueryInterface(gcn::ILogDispatcher_UUID,
+    xcom::ResultCode nResult = spLog->QueryInterface(xcom::ILogDispatcher_UUID,
                                         reinterpret_cast<void**>(&spLogDispatcher));
 
-    if (gcn::OK != nResult)
+    if (xcom::OK != nResult)
     {
         THROW_EXCEPTION("Cannot query ILogDispatcher interface!");
     }
 
 
-    gcn::IConnectionPointContainer* pConnectionPointContainer = nullptr;
+    xcom::IConnectionPointContainer* pConnectionPointContainer = nullptr;
 
-    if (gcn::OK != (nResult = spLogDispatcher->QueryInterface(gcn::IConnectionPointContainer_UUID,
+    if (xcom::OK != (nResult = spLogDispatcher->QueryInterface(xcom::IConnectionPointContainer_UUID,
                                                         reinterpret_cast<void**>(&pConnectionPointContainer))))
     {
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
@@ -176,8 +176,8 @@ int main()
 
 #endif //ALLOW_SINGLETON_DISPATCH_LOG
 
-    if (gcn::OK != (nResult = pConnectionPointContainer->Bind(gcn::ILogHandler_UUID,
-                                                        reinterpret_cast<void*>(static_cast<gcn::ILogHandler*>(&g_LogHandler)))))
+    if (xcom::OK != (nResult = pConnectionPointContainer->Bind(xcom::ILogHandler_UUID,
+                                                        reinterpret_cast<void*>(static_cast<xcom::ILogHandler*>(&g_LogHandler)))))
     {
         THROW_EXCEPTION("Cannot bind LogHandler interface!");
     }

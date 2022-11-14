@@ -12,7 +12,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_BEGIN
+XCOM_NAMESPACE_BEGIN
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -82,23 +82,23 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_END
+XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 
 #ifdef ALLOW_PREBIND_DUMP
-    #define PREBIND_DUMP_FUNCTION() gcn::DumpFunction DumpFunc( __FILE__, __FUNCTION__, __LINE__ )
+    #define PREBIND_DUMP_FUNCTION() xcom::DumpFunction DumpFunc( __FILE__, __FUNCTION__, __LINE__ )
 #else
     #define PREBIND_DUMP_FUNCTION()
 #endif
 
 #ifdef ALLOW_SINGLETON_DISPATCH_LOG
 
-    #define DUMP_FUNCTION() gcn::DumpFunction DumpFunc( __FILE__, __FUNCTION__, __LINE__ )
-    #define DUMP_FUNCTION_TO(x) gcn::DumpFunction DumpFunc(__FILE__, __FUNCTION__, __LINE__)
+    #define DUMP_FUNCTION() xcom::DumpFunction DumpFunc( __FILE__, __FUNCTION__, __LINE__ )
+    #define DUMP_FUNCTION_TO(x) xcom::DumpFunction DumpFunc(__FILE__, __FUNCTION__, __LINE__)
 
     #define DUMP_MESSAGE( ll, message ) {                                                       \
-    if( ll <= gcn::LogDispatcherSingleton::instance().GetLogLevel() )                           \
+    if( ll <= xcom::LogDispatcherSingleton::instance().GetLogLevel() )                          \
     {                                                                                           \
         std::string szSourceFile( __FILE__ );                                                   \
                                                                                                 \
@@ -124,28 +124,28 @@ GCN_NAMESPACE_END
         std::ostringstream oss;                                                                 \
         oss << szMessage << message;                                                            \
         szMessage.assign( oss.str() );                                                          \
-        gcn::LogDispatcherSingleton::instance().FireLogMessage( ll, szMessage );                \
+        xcom::LogDispatcherSingleton::instance().FireLogMessage( ll, szMessage );               \
     }                                                                                           \
 }
 
 #else
     #define DUMP_FUNCTION()
-    #define DUMP_FUNCTION_TO(x) gcn::DumpFunction DumpFunc(__FILE__, __FUNCTION__, __LINE__, static_cast<gcn::CLogDispatcherImpl*>((gcn::ILogDispatcher*)x))
+    #define DUMP_FUNCTION_TO(x) xcom::DumpFunction DumpFunc(__FILE__, __FUNCTION__, __LINE__, static_cast<xcom::CLogDispatcherImpl*>((xcom::ILogDispatcher*)x))
     #define DUMP_MESSAGE( ll, message )
 #endif
 
 
 #define DUMP_INFO( message ) \
-    DUMP_MESSAGE( gcn::LL_INFO, message )
+    DUMP_MESSAGE( xcom::LL_INFO, message )
 
 #define DUMP_WARNING( message ) \
-    DUMP_MESSAGE( gcn::LL_WARNING, message )
+    DUMP_MESSAGE( xcom::LL_WARNING, message )
 
 #define DUMP_ERROR( message ) \
-    DUMP_MESSAGE( gcn::LL_ERROR, message )
+    DUMP_MESSAGE( xcom::LL_ERROR, message )
 
 #define DUMP_DEBUG( message ) \
-    DUMP_MESSAGE( gcn::LL_DEBUG, message )
+    DUMP_MESSAGE( xcom::LL_DEBUG, message )
 
 /*
 #define DUMP_EXCEPTION( ex ) {                                                              \
@@ -153,7 +153,7 @@ GCN_NAMESPACE_END
     sMessage.append( boost::lexical_cast< std::string >( boost::this_thread::get_id() ) );  \
     sMessage.append( ": " );                                                                \
     sMessage.append( ex.what() );                                                           \
-    gcn::LogDispatcherSingleton::instance().FireLogMessage( LL_ERROR, sMessage );       \
+    xcom::LogDispatcherSingleton::instance().FireLogMessage( LL_ERROR, sMessage );       \
 }
 
 #define DUMP_BOOST_EXCEPTION( ex ) {                                                        \
@@ -161,7 +161,7 @@ GCN_NAMESPACE_END
     sMessage.append( boost::lexical_cast< std::string >( boost::this_thread::get_id() ) );  \
     sMessage.append( ": " );                                                                \
     sMessage.append( boost::diagnostic_information_what( ex ) );                            \
-    gcn::LogDispatcherSingleton::instance().FireLogMessage( LL_ERROR, sMessage );       \
+    xcom::LogDispatcherSingleton::instance().FireLogMessage( LL_ERROR, sMessage );       \
 }
 */
 

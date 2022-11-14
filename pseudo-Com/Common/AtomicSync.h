@@ -16,8 +16,8 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-#define SYNC_NAMESPACE_BEGIN GCN_NAMESPACE_BEGIN namespace sync {
-#define SYNC_NAMESPACE_END } GCN_NAMESPACE_END
+#define SYNC_NAMESPACE_BEGIN XCOM_NAMESPACE_BEGIN namespace sync {
+#define SYNC_NAMESPACE_END } XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 

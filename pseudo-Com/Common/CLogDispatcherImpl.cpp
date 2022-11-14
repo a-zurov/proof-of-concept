@@ -7,7 +7,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_BEGIN
+XCOM_NAMESPACE_BEGIN
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -80,7 +80,7 @@ void CLogDispatcherImpl::FireLogMessage(const LogLevel nLogLevel, const std::str
     }
 }
 
-ResultCode CLogDispatcherImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
+ResultCode CLogDispatcherImpl::QueryInterface(const XCOM_UUID& uuid, void** ppInterface)
 {
     if (NULL == ppInterface)
     {
@@ -99,7 +99,7 @@ ResultCode CLogDispatcherImpl::QueryInterface(const GCN_UUID& uuid, void** ppInt
     return UNKNOWN_INTERFACE;
 }
 
-ResultCode CLogDispatcherImpl::Bind(const GCN_UUID& uuid, void* pInterface)
+ResultCode CLogDispatcherImpl::Bind(const XCOM_UUID& uuid, void* pInterface)
 {
     if (NULL != pInterface)
     {
@@ -114,7 +114,7 @@ ResultCode CLogDispatcherImpl::Bind(const GCN_UUID& uuid, void* pInterface)
     return UNKNOWN_INTERFACE;
 }
 
-ResultCode CLogDispatcherImpl::Unbind(const GCN_UUID& uuid, void* pInterface)
+ResultCode CLogDispatcherImpl::Unbind(const XCOM_UUID& uuid, void* pInterface)
 {
     if (NULL != pInterface)
     {
@@ -168,7 +168,7 @@ void CLogImpl::Close()
 
 }
 
-ResultCode CLogImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
+ResultCode CLogImpl::QueryInterface(const XCOM_UUID& uuid, void** ppInterface)
 {
     if (nullptr == ppInterface)
     {
@@ -206,6 +206,6 @@ ResultCode CLogImpl::QueryInterface(const GCN_UUID& uuid, void** ppInterface)
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_END
+XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////

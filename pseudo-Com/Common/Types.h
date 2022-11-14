@@ -35,12 +35,12 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-#define GCN_NAMESPACE_BEGIN namespace gcn { // global common namespace
-#define GCN_NAMESPACE_END }
+#define XCOM_NAMESPACE_BEGIN namespace xcom { // global common namespace
+#define XCOM_NAMESPACE_END }
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_BEGIN
+XCOM_NAMESPACE_BEGIN
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -57,39 +57,39 @@ typedef double      DOUBLE_t;
 
 //////////////////////////////////////////////////////////////////////////
 
-#define GCN_DATA_TYPE                                                 \
-    X( GCN_DATA_TYPE_UNKNOWN = 0, "GCN_DATA_TYPE_UNKNOWN" )           \
-    X( GCN_DATA_TYPE_INT32,       "GCN_DATA_TYPE_INT32"   )           \
-    X( GCN_DATA_TYPE_UINT32,      "GCN_DATA_TYPE_UINT32"  )           \
-    X( GCN_DATA_TYPE_INT64,       "GCN_DATA_TYPE_INT64"   )           \
-    X( GCN_DATA_TYPE_UINT64,      "GCN_DATA_TYPE_UINT64"  )           \
-    X( GCN_DATA_TYPE_FLOAT,       "GCN_DATA_TYPE_FLOAT"   )           \
-    X( GCN_DATA_TYPE_DOUBLE,      "GCN_DATA_TYPE_DOUBLE"  )           \
-    X( GCN_DATA_TYPE_BOOLEAN,     "GCN_DATA_TYPE_BOOLEAN" )           \
-    X( GCN_DATA_TYPE_TIME,        "GCN_DATA_TYPE_TIME"    )           \
-    X( GCN_DATA_TYPE_DATE,        "GCN_DATA_TYPE_DATE"    )           \
-    X( GCN_DATA_TYPE_DATE_TIME,   "GCN_DATA_TYPE_DATE_TIME" )         \
-    X( GCN_DATA_TYPE_STRING,      "GCN_DATA_TYPE_STRING"  )           \
-    X( GCN_DATA_TYPE_BINARY,      "GCN_DATA_TYPE_BINARY"  )           \
-    X( GCN_DATA_TYPE_PASSWORD,    "GCN_DATA_TYPE_PASSWORD" )
+#define XCOM_DATA_TYPE                                                  \
+    X( XCOM_DATA_TYPE_UNKNOWN = 0, "XCOM_DATA_TYPE_UNKNOWN" )           \
+    X( XCOM_DATA_TYPE_INT32,       "XCOM_DATA_TYPE_INT32"   )           \
+    X( XCOM_DATA_TYPE_UINT32,      "XCOM_DATA_TYPE_UINT32"  )           \
+    X( XCOM_DATA_TYPE_INT64,       "XCOM_DATA_TYPE_INT64"   )           \
+    X( XCOM_DATA_TYPE_UINT64,      "XCOM_DATA_TYPE_UINT64"  )           \
+    X( XCOM_DATA_TYPE_FLOAT,       "XCOM_DATA_TYPE_FLOAT"   )           \
+    X( XCOM_DATA_TYPE_DOUBLE,      "XCOM_DATA_TYPE_DOUBLE"  )           \
+    X( XCOM_DATA_TYPE_BOOLEAN,     "XCOM_DATA_TYPE_BOOLEAN" )           \
+    X( XCOM_DATA_TYPE_TIME,        "XCOM_DATA_TYPE_TIME"    )           \
+    X( XCOM_DATA_TYPE_DATE,        "XCOM_DATA_TYPE_DATE"    )           \
+    X( XCOM_DATA_TYPE_DATE_TIME,   "XCOM_DATA_TYPE_DATE_TIME" )         \
+    X( XCOM_DATA_TYPE_STRING,      "XCOM_DATA_TYPE_STRING"  )           \
+    X( XCOM_DATA_TYPE_BINARY,      "XCOM_DATA_TYPE_BINARY"  )           \
+    X( XCOM_DATA_TYPE_PASSWORD,    "XCOM_DATA_TYPE_PASSWORD" )
 
-#define GCN_DATA_TYPE_UNKNOWN_STR                                    "0"
-#define GCN_DATA_TYPE_INT32_STR                                      "1"
-#define GCN_DATA_TYPE_UINT32_STR                                     "2"
-#define GCN_DATA_TYPE_INT64_STR                                      "3"
-#define GCN_DATA_TYPE_UINT64_STR                                     "4"
-#define GCN_DATA_TYPE_FLOAT_STR                                      "5"
-#define GCN_DATA_TYPE_DOUBLE_STR                                     "6"
-#define GCN_DATA_TYPE_BOOLEAN_STR                                    "7"
-#define GCN_DATA_TYPE_TIME_STR                                       "8"
-#define GCN_DATA_TYPE_DATE_STR                                       "9"
-#define GCN_DATA_TYPE_DATE_TIME_STR                                  "10"
-#define GCN_DATA_TYPE_STRING_STR                                     "11"
-#define GCN_DATA_TYPE_BINARY_STR                                     "12"
-#define GCN_DATA_TYPE_PASSWORD_STR                                   "13"
+#define XCOM_DATA_TYPE_UNKNOWN_STR      "0"
+#define XCOM_DATA_TYPE_INT32_STR        "1"
+#define XCOM_DATA_TYPE_UINT32_STR       "2"
+#define XCOM_DATA_TYPE_INT64_STR        "3"
+#define XCOM_DATA_TYPE_UINT64_STR       "4"
+#define XCOM_DATA_TYPE_FLOAT_STR        "5"
+#define XCOM_DATA_TYPE_DOUBLE_STR       "6"
+#define XCOM_DATA_TYPE_BOOLEAN_STR      "7"
+#define XCOM_DATA_TYPE_TIME_STR         "8"
+#define XCOM_DATA_TYPE_DATE_STR         "9"
+#define XCOM_DATA_TYPE_DATE_TIME_STR    "10"
+#define XCOM_DATA_TYPE_STRING_STR       "11"
+#define XCOM_DATA_TYPE_BINARY_STR       "12"
+#define XCOM_DATA_TYPE_PASSWORD_STR     "13"
 
 #define X( a, b ) a,
-enum DataType { GCN_DATA_TYPE };
+enum DataType { XCOM_DATA_TYPE };
 #undef X
 
 //////////////////////////////////////////////////////////////////////////
@@ -98,19 +98,19 @@ template< typename data_info_prop_t, data_info_prop_t prop > struct type_adapter
 
 #define SET_VALUE_TYPE( __PropType, __Prop, __PropValueType ) template<> struct type_adapter< __PropType, __Prop > { enum{ prop = __Prop }; typedef __PropValueType prop_value_t; }
 
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_INT32,  INT32_t );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_UINT32, UINT32_t );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_INT64,  INT64_t );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_UINT64, UINT64_t );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_FLOAT,  FLOAT_t );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_DOUBLE, DOUBLE_t );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_BOOLEAN, bool );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_TIME,   INT64_t );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_DATE,   INT64_t );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_DATE_TIME, INT64_t );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_STRING, std::string );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_BINARY, std::string );
-SET_VALUE_TYPE( DataType, GCN_DATA_TYPE_PASSWORD, std::string );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_INT32,     INT32_t );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_UINT32,    UINT32_t );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_INT64,     INT64_t );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_UINT64,    UINT64_t );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_FLOAT,     FLOAT_t );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_DOUBLE,    DOUBLE_t );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_BOOLEAN,   bool );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_TIME,      INT64_t );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_DATE,      INT64_t );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_DATE_TIME, INT64_t );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_STRING,    std::string );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_BINARY,    std::string );
+SET_VALUE_TYPE( DataType, XCOM_DATA_TYPE_PASSWORD,  std::string );
 
 template < int v = -1 >
 struct Int2Type
@@ -120,14 +120,14 @@ struct Int2Type
 
 //////////////////////////////////////////////////////////////////////////
 
-struct GCN_UUID
+struct XCOM_UUID
 {
     UINT32_t nData1;
     UINT16_t nData2;
     UINT16_t nData3;
     UINT8_t arrData[8];
 
-    bool operator != ( const GCN_UUID& uuid2 ) const
+    bool operator != ( const XCOM_UUID& uuid2 ) const
     {
         return  this->nData1 != uuid2.nData1 ||
                 this->nData2 != uuid2.nData2 ||
@@ -136,7 +136,7 @@ struct GCN_UUID
     }
 };
 
-inline bool EqualsUUID(const GCN_UUID& uuid1, const GCN_UUID& uuid2)
+inline bool EqualsUUID(const XCOM_UUID& uuid1, const XCOM_UUID& uuid2)
 {
     bool bRes = ( uuid1.nData1 == uuid2.nData1
         && uuid1.nData2 == uuid2.nData2
@@ -148,7 +148,7 @@ inline bool EqualsUUID(const GCN_UUID& uuid1, const GCN_UUID& uuid2)
 
 //////////////////////////////////////////////////////////////////////////
 
-#define GCN_RESULT_CODES                                \
+#define XCOM_RESULT_CODES                               \
     X( OK = 0,                  "OK"               )    \
     X( UNKNOWN_ERROR,           "UNKNOWN_ERROR"    )    \
     X( INIT_ERROR,              "INIT_ERROR"       )    \
@@ -157,12 +157,12 @@ inline bool EqualsUUID(const GCN_UUID& uuid1, const GCN_UUID& uuid2)
     X( UNKNOWN_INTERFACE = 1024, "UNKNOWN_INTERFACE" )
 
 #define X( a, b ) a,
-enum ResultCode { GCN_RESULT_CODES };
+enum ResultCode { XCOM_RESULT_CODES };
 #undef X
 
 //////////////////////////////////////////////////////////////////////////
 
-#define GCN_LOG_LEVEL                   \
+#define XCOM_LOG_LEVEL                   \
     X( LL_FATAL = 2,    "LL_FATAL" )    \
     X( LL_ERROR,        "LL_ERROR" )    \
     X( LL_WARNING,      "LL_WARNING" )  \
@@ -171,7 +171,7 @@ enum ResultCode { GCN_RESULT_CODES };
     X( LL_PREBIND,      "LL_PREBIND" )
 
 #define X( a, b ) a,
-enum LogLevel { GCN_LOG_LEVEL };
+enum LogLevel { XCOM_LOG_LEVEL };
 #undef X
 
 
@@ -179,7 +179,7 @@ enum LogLevel { GCN_LOG_LEVEL };
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_END
+XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 

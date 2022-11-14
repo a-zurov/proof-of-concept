@@ -23,7 +23,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_BEGIN
+XCOM_NAMESPACE_BEGIN
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -50,11 +50,11 @@ public:
     void FireLogMessage(const LogLevel nLogLevel, const std::string& sMessage);
 
 protected:
-    virtual ResultCode QueryInterface(const GCN_UUID& uuid, void** ppInterface);
+    virtual ResultCode QueryInterface(const XCOM_UUID& uuid, void** ppInterface);
 
-    virtual ResultCode Bind(const GCN_UUID& uuid, void* pInterface);
+    virtual ResultCode Bind(const XCOM_UUID& uuid, void* pInterface);
 
-    virtual ResultCode Unbind(const GCN_UUID& uuid, void* pInterface);
+    virtual ResultCode Unbind(const XCOM_UUID& uuid, void* pInterface);
 
     virtual void Close();
 
@@ -87,7 +87,7 @@ public:
 
     virtual void Close();
 
-    virtual ResultCode QueryInterface(const GCN_UUID& uuid, void** ppInterface);
+    virtual ResultCode QueryInterface(const XCOM_UUID& uuid, void** ppInterface);
 
 private:
     LogDispatcherPtr_t m_spLogDispatcher;
@@ -99,7 +99,7 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-GCN_NAMESPACE_END
+XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 
