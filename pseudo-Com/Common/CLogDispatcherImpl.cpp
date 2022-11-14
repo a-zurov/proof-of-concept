@@ -56,7 +56,7 @@ void CLogDispatcherImpl::FireLogMessage(const LogLevel nLogLevel, const std::str
         return;
     }
 
-    sync::upgrade_guard_t upLock(m_RWEventsLock);
+    sync::upgrade_guard_t upLock(m_mtxLogHanlersGuard);
 
 #ifdef ALLOW_PREBIND_DUMP
 
@@ -82,7 +82,7 @@ void CLogDispatcherImpl::FireLogMessage(const LogLevel nLogLevel, const std::str
 
 ResultCode CLogDispatcherImpl::QueryInterface(const XCOM_UUID& uuid, void** ppInterface)
 {
-    if (NULL == ppInterface)
+    if (nullptr == ppInterface)
     {
         return INVALID_PARAMETER;
     }
@@ -101,7 +101,7 @@ ResultCode CLogDispatcherImpl::QueryInterface(const XCOM_UUID& uuid, void** ppIn
 
 ResultCode CLogDispatcherImpl::Bind(const XCOM_UUID& uuid, void* pInterface)
 {
-    if (NULL != pInterface)
+    if (nullptr != pInterface)
     {
         if (EqualsUUID(uuid, ILogHandler_UUID))
         {
@@ -116,7 +116,7 @@ ResultCode CLogDispatcherImpl::Bind(const XCOM_UUID& uuid, void* pInterface)
 
 ResultCode CLogDispatcherImpl::Unbind(const XCOM_UUID& uuid, void* pInterface)
 {
-    if (NULL != pInterface)
+    if (nullptr != pInterface)
     {
         if (EqualsUUID(uuid, ILogHandler_UUID))
         {
@@ -129,18 +129,18 @@ ResultCode CLogDispatcherImpl::Unbind(const XCOM_UUID& uuid, void* pInterface)
     return UNKNOWN_INTERFACE;
 }
 
-void CLogDispatcherImpl::AddLogHandler(ILogHandler* pEvents)
+void CLogDispatcherImpl::AddLogHandler(ILogHandler* pHandler)
 {
-    sync::write_guard_t wLock(m_RWEventsLock);
+    sync::write_guard_t wLock(m_mtxLogHanlersGuard);
 
-    m_setLogHandlers.insert(pEvents);
+    m_setLogHandlers.insert(pHandler);
 }
 
-void CLogDispatcherImpl::RemoveLogHandler(ILogHandler* pEvents)
+void CLogDispatcherImpl::RemoveLogHandler(ILogHandler* pHandler)
 {
-    sync::write_guard_t wLock(m_RWEventsLock);
+    sync::write_guard_t wLock(m_mtxLogHanlersGuard);
 
-    m_setLogHandlers.erase(pEvents);
+    m_setLogHandlers.erase(pHandler);
 }
 
 CLogImpl::~CLogImpl()

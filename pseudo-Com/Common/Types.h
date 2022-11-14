@@ -5,16 +5,16 @@
 #ifndef __XCOM_TYPES_H__
 #define __XCOM_TYPES_H__
 
-#include <string>
+#include <cstring>
 #include <iostream>
 
 #ifdef _MSC_VER
-#define __CXX_VER__ _MSVC_LANG
-#define __PRETTY_FUNCTION__ __FUNCSIG__
-#define __DELIM__ '\\'
+    #define __CXX_VER__ _MSVC_LANG
+    #define __PRETTY_FUNCTION__ __FUNCSIG__
+    #define __DELIM__ '\\'
 #else
-#define __CXX_VER__ __cplusplus
-#define __DELIM__ '/'
+    #define __CXX_VER__ __cplusplus
+    #define __DELIM__ '/'
 #endif
 
 // C++11 requires a space between literal and string macro
@@ -138,11 +138,10 @@ struct XCOM_UUID
 
 inline bool EqualsUUID(const XCOM_UUID& uuid1, const XCOM_UUID& uuid2)
 {
-    bool bRes = ( uuid1.nData1 == uuid2.nData1
-        && uuid1.nData2 == uuid2.nData2
-        && uuid1.nData3 == uuid2.nData3
-        && memcmp((const void*)uuid1.arrData, (const void*)uuid2.arrData, sizeof(uuid1.arrData)) == NULL );
-
+    bool bRes = (      uuid1.nData1 == uuid2.nData1
+                    && uuid1.nData2 == uuid2.nData2
+                    && uuid1.nData3 == uuid2.nData3
+                    && memcmp( (const void*)uuid1.arrData, (const void*)uuid2.arrData, sizeof(uuid1.arrData) ) == (int)NULL );
     return bRes;
 }
 

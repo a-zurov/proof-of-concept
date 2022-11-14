@@ -21,6 +21,7 @@ Thumbs.db
 /cross_template_kit/
 /external_sdk/boost/
 /pseudo-Com/_compiled_x64/
+/pseudo-Com/_compiled/
 
 # You can prepend a pattern with a double asterisk (= two consecutive asterisks)
 # to match file or directory anywhere in the repository / in all directories.
@@ -29,3 +30,5 @@ Thumbs.db
 **/x64/
 **/x86/
 **/obj/
+**/build/
+**/debug/
