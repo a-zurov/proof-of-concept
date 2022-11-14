@@ -2,12 +2,11 @@
 //
 
 #include <iostream>
+#include <sstream>
+
 #include <thread>
 #include <chrono>
 #include <mutex>
-#include <sstream>
-
-#define MAKE_COUT_DUMP  // NOT thread-safe
 
 #include "../Common/IBase.h"
 #include "../Common/RefCounter.h"
@@ -44,7 +43,7 @@ class IComObject
     : public gcn::IBase
 {
 public:
-    virtual void Foo() = 0;
+    virtual void Foo() const = 0;
 };
 
 class CComObjectImpl
@@ -53,16 +52,14 @@ class CComObjectImpl
 {
     using ThisRefCounter = gcn::CRefCounter;
 
-public:
-    virtual ~CComObjectImpl()
-    {
-        cout_dump_this();
-    }
+    mutable std::mutex m_mtxFooCounter;
 
-    CComObjectImpl()
-    {
-        cout_dump_this();
-    }
+    mutable int m_nFooCounter = 0;
+
+public:
+    virtual ~CComObjectImpl() {}
+
+    CComObjectImpl() {}
 
     long AddRef() override;
 
@@ -70,20 +67,16 @@ public:
 
     void Close() override
     {
-#ifdef MAKE_COUT_DUMP
-        cout_dump_msg("the container is decaying right now");
-#else
-        std::cout << "the container is decaying right now" << std::endl;
-#endif
+        DUMP_MESSAGE(gcn::GCN_LL_WARNING , "CComObjectImpl is destroyed");
     };
 
-    void Foo() override
+    void Foo() const override
     {
-#ifdef MAKE_COUT_DUMP
-        cout_dump_msg( ThisRefCounter::get() );
-#else
-        std::cout << "Foo() call RefCounter = " << ThisRefCounter::get() << std::endl;
-#endif
+        DUMP_FUNCTION();
+
+        std::lock_guard<std::mutex> lock(m_mtxFooCounter);
+
+        DUMP_INFO(" CComObjectImpl::m_nFooCounter = " << ++m_nFooCounter);
     };
 };
 
@@ -91,7 +84,7 @@ long CComObjectImpl::AddRef()
 {
     auto nRef = ThisRefCounter::AddRef();
 
-    cout_dump_msg(nRef);
+    DUMP_MESSAGE(gcn::GCN_LL_INFO, " ThisRefCounter = " << nRef);
 
     return nRef;
 }
@@ -100,14 +93,16 @@ long CComObjectImpl::Release()
 {
     auto nRef = ThisRefCounter::Release();
 
-    cout_dump_msg(nRef);
+    DUMP_MESSAGE(gcn::GCN_LL_INFO, " ThisRefCounter = " << nRef);
 
     return nRef;
 }
 
 using ComObjectPtr_t = gcn::CSmartPtr< IComObject >;
+
 typedef gcn::CSmartPtr< gcn::ILog > LogPtr_t;
 typedef gcn::CSmartPtr< gcn::ILogDispatcher > LogDispatcherPtr_t;
+
 
 void thread_func(ComObjectPtr_t spObject, LogDispatcherPtr_t spLogDispatcher)
 {
@@ -116,12 +111,9 @@ void thread_func(ComObjectPtr_t spObject, LogDispatcherPtr_t spLogDispatcher)
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     ComObjectPtr_t spComObject;
-    spComObject.Attach(spObject.Detach()); // thread-safe, even though the counter is incremented
+    spComObject.Attach(spObject.Detach()); // thread-safe due to atomic, even though the ref-counter is incremented
 
     {
-        static std::mutex io_mutex;
-        std::lock_guard<std::mutex> lock(io_mutex);
-
         spComObject->Foo();
     }
 }
@@ -133,16 +125,16 @@ int main()
 
     spLog.Attach(gcn::CreateLog());
 
-#ifdef ALLOW_SINGLTONE_LOG_DISPATCH
+#ifdef ALLOW_SINGLETONE_DISPATCH_LOG
 
     gcn::ILogDispatcher* pLogDispatcherSingltone = nullptr;
 
-    gcn::ResultCode nResult = spLog->QueryInterface(gcn::ILogDispatcherSingltone_UUID,
+    gcn::ResultCode nResult = spLog->QueryInterface(gcn::ILogDispatcherSingleton_UUID,
                                         reinterpret_cast<void**>(&pLogDispatcherSingltone));
 
     if (gcn::GCN_OK != nResult)
     {
-        THROW_EXCEPTION("Cannot query ILogDispatcherSingltone interface!");
+        THROW_EXCEPTION("Cannot query ILogDispatcher Singleton interface!");
     }
 
     pLogDispatcherSingltone->SetLogLevel(gcn::GCN_LL_FUNC);
@@ -150,22 +142,21 @@ int main()
     gcn::IConnectionPointContainer* pConnectionPointContainer = nullptr;
 
     if (gcn::GCN_OK != (nResult = pLogDispatcherSingltone->QueryInterface(gcn::IConnectionPointContainer_UUID,
-        reinterpret_cast<void**>(&pConnectionPointContainer))))
+                                        reinterpret_cast<void**>(&pConnectionPointContainer))))
     {
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
     }
 
-#else //ALLOW_SINGLTONE_LOG_DISPATCH
+#else //ALLOW_SINGLETONE_DISPATCH_LOG
 
     gcn::ResultCode nResult = spLog->QueryInterface(gcn::ILogDispatcher_UUID,
                                         reinterpret_cast<void**>(&spLogDispatcher));
 
     if (gcn::GCN_OK != nResult)
     {
-        THROW_EXCEPTION("Cannot query ILogDispatcherSingltone interface!");
+        THROW_EXCEPTION("Cannot query ILogDispatcher interface!");
     }
 
-    spLogDispatcher->SetLogLevel(gcn::GCN_LL_FUNC);
 
     gcn::IConnectionPointContainer* pConnectionPointContainer = nullptr;
 
@@ -175,13 +166,14 @@ int main()
         THROW_EXCEPTION("Cannot query ConnectionPointContainer interface!");
     }
 
-#endif //ALLOW_SINGLTONE_LOG_DISPATCH
+#endif //ALLOW_SINGLETONE_DISPATCH_LOG
 
     if (gcn::GCN_OK != (nResult = pConnectionPointContainer->Bind(gcn::ILogHandler_UUID,
                                                         reinterpret_cast<void*>(static_cast<gcn::ILogHandler*>(&g_LogHandler)))))
     {
         THROW_EXCEPTION("Cannot bind LogHandler interface!");
     }
+
 
     checkpoint("Start");
 

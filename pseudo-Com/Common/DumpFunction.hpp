@@ -7,6 +7,9 @@
 
 #include "CLogDispatcherImpl.h"
 
+#include <string>
+#include <sstream>
+
 //////////////////////////////////////////////////////////////////////////
 
 GCN_NAMESPACE_BEGIN
@@ -14,7 +17,7 @@ GCN_NAMESPACE_BEGIN
 //////////////////////////////////////////////////////////////////////////
 
 
-class DumpFunction
+class DumpFunction final
 {
 public:
     DumpFunction(const char* pchSourceFile, const char* pchFunctionName, int nSourceLine, CLogDispatcherImpl* p = nullptr)
@@ -40,11 +43,11 @@ public:
         szMessage.append(" ) | ");
         szMessage.append(m_szFunctionName);
 
-#ifdef ALLOW_SINGLTONE_LOG_DISPATCH
-        LogDispatcherSingltone::instance().FireLogMessage(GCN_LL_FUNC, szMessage);
+#ifdef ALLOW_SINGLETONE_DISPATCH_LOG
+        LogDispatcherSingleton::instance().FireLogMessage(GCN_LL_FUNC, szMessage);
 #else
-        spLogDispatcher = p;
-        if (spLogDispatcher) static_cast<CLogDispatcherImpl*>(spLogDispatcher)->FireLogMessage(GCN_LL_FUNC, szMessage);
+        m_spLogDispatcher = p;
+        if (m_spLogDispatcher) static_cast<CLogDispatcherImpl*>(m_spLogDispatcher)->FireLogMessage(GCN_LL_FUNC, szMessage);
 #endif
     }
 
@@ -59,10 +62,10 @@ public:
         szMessage.append(" ) | ");
         szMessage.append(m_szFunctionName);
 
-#ifdef ALLOW_SINGLTONE_LOG_DISPATCH
-        LogDispatcherSingltone::instance().FireLogMessage(GCN_LL_FUNC, szMessage);
+#ifdef ALLOW_SINGLETONE_DISPATCH_LOG
+        LogDispatcherSingleton::instance().FireLogMessage(GCN_LL_FUNC, szMessage);
 #else
-        if (spLogDispatcher) static_cast<CLogDispatcherImpl*>(spLogDispatcher)->FireLogMessage(GCN_LL_FUNC, szMessage);
+        if (m_spLogDispatcher) static_cast<CLogDispatcherImpl*>(m_spLogDispatcher)->FireLogMessage(GCN_LL_FUNC, szMessage);
 #endif
 
     }
@@ -73,8 +76,8 @@ private:
 
     int m_nSourceLine;
 
-#ifndef ALLOW_SINGLTONE_LOG_DISPATCH
-    LogDispatcherPtr_t spLogDispatcher;
+#ifndef ALLOW_SINGLETONE_DISPATCH_LOG
+    LogDispatcherPtr_t m_spLogDispatcher;
 #endif
 };
 
@@ -90,41 +93,20 @@ GCN_NAMESPACE_END
     #define PREBIND_DUMP_FUNCTION()
 #endif
 
-#ifdef ALLOW_SINGLTONE_LOG_DISPATCH
+#ifdef ALLOW_SINGLETONE_DISPATCH_LOG
     #define DUMP_FUNCTION() gcn::DumpFunction DumpFunc( __FILE__, __FUNCTION__, __LINE__ )
     #define DUMP_FUNCTION_TO(x) gcn::DumpFunction DumpFunc(__FILE__, __FUNCTION__, __LINE__)
-#else
-    #define DUMP_FUNCTION()
-    #define DUMP_FUNCTION_TO(x) gcn::DumpFunction DumpFunc(__FILE__, __FUNCTION__, __LINE__, static_cast<gcn::CLogDispatcherImpl*>((gcn::ILogDispatcher*)x))
-#endif
-
-/*
-#define DUMP_EXCEPTION( ex ) {                                                              \
-    std::string sMessage( "ThreadID: " );                                                   \
-    sMessage.append( boost::lexical_cast< std::string >( boost::this_thread::get_id() ) );  \
-    sMessage.append( ": " );                                                                \
-    sMessage.append( ex.what() );                                                           \
-    LogDispatcherSingltone::instance().FireLogMessage( CC_LL_ERROR, sMessage );             \
-}
-
-#define DUMP_BOOST_EXCEPTION( ex ) {                                                        \
-    std::string sMessage( "ThreadID: " );                                                   \
-    sMessage.append( boost::lexical_cast< std::string >( boost::this_thread::get_id() ) );  \
-    sMessage.append( ": " );                                                                \
-    sMessage.append( boost::diagnostic_information_what( ex ) );                            \
-    LogDispatcherSingltone::instance().FireLogMessage( CC_LL_ERROR, sMessage );             \
-}
 
 #define DUMP_MESSAGE( ll, message ) {                                                           \
-    if( ll <= LogDispatcherSingltone::instance().GetLogLevel() )                                \
+    if( ll <= gcn::LogDispatcherSingleton::instance().GetLogLevel() )                           \
     {                                                                                           \
-        std::string sSourceFile( __FILE__ );                                                    \
+        std::string szSourceFile( __FILE__ );                                                   \
                                                                                                 \
-        std::size_t nPos = sSourceFile.rfind( PATH_SLASH );                                     \
+        std::size_t nPos = szSourceFile.rfind( __DELIM__ );                                     \
                                                                                                 \
         if( std::string::npos != nPos )                                                         \
         {                                                                                       \
-            sSourceFile.assign( sSourceFile.substr( nPos + 1 ) );                               \
+            szSourceFile.assign( szSourceFile.substr( nPos + 1 ) );                             \
         }                                                                                       \
                                                                                                 \
         std::string sMessage( "ThreadID: " );                                                   \
@@ -132,7 +114,7 @@ GCN_NAMESPACE_END
         sMessage.append( ": " );                                                                \
         sMessage.append( "Message: Source" );                                                   \
         sMessage.append( ": " );                                                                \
-        sMessage.append( sSourceFile );                                                         \
+        sMessage.append( szSourceFile );                                                        \
         sMessage.append( "( " );                                                                \
         sMessage.append( boost::lexical_cast< std::string >( __LINE__ ) );                      \
         sMessage.append( " )" );                                                                \
@@ -142,21 +124,45 @@ GCN_NAMESPACE_END
         std::ostringstream stream;                                                              \
         stream << sMessage << message;                                                          \
         sMessage.assign( stream.str() );                                                        \
-        m_spLogHandler->FireLogMessage( ll, sMessage );                                         \
+        gcn::LogDispatcherSingleton::instance().FireLogMessage( ll, sMessage );                 \
     }                                                                                           \
 }
 
+#else
+    #define DUMP_FUNCTION()
+    #define DUMP_FUNCTION_TO(x) gcn::DumpFunction DumpFunc(__FILE__, __FUNCTION__, __LINE__, static_cast<gcn::CLogDispatcherImpl*>((gcn::ILogDispatcher*)x))
+    #define DUMP_MESSAGE( ll, message )
+#endif
+
+
 #define DUMP_INFO( message ) \
-    DUMP_MESSAGE( GCN_LL_INFO, message )
+    DUMP_MESSAGE( gcn::GCN_LL_INFO, message )
 
 #define DUMP_WARNING( message ) \
-    DUMP_MESSAGE( GCN_LL_WARNING, message )
+    DUMP_MESSAGE( gcn::GCN_LL_WARNING, message )
 
 #define DUMP_ERROR( message ) \
-    DUMP_MESSAGE( GCN_LL_ERROR, message )
+    DUMP_MESSAGE( gcn::GCN_LL_ERROR, message )
 
 #define DUMP_DEBUG( message ) \
-    DUMP_MESSAGE( GCN_LL_DEBUG, message )
+    DUMP_MESSAGE( gcn::GCN_LL_DEBUG, message )
+
+/*
+#define DUMP_EXCEPTION( ex ) {                                                              \
+    std::string sMessage( "ThreadID: " );                                                   \
+    sMessage.append( boost::lexical_cast< std::string >( boost::this_thread::get_id() ) );  \
+    sMessage.append( ": " );                                                                \
+    sMessage.append( ex.what() );                                                           \
+    gcn::LogDispatcherSingleton::instance().FireLogMessage( GCN_LL_ERROR, sMessage );       \
+}
+
+#define DUMP_BOOST_EXCEPTION( ex ) {                                                        \
+    std::string sMessage( "ThreadID: " );                                                   \
+    sMessage.append( boost::lexical_cast< std::string >( boost::this_thread::get_id() ) );  \
+    sMessage.append( ": " );                                                                \
+    sMessage.append( boost::diagnostic_information_what( ex ) );                            \
+    gcn::LogDispatcherSingleton::instance().FireLogMessage( GCN_LL_ERROR, sMessage );       \
+}
 */
 
 

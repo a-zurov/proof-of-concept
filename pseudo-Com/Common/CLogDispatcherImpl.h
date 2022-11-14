@@ -7,7 +7,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-#include <string>
 #include <set>
 
 #include <boost/lexical_cast.hpp>
@@ -69,7 +68,7 @@ private:
     boost::shared_mutex m_RWEventsLock;
 };
 
-typedef singleton< CLogDispatcherImpl > LogDispatcherSingltone;
+typedef singleton< CLogDispatcherImpl > LogDispatcherSingleton;
 
 typedef CSmartPtr< CLogDispatcherImpl > LogDispatcherPtr_t;
 

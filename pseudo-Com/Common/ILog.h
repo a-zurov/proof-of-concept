@@ -17,9 +17,10 @@ GCN_NAMESPACE_BEGIN
 /////////////////////////////////////////////////////////////////////
 
 //#define ALLOW_PREBIND_DUMP
+#define ALLOW_SINGLETONE_DISPATCH_LOG
 
 #ifdef ALLOW_PREBIND_DUMP
-    #define ALLOW_SINGLTONE_LOG_DISPATCH
+    #define ALLOW_SINGLETONE_DISPATCH_LOG
 #endif
 
 class ILog
@@ -35,7 +36,7 @@ ILog* CreateLog();
 /////////////////////////////////////////////////////////////////////
 // {920B6877-E906-4C39-8C4C-AF425F0D0BD6}
 
-static const GCN_UUID ILogDispatcherSingltone_UUID =
+static const GCN_UUID ILogDispatcherSingleton_UUID =
 { 0x920b6877, 0xe906, 0x4c39, { 0x8c, 0x4c, 0xaf, 0x42, 0x5f, 0xd, 0xb, 0xd6 } };
 
 /////////////////////////////////////////////////////////////////////
