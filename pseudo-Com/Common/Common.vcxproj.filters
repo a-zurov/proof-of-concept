@@ -24,7 +24,7 @@
     <ClInclude Include="Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RefCounter.h">
+    <ClInclude Include="CRefCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AtomicSync.h">
@@ -39,7 +39,7 @@
     <ClInclude Include="CSmartPtr.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IConnectionPoint.h">
+    <ClInclude Include="IConnectionPointContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ILogHandler.h">
@@ -65,7 +65,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RefCounter.cpp">
+    <ClCompile Include="CRefCounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CLogDispatcherImpl.cpp">

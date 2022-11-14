@@ -9,10 +9,10 @@
 #include <mutex>
 
 #include "../Common/IBase.h"
-#include "../Common/RefCounter.h"
+#include "../Common/CRefCounter.h"
 #include "../Common/CSmartPtr.h"
 #include "../Common/ILogHandler.h"
-#include "../Common/IConnectionPoint.h"
+#include "../Common/IConnectionPointContainer.h"
 #include "../Common/DumpFunction.hpp"
 
 //////////////////////////////////////////////////////////////////////////

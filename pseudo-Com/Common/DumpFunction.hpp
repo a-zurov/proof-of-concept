@@ -2,8 +2,8 @@
 // Module: DumpFunction.hpp
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __GCN_DUMP_FUNCTION_HPP__
-#define __GCN_DUMP_FUNCTION_HPP__
+#ifndef __XCOM_DUMP_FUNCTION_HPP__
+#define __XCOM_DUMP_FUNCTION_HPP__
 
 #include "CLogDispatcherImpl.h"
 
@@ -167,4 +167,4 @@ XCOM_NAMESPACE_END
 
 
 
-#endif //__GCN_DUMP_FUNCTION_HPP__
+#endif //__XCOM_DUMP_FUNCTION_HPP__

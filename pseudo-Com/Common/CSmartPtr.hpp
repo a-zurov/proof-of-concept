@@ -2,8 +2,8 @@
 // Module: CSmartPtr.hpp
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __GCN_CSMART_PTR_HPP__
-#define __GCN_CSMART_PTR_HPP__
+#ifndef __XCOM_SMART_PTR_HPP__
+#define __XCOM_SMART_PTR_HPP__
 
 #include "DumpFunction.hpp"
 
@@ -220,4 +220,4 @@ XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 
-#endif //__CC_CSMART_PTR_HPP__
+#endif //__XCOM_SMART_PTR_HPP__

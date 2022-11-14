@@ -2,8 +2,8 @@
 // Module: IConnectionPoint.h
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __GCN_I_CONNECTION_POINT_H__
-#define __GCN_I_CONNECTION_POINT_H__
+#ifndef __XCOM_I_CONNECTION_POINT_CONTAINER_H__
+#define __XCOM_I_CONNECTION_POINT_CONTAINER_H__
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -42,4 +42,4 @@ XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 
-#endif //__GCN_I_CONNECTION_POINT_H__
+#endif //__XCOM_I_CONNECTION_POINT_CONTAINER_H__

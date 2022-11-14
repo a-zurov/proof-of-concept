@@ -2,8 +2,8 @@
 // Module: CLogDispatcherImpl - pseudo COM's logs support system
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __GCN_CLOG_DISPATCHER_IMPL_H__
-#define __GCN_CLOG_DISPATCHER_IMPL_H__
+#ifndef __XCOM_LOG_DISPATCHER_IMPL_H__
+#define __XCOM_LOG_DISPATCHER_IMPL_H__
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -13,13 +13,13 @@
 #include <boost/thread.hpp>
 
 #include "AtomicSync.h"
-#include "RefCounter.h"
+#include "CRefCounter.h"
 #include "CSmartPtr.h"
 #include "Singleton.h"
 
 #include "ILog.h"
 #include "ILogHandler.h"
-#include "IConnectionPoint.h"
+#include "IConnectionPointContainer.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -103,4 +103,4 @@ XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 
-#endif //__GCN_CLOG_DISPATCHER_IMPL_H__
+#endif //__XCOM_LOG_DISPATCHER_IMPL_H__

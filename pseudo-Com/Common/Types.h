@@ -2,8 +2,8 @@
 // Module: Types.h - definitions of Global Common namespace
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __GCN_TYPES_H__
-#define __GCN_TYPES_H__
+#ifndef __XCOM_TYPES_H__
+#define __XCOM_TYPES_H__
 
 #include <string>
 #include <iostream>
@@ -183,4 +183,4 @@ XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 
-#endif //__GCN_TYPES_H__
+#endif //__XCOM_TYPES_H__

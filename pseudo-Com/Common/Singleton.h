@@ -2,8 +2,8 @@
 // File name: Singleton.h
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __GCN_SINGLETON_H__
-#define __GCN_SINGLETON_H__
+#ifndef __XCOM_SINGLETON_H__
+#define __XCOM_SINGLETON_H__
 
 #include "Types.h"
 
@@ -46,4 +46,4 @@ XCOM_NAMESPACE_END
 
 //////////////////////////////////////////////////////////////////////////
 
-#endif //__GCN_SINGLETON_H__
+#endif //__XCOM_SINGLETON_H__
