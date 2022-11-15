@@ -63,12 +63,12 @@ class CComObjectImpl
 
     mutable int m_nFooCounter = 0;
 
-    xcom::Signal< void(const xcom::LogLevel nLogLevel, const std::string& sMessage) > DUMP_;
+    xcom::SignalEmitter< void(const xcom::LogLevel nLogLevel, const std::string& sMessage) > DUMP_;
 
 public:
     virtual ~CComObjectImpl()
     {
-        DUMP_.disconnect();
+
     }
 
     CComObjectImpl()
@@ -86,6 +86,7 @@ public:
     void Close() override
     {
         DUMP_MESSAGE(xcom::LL_WARNING , "ThisRefCounter is destroying CComObjectImpl");
+        DUMP_.disconnect();
     };
 
     void Foo() const override
