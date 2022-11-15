@@ -23,33 +23,39 @@ class Function<R(Args...)>
     R(*m_stub_ptr)(void*, Args...);
 
     template<typename I, typename F>
-    Function(I&& this_ptr, F&& stub_ptr) :
-        m_this_ptr(std::forward<I>(this_ptr)),
-        m_stub_ptr(std::forward<F>(stub_ptr)) {}
+    Function(I&& this_ptr, F&& stub_ptr)
+        : m_this_ptr( std::forward<I>(this_ptr) )
+        , m_stub_ptr( std::forward<F>(stub_ptr) ) {}
 
 public:
 
     template<R(*func_ptr)(Args...)>
     static inline Function bind()
     {
-        return { nullptr, [](void*, Args... args) {
-            return (*func_ptr)(args...); }
-        };
+        return  { nullptr
+                , [](void*, Args... args) {
+                        return (*func_ptr)(args...);
+                    }
+                };
     }
 
     template<typename T, R(T::* method_ptr)(Args...)>
     static inline Function bind(T* pointer)
     {
-        return { pointer, [](void* this_ptr, Args... args) {
-            return (static_cast<T*>(this_ptr)->*method_ptr)(args...); }
-        };
+        return  { pointer
+                , [](void* this_ptr, Args... args) {
+                        return (static_cast<T*>(this_ptr)->*method_ptr)(args...);
+                    }
+                };
     }
 
     template<typename T, R(T::* method_ptr)(Args...) const>
     static inline Function bind(T* pointer)
     {
-        return { pointer, [](void* this_ptr, Args... args) {
-            return (static_cast<const T*>(this_ptr)->*method_ptr)(args...); }
+        return  { pointer
+                , [](void* this_ptr, Args... args) {
+                        return (static_cast<const T*>(this_ptr)->*method_ptr)(args...);
+                }
         };
     }
 
@@ -59,8 +65,8 @@ public:
     }
 };
 
-
 template <typename R> class Signal;
+
 template <typename R, typename... Args>
 class Signal<R(Args...)>
 {
@@ -76,17 +82,17 @@ public:
         slots.push_back(fn);
     }
 
-    template <typename T, R(T::* meth_ptr)(Args...)>
+    template <typename T, R(T::* method_ptr)(Args...)>
     void connect(T* instance)
     {
-        auto fn = Function::template bind<T, meth_ptr>(instance);
+        auto fn = Function::template bind<T, method_ptr>(instance);
         slots.push_back(fn);
     }
 
-    template <typename T, R(T::* meth_ptr)(Args...) const>
+    template <typename T, R(T::* method_ptr)(Args...) const>
     void connect(T* instance)
     {
-        auto fn = Function::template bind<T, meth_ptr>(instance);
+        auto fn = Function::template bind<T, method_ptr>(instance);
         slots.push_back(fn);
     }
 
