@@ -14,6 +14,7 @@
 #include "../Common/ILogHandler.h"
 #include "../Common/IConnectionPointContainer.h"
 #include "../Common/DumpFunction.hpp"
+#include "../Common/SignalSlot.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -62,10 +63,21 @@ class CComObjectImpl
 
     mutable int m_nFooCounter = 0;
 
-public:
-    virtual ~CComObjectImpl() {}
+    xcom::Signal< void(const xcom::LogLevel nLogLevel, const std::string& sMessage) > DUMP_;
 
-    CComObjectImpl() {}
+public:
+    virtual ~CComObjectImpl()
+    {
+        DUMP_.disconnect();
+    }
+
+    CComObjectImpl()
+    {
+#ifdef ALLOW_SINGLETON_DISPATCH_LOG
+        DUMP_.connect< xcom::CLogDispatcherImpl
+            , &xcom::CLogDispatcherImpl::FireLogMessage>(&xcom::LogDispatcherSingleton::instance());
+#endif
+    }
 
     long AddRef() override;
 
@@ -83,6 +95,8 @@ public:
         std::lock_guard<std::mutex> lock(m_mtxFooCounter);
 
         DUMP_INFO(" CComObjectImpl::m_nFooCounter = " << ++m_nFooCounter);
+
+        DUMP_(xcom::LL_DEBUG, __PRETTY_FUNCTION__);
     };
 };
 

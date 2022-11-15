@@ -159,6 +159,7 @@
     <ClInclude Include="ILogHandler.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="CRefCounter.h" />
+    <ClInclude Include="SignalSlot.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>

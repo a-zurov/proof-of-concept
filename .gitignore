@@ -18,7 +18,6 @@ Thumbs.db
 *.exe
 
 /sfinae-Nicolai-Josuttis/sfinae
-/cross_template_kit/
 /external_sdk/boost/
 /pseudo-Com/_compiled_x64/
 /pseudo-Com/_compiled/
@@ -32,3 +31,7 @@ Thumbs.db
 **/obj/
 **/build/
 **/debug/
+
+## delete later
+/cross_template_kit/
+/SigSlot/

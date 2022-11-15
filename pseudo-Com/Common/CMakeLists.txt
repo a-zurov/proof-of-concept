@@ -28,6 +28,9 @@ set(SRC_LIST ${SRC_LIST} "./CSmartPtr.h")
 set(SRC_LIST ${SRC_LIST} "./CRefCounter.h")
 set(SRC_LIST ${SRC_LIST} "./CLogDispatcherImpl.h")
 
+set(SRC_LIST ${SRC_LIST} "./SignalSlot.h")
+set(SRC_LIST ${SRC_LIST} "./Singleton.h")
+
 get_property(COMMON_D GLOBAL PROPERTY COMMON_DEFINED)
 
 if(NOT COMMON_D STREQUAL "YES")

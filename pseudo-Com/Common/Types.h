@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
-// Module: Types.h - definitions of Global Common namespace
+// Module: Types.h - definitions of global pseudo-Com namespace xcom::
 //////////////////////////////////////////////////////////////////////////
 
 #ifndef __XCOM_TYPES_H__
@@ -35,7 +35,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-#define XCOM_NAMESPACE_BEGIN namespace xcom { // global common namespace
+#define XCOM_NAMESPACE_BEGIN namespace xcom { // global pseudo-Com namespace
 #define XCOM_NAMESPACE_END }
 
 //////////////////////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ struct XCOM_UUID
         return  this->nData1 != uuid2.nData1 ||
                 this->nData2 != uuid2.nData2 ||
                 this->nData3 != uuid2.nData3 ||
-                ( std::memcmp( this->arrData, uuid2.arrData, sizeof(this->arrData) ) != 0 );
+                ( std::memcmp( this->arrData, uuid2.arrData, sizeof(this->arrData) ) != (int)NULL);
     }
 };
 
@@ -161,7 +161,7 @@ enum ResultCode { XCOM_RESULT_CODES };
 
 //////////////////////////////////////////////////////////////////////////
 
-#define XCOM_LOG_LEVEL                   \
+#define XCOM_LOG_LEVEL                  \
     X( LL_FATAL = 2,    "LL_FATAL" )    \
     X( LL_ERROR,        "LL_ERROR" )    \
     X( LL_WARNING,      "LL_WARNING" )  \

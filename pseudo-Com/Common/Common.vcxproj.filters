@@ -57,6 +57,9 @@
     <ClInclude Include="DumpFunction.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SignalSlot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp">
