@@ -25,11 +25,11 @@ int a = 2;
 template <typename T>
 void f() {
 
-    /* typename */ S<T>::X* a;
+    typename S<T>::X* a;
 }
 
 int main()
 {
-    f<int>();
+    // f<int>();
     f<double>();
 }
