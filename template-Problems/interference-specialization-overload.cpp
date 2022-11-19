@@ -58,8 +58,8 @@ void h(T t1, T t2) {
 int main() {
 
     f(0, 0);
-    std::cout << std::endl;
+    std::cout << '\n';
     g(0, 0);
-    std::cout << std::endl;
+    std::cout << '\n';
     h(0, 0);
 }

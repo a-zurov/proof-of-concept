@@ -34,9 +34,9 @@ void f() {
     typename S<T>::template X<1, 2> a;
     if (std::is_arithmetic<T>::value && !std::is_same<T, bool>::value) {
         typename S<T>::template X<1, a.g()> b;
-        std::cout << "The Meaning of life = " << b.g() << a.h(b) << std::endl;
+        std::cout << "The Meaning of life = " << b.g() << a.h(b) << '\n';
     } else {
-        std::cout << "..but sometimes life has no meaning." << std::endl;
+        std::cout << "..but sometimes life has no meaning." << '\n';
     }
 };
 

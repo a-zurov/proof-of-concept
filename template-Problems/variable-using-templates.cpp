@@ -40,10 +40,10 @@ int main()
 {
     MyMap_t<std::string> map{ {"abc", "zyx"}, {"cde", "wut"} };
 
-    std::cout << map["abc"] << " " << map["cde"] << std::endl;
+    std::cout << map["abc"] << " " << map["cde"] << '\n';
 
     Foo <int> fooInt{};
     Foo <double> fooDouble{};
 
-    std::cout << fooInt.getMaxSize() << " " << fooDouble.getMaxSize() << std::endl;
+    std::cout << fooInt.getMaxSize() << " " << fooDouble.getMaxSize() << '\n';
 }
