@@ -21,16 +21,22 @@
 #define __FILENAME__ ( std::strrchr( "/" __FILE__, __DELIM__ ) + 1 )
 #define __MAKE_DUMP__   __FILENAME__ << " : " << __LINE__ << " | " << __PRETTY_FUNCTION__
 
-#define checkpoint(x) std::cout << __MAKE_DUMP__ << " Checkpoint#" << #x << std::endl
+#ifdef ALLOW_FLUSH_ON_DUMP
+    #define DUMP_ENDL std::endl
+#else
+    #define DUMP_ENDL '\n'
+#endif
+
+#define checkpoint(x) std::cout << __MAKE_DUMP__ << " Checkpoint#" << #x << DUMP_ENDL
 
 #ifdef MAKE_COUT_DUMP // NOT thread-safe
-#define cout_dump()  std::cout << __MAKE_DUMP__ <<  std::endl
-#define cout_dump_msg(x)  std::cout << __MAKE_DUMP__ << " " << x << std::endl
-#define cout_dump_this()  std::cout << __MAKE_DUMP__ << " #" << this << std::endl
+    #define cout_dump()  std::cout << __MAKE_DUMP__ << DUMP_ENDL
+    #define cout_dump_msg(x)  std::cout << __MAKE_DUMP__ << " " << x << DUMP_ENDL
+    #define cout_dump_this()  std::cout << __MAKE_DUMP__ << " #" << this << DUMP_ENDL
 #else
-#define cout_dump()
-#define cout_dump_msg(x)
-#define cout_dump_this()
+    #define cout_dump()
+    #define cout_dump_msg(x)
+    #define cout_dump_this()
 #endif
 
 //////////////////////////////////////////////////////////////////////////

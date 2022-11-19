@@ -64,7 +64,7 @@ void CLogDispatcherImpl::FireLogMessage(const LogLevel nLogLevel, const std::str
 
         sync::upto_write_guard_t wLock(upLock);
 
-        std::cout << szMessage << std::endl;
+        std::cout << szMessage << DUMP_ENDL;
 
         return;
     }
