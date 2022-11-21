@@ -18,8 +18,6 @@ using namespace std;
 
 #ifdef INFILE
 #include <fstream>
-#else
-#define infile std::cin
 #endif
 
 #define TAG_OPEN "<tag"
@@ -30,15 +28,17 @@ enum class Switch { name, value, delim };
 int main()
 {
 #ifdef INFILE
-    ifstream infile("test.txt");
-    if (!infile.is_open()) return 0;
+    ifstream input_stream("test.txt");
+    if (!input_stream.is_open()) return 0;
+#else
+#define input_stream std::cin
 #endif
 
     int N, Q;
-    infile >> N >> Q;
+    input_stream >> N >> Q;
 
     char next;
-    while (infile.get(next))
+    while (input_stream.get(next))
     {
         if (next == '\n') {
             break;
@@ -48,7 +48,7 @@ int main()
     map<string, map <string, string>> mapHRML;
     string line;
 
-    for (int j = 0; j < N && getline(infile, line); ++j)
+    for (int j = 0; j < N && getline(input_stream, line); ++j)
     {
         if (0 == strcmp(TAG_OPEN, line.substr(0, TAG_OPEN_SIZE).c_str()))
         {
@@ -89,7 +89,7 @@ int main()
         }
     }
 
-    for (int j = 0; j < Q && getline(infile, line); ++j) {
+    for (int j = 0; j < Q && getline(input_stream, line); ++j) {
 
         size_t nPosDelim = line.rfind('~');
         size_t nPosTagBegin = line.rfind('.', nPosDelim);
@@ -103,6 +103,6 @@ int main()
     }
 
 #ifdef INFILE
-    infile.close();
+    input_stream.close();
 #endif
 }
