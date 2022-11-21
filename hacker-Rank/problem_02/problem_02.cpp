@@ -14,9 +14,10 @@
 
 using namespace std;
 
-#define INFILE
+// comment this macro and check includes before copying to HackerRank editor
+#define INPUT_FROM_FILE
 
-#ifdef INFILE
+#ifdef INPUT_FROM_FILE
 #include <fstream>
 #endif
 
@@ -27,12 +28,16 @@ enum class Switch { name, value, delim };
 
 int main()
 {
-#ifdef INFILE
+
+#ifdef INPUT_FROM_FILE
     ifstream input_stream("test.txt");
-    if (!input_stream.is_open()) return 0;
+    if (!input_stream.is_open()) {
+        std::cout << "File 'test.txt' is not found : test stopped..\n";
+        return 0;
+    }
 #else
 #define input_stream std::cin
-#endif
+#endif //INPUT_FROM_FILE
 
     int N, Q;
     input_stream >> N >> Q;
@@ -102,7 +107,7 @@ int main()
         cout << (value.empty() ? "Not Found!" : value.c_str()) << '\n';
     }
 
-#ifdef INFILE
+#ifdef INPUT_FROM_FILE
     input_stream.close();
 #endif
 }
