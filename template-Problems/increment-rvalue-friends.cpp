@@ -53,14 +53,14 @@ int main() {
     int j = 0;
     (++j)++;
     ++++j;
-    ++j = std::move(j++);
+    ++j = std::forward<int>(std::move(j++));
     j += std::forward<int>(std::move(j++));
     std::cout << j; // CE, UB, result?
 
     X<double> x(0);
     (++x)++;
     ++++x;
-    ++x = std::move(x++);
-    x += std::move(x++);
+    ++x = x++;
+    x += x++;
     std::cout << x;
 }
