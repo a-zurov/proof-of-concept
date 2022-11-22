@@ -51,45 +51,61 @@ int main()
     }
 
     map<string, map <string, string>> mapHRML;
-    string line;
+    string line, tagfull;
 
     for (int j = 0; j < N && getline(input_stream, line); ++j)
     {
-        if (0 == strcmp(TAG_OPEN, line.substr(0, TAG_OPEN_SIZE).c_str()))
-        {
-            stringstream ss(line);
-            string tag;
+        if (0 != strcmp(TAG_OPEN, line.substr(0, TAG_OPEN_SIZE).c_str())) {
 
-            if (getline(ss, tag, ' ')) {
-
-                mapHRML[tag = tag.substr(1, tag.size() - 1)] = {};
-
-                string pattern, name;
-                Switch sw = Switch::name;
-
-                while (getline(ss, pattern, ' '))
-                {
-                    switch (sw) {
-                    case Switch::name:
-                        name = pattern;
-                        sw = Switch::delim;
-                        break;
-                    case Switch::delim:
-                        if ('=' == *pattern.begin()) {
-                            sw = Switch::value;
-                        }
-                        else {
-                            mapHRML[tag][name] = {};
-                            name.clear();
-                            sw = Switch::name;
-                        }
-                        break;
-                    case Switch::value:
-                        mapHRML[tag][name] = pattern.substr(1, pattern.size() - ('>' == *(pattern.end() - 1) ? 3 : 2));
-                        name.clear();
-                        sw = Switch::name;
-                    }
+            string tag_close = line.substr(2, line.size() - 3);
+            std::size_t pos = tagfull.find(tag_close);
+            if (pos != string::npos) {
+                if (pos != 0) {
+                    tagfull.erase(pos - 1, tag_close.length() + 1);
                 }
+                else {
+                    tagfull.erase(pos, max(tag_close.length() + 1, tagfull.size()));
+                }
+            }
+            continue;
+        }
+
+        stringstream ss(line);
+        string tag;
+
+        if (!getline(ss, tag, ' ')) break;
+
+
+        tag = tag.substr(1, '>' == *(tag.end()-1) ? tag.size() - 2: tag.size() - 1);
+
+
+        if (tagfull.empty()) tagfull = tag;
+        else tagfull.append('.' + tag);
+
+        mapHRML[tagfull] = {};
+
+        string pattern, name;
+        Switch sw = Switch::name;
+
+        while (getline(ss, pattern, ' '))
+        {
+            switch (sw) {
+            case Switch::name:
+                name = pattern;
+                sw = Switch::delim;
+                break;
+            case Switch::delim:
+                if ('=' == *pattern.begin()) {
+                    sw = Switch::value;
+                }
+                else {
+                    mapHRML[tagfull][name] = {};
+                    sw = Switch::name;
+                }
+                break;
+            case Switch::value:
+                mapHRML[tagfull][name] = pattern.substr(1, pattern.size() - ('>' == *(pattern.end() - 1) ? 3 : 2));
+                sw = Switch::name;
             }
         }
     }
@@ -97,10 +113,7 @@ int main()
     for (int j = 0; j < Q && getline(input_stream, line); ++j) {
 
         size_t nPosDelim = line.rfind('~');
-        size_t nPosTagBegin = line.rfind('.', nPosDelim);
-        nPosTagBegin = string::npos == nPosTagBegin ? 0 : nPosTagBegin + 1;
-
-        string tag = line.substr(nPosTagBegin, nPosDelim - nPosTagBegin);
+        string tag = line.substr(0, nPosDelim);
         string name = line.substr(nPosDelim + 1, line.size());
         string value = mapHRML[tag][name];
 
