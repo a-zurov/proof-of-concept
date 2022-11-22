@@ -10,10 +10,6 @@
 #include "macro.h"
 #include "String.h"
 
-static constexpr ccn::conststr const& g_CxxVersionName(ccn::getCxxVersionName());
-
-using String = ccn::String;
-
 #ifdef _MSC_VER
 #if ( _Cxx_14 <= __CXX_VER__ )
 #define _IS_CONVERTIBLE
@@ -23,6 +19,10 @@ using String = ccn::String;
 #define _IS_CONVERTIBLE
 #endif
 #endif
+
+static constexpr cxx::constString const& g_CxxVersionName(cxx::getCxxVersionName());
+
+using String = cxx::String;
 
 class Cust {
 
@@ -67,7 +67,7 @@ public:
         , m_szLast(std::forward<S2>(last))
         , m_nID(id) {}
 
-#endif
+#endif //_IS_CONVERTIBLE
 
 };
 
@@ -85,20 +85,47 @@ int main()
 
     checkpoint(1);
     {
-        String szFirst;
+        checkpoint(1A);
+
+        String szFirst = "abc";
         String szSecond("xyz");
-        std::cout << szFirst << " " << szSecond << std::endl;
-        szFirst = szSecond;
-        std::cout << szFirst << " " << szSecond << std::endl;
+        String szThird = szSecond;
+        String szFourth(szFirst);
+        String szFifth(std::move(szThird));
+
+        auto kek_print = [&]() {
+            std::cout << szFirst
+                << " " << szSecond
+                << " " << szThird
+                << " " << szFourth
+                << " " << szFifth << "\n";
+        };
+
+        kek_print();
+
+
+        checkpoint(1B);
+
+        szFirst = szThird = szSecond;
+        szThird = "gde";
+        szFourth = std::move(szFifth) = szThird;
+
+        kek_print();
+
+        checkpoint(1C);
+
         szFirst = std::move(szSecond);
-        std::cout << szFirst << " " << szSecond << std::endl; // used a moved object
+        szSecond = std::forward<String>(std::move(szThird));
+        szFourth = szFifth = std::move(szThird);
+
+        kek_print();
     }
 
     checkpoint(3);
     {
-        Cust a;
         String x("Bob");
         const String& y = x;
+        Cust a;
         a.foo(std::move(String("Tim")));
         a.foo(x);
         a.foo(y); // by value

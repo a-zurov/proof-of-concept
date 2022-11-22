@@ -1,6 +1,10 @@
 #include "String.h"
 
-BEGIN_NAMESPACE_CCN
+//////////////////////////////////////////////////////////////////////////
+
+BEGIN_NAMESPACE_CXX
+
+//////////////////////////////////////////////////////////////////////////
 
 //-------------------------------------------------
 // The Rule of Three
@@ -8,7 +12,7 @@ BEGIN_NAMESPACE_CCN
 
 String::~String()
 {
-    cout_dump_msg(*this);
+    cout_dump_this();
 
     delete[] m_pBuff;
 }
@@ -17,12 +21,12 @@ String::String()
     : m_pBuff(nullptr)
     , m_nSize(0)
 {
-    cout_dump();
+    cout_dump_this();
 }
 
 String::String(const char* p)
 {
-    cout_dump();
+    cout_dump_this();
 
     if (nullptr == p) {
 
@@ -41,7 +45,7 @@ String::String(const char* p)
 String::String(const String& s)
     : m_nSize(s.m_nSize)
 {
-    cout_dump();
+    cout_dump_this();
 
     if (nullptr == s.m_pBuff) {
         m_pBuff = nullptr;
@@ -54,7 +58,7 @@ String::String(const String& s)
 
 String& String::operator= (const String& rhs) // assignment operator
 {
-    cout_dump();
+    cout_dump_this();
 
     if (this == &rhs) {
         return *this;
@@ -81,7 +85,7 @@ String::String(String&& rhs) noexcept
     : m_nSize(rhs.m_nSize)
     , m_pBuff(rhs.m_pBuff)
 {
-    cout_dump();
+    cout_dump_this();
 
     rhs.m_nSize = 0;
     rhs.m_pBuff = nullptr;
@@ -89,7 +93,7 @@ String::String(String&& rhs) noexcept
 
 String& String::operator= (String&& rhs) noexcept
 {
-    cout_dump();
+    cout_dump_this();
 
     if (this == &rhs) {
         return*this;
@@ -108,8 +112,12 @@ String& String::operator= (String&& rhs) noexcept
 
 std::ostream& operator << (std::ostream& os, const String& s) {
 
-    return s.m_pBuff ? os.write(s.m_pBuff, s.m_nSize) : os << "\"nullptr\"";
+    return s.m_pBuff ? os.write(s.m_pBuff, s.m_nSize) : os << std::quoted("nullptr");
 
 }
 
-END_NAMESPACE_CCN
+//////////////////////////////////////////////////////////////////////////
+
+END_NAMESPACE_CXX
+
+//////////////////////////////////////////////////////////////////////////

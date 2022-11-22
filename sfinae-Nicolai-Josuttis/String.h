@@ -2,7 +2,11 @@
 
 #include "macro.h"
 
-BEGIN_NAMESPACE_CCN
+//////////////////////////////////////////////////////////////////////////
+
+BEGIN_NAMESPACE_CXX
+
+//////////////////////////////////////////////////////////////////////////
 
 class String {
 
@@ -13,17 +17,17 @@ public: // The Rule of Three
 
     ~String();
 
-    String();
-    String(const char* p);
-    String(const String& s);
+    String();                   // A
+    String(const char* p);      // B
+    String(const String& s);    // C
 
-    String& operator= (const String& rhs);
+    String& operator= (const String& rhs);      // D
 
 public: // The Rule of Five
 
-    String(String&& rhs) noexcept;
+    String(String&& rhs) noexcept;              // E
 
-    String& operator= (String&& rhs) noexcept;
+    String& operator= (String&& rhs) noexcept;  // F
 
 public:
 
@@ -39,4 +43,8 @@ public:
 
 std::ostream& operator << (std::ostream& os, const String& s);
 
-END_NAMESPACE_CCN
+//////////////////////////////////////////////////////////////////////////
+
+END_NAMESPACE_CXX
+
+//////////////////////////////////////////////////////////////////////////

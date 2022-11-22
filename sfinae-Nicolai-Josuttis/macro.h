@@ -2,6 +2,7 @@
 #define __MACRO_H__
 
 #include <iostream>
+#include <iomanip>
 #include <cstring>
 #include <stdexcept>
 
@@ -18,26 +19,45 @@
 #define __FILENAME__ ( std::strrchr( "/" __FILE__, __DELIM__ ) + 1 )
 #define __MAKE_DUMP__   __FILENAME__ << " : " << __LINE__ << " | " << __PRETTY_FUNCTION__
 
-#define cout_dump()  std::cout << __MAKE_DUMP__ << std::endl
-#define cout_dump_msg(x)  std::cout << __MAKE_DUMP__ << " " << x << std::endl
-#define checkpoint(x) std::cout << __MAKE_DUMP__ << " Checkpoint#" << #x << std::endl
+#ifdef _ALLOW_FLUSH_ON_DUMP
+#define _DUMP_ENDL std::endl
+#else
+#define _DUMP_ENDL '\n'
+#endif
 
+#define checkpoint(x) std::cout << __MAKE_DUMP__ << " Checkpoint#" << #x << " **************" << _DUMP_ENDL
 
-#define BEGIN_NAMESPACE_CCN namespace ccn { // begin check concept namespace
-#define END_NAMESPACE_CCN }                 // end check concept namespace
+#define _ALLOW_COUT_DUMP
 
-//--------------------------------------------------------------------------------
+#ifdef _ALLOW_COUT_DUMP
+#define cout_dump()         std::cout << __MAKE_DUMP__ << _DUMP_ENDL
+#define cout_dump_msg(x)    std::cout << __MAKE_DUMP__ << " " << x << _DUMP_ENDL
+#define cout_dump_this()    std::printf("%s : %d | %s %p\n", __FILENAME__, __LINE__, __PRETTY_FUNCTION__, (void*)this)
+#else
+#define cout_dump()
+#define cout_dump_msg(x)
+#define cout_dump_this()
+#endif
 
-BEGIN_NAMESPACE_CCN
+//////////////////////////////////////////////////////////////////////////
 
-class conststr
+#define BEGIN_NAMESPACE_CXX namespace cxx { // begin check concept namespace
+#define END_NAMESPACE_CXX }                 // end check concept namespace
+
+//////////////////////////////////////////////////////////////////////////
+
+BEGIN_NAMESPACE_CXX
+
+//////////////////////////////////////////////////////////////////////////
+
+class constString
 {
     const char* m_pBuff;
     std::size_t m_nSize;
 
 public:
     template<std::size_t N>
-    constexpr conststr(const char(&a)[N])
+    constexpr constString(const char(&a)[N])
                 : m_pBuff(a)
                 , m_nSize(N - 1) {}
 
@@ -50,11 +70,11 @@ public:
 
     constexpr std::size_t size() const { return m_nSize; }
 
-    friend std::ostream& operator << (std::ostream& os, const conststr& s);
+    friend std::ostream& operator << (std::ostream& os, const constString& s);
 
 };
 
-std::ostream& operator << (std::ostream& os, const conststr& s);
+std::ostream& operator << (std::ostream& os, const constString& s);
 
 /**
 * The macro BOOST_CXX_VERSION is set to the C++ standard version -
@@ -72,7 +92,7 @@ std::ostream& operator << (std::ostream& os, const conststr& s);
 
 #define _NAME(x) #x
 
-constexpr conststr getCxxVersionName()
+constexpr constString getCxxVersionName()
 {
     switch (__CXX_VER__)
     {
@@ -86,6 +106,10 @@ constexpr conststr getCxxVersionName()
     }
 }
 
-END_NAMESPACE_CCN
+//////////////////////////////////////////////////////////////////////////
+
+END_NAMESPACE_CXX
+
+//////////////////////////////////////////////////////////////////////////
 
 #endif // __MACRO_H__

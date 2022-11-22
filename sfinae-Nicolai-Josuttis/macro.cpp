@@ -1,11 +1,19 @@
 #include "macro.h"
 
-BEGIN_NAMESPACE_CCN
+//////////////////////////////////////////////////////////////////////////
 
-std::ostream& operator << (std::ostream& os, const conststr& s) {
+BEGIN_NAMESPACE_CXX
 
-    return s.m_pBuff ? os.write(s.m_pBuff, s.m_nSize) : os << "\"nullptr\"";
+//////////////////////////////////////////////////////////////////////////
+
+std::ostream& operator << (std::ostream& os, const constString& cstr) {
+
+    return cstr.m_pBuff ? os.write(cstr.m_pBuff, cstr.m_nSize) : os << std::quoted("nullptr");
 
 }
 
-END_NAMESPACE_CCN
+//////////////////////////////////////////////////////////////////////////
+
+END_NAMESPACE_CXX
+
+//////////////////////////////////////////////////////////////////////////
