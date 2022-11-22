@@ -15,19 +15,19 @@ class String {
 
 public: // The Rule of Three
 
-    ~String();
+    ~String();                  // D (dtor)
 
-    String();                   // A
-    String(const char* p);      // B
-    String(const String& s);    // C
+    String();                   // C0 (ctor)
+    String(const char* p);      // C1 (ctor)
+    String(const String& s);    // CC (cpyctor)
 
-    String& operator= (const String& rhs);      // D
+    String& operator= (const String& rhs);      // ASS (assop)
 
 public: // The Rule of Five
 
-    String(String&& rhs) noexcept;              // E
+    String(String&& rhs) noexcept;              // MC (movctor)
 
-    String& operator= (String&& rhs) noexcept;  // F
+    String& operator= (String&& rhs) noexcept;  // MASS (movassop)
 
 public:
 
