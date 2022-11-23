@@ -29,7 +29,10 @@ public: // The Rule of Five
 
     String& operator= (String&& rhs) noexcept;  // MASS (movassop)
 
-public:
+public: // Extra assignment
+/*
+    String& operator= (const char* p); // EXTASS
+*/
 
     char operator[] (size_t j) const
     {

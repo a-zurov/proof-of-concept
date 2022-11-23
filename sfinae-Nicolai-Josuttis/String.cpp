@@ -96,7 +96,7 @@ String& String::operator= (String&& rhs) noexcept
     cout_dump_this();
 
     if (this == &rhs) {
-        return*this;
+        return *this;
     }
 
     delete[] m_pBuff;
@@ -109,6 +109,37 @@ String& String::operator= (String&& rhs) noexcept
 
     return *this;
 }
+
+//-------------------------------------------------
+// Extra assignment
+//-------------------------------------------------
+/*
+String& String::operator= (const char* p)
+{
+    cout_dump_this();
+
+    if (this->m_pBuff == p) {
+        return *this;
+    }
+
+    delete[] m_pBuff;
+
+    if (nullptr == p) {
+
+        m_nSize = 0;
+        m_pBuff = nullptr;
+        return *this;
+    }
+
+    m_nSize = strlen(p);
+    m_pBuff = new char[m_nSize + 1];
+
+    memcpy(m_pBuff, p, m_nSize * sizeof(char));
+    m_pBuff[m_nSize] = '\n';
+
+    return *this;
+}
+*/
 
 std::ostream& operator << (std::ostream& os, const String& s) {
 
