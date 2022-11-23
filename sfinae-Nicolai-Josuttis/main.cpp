@@ -145,7 +145,8 @@ int main()
 
         checkpoint(2B);
 
-        SlowBox sb("xyz");  // C, C1, MASS, D (tmp_String)
+        SlowBox sb1("xyz"); // C, C1, MASS, D (tmp_String)
+        SlowBox sb2(sb1);   // CC, the same: SlowBox sb2 = sb1;
 
         checkpoint(2End);
     }
