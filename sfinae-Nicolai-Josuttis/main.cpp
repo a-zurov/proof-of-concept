@@ -71,6 +71,19 @@ public:
 
 };
 
+struct FastBox {
+    String  m_szBoxed;
+    FastBox(const char* p)
+        : m_szBoxed(p) {
+    }
+};
+
+struct SlowBox {
+    String  m_szBoxed;
+    SlowBox(const char* p) {
+        m_szBoxed = p;
+    }
+};
 
 int main()
 {
@@ -87,11 +100,11 @@ int main()
     {
         checkpoint(1A);
 
-        String szFirst = "abc";
-        String szSecond("xyz");
-        String szThird = szSecond;
-        String szFourth(szFirst);
-        String szFifth(std::move(szThird));
+        String szFirst = "abc";                 // C1
+        String szSecond("xyz");                 // C1
+        String szThird = szSecond;              // CC
+        String szFourth(szFirst);               // CC
+        String szFifth(std::move(szThird));     // MCC
 
         auto kek_print = [&]() {
             std::cout << szFirst
@@ -106,9 +119,9 @@ int main()
 
         checkpoint(1B);
 
-        szFirst = szThird = szSecond;
-        szThird = "gde";
-        szFourth = std::move(szFifth) = szThird;
+        szFirst = szThird = szSecond;   // ASS <- ASS
+        szThird = "gde";                // C1, MASS, D (tmp_String)
+        szFourth = std::move(szFifth) = szThird; // no move
 
         kek_print();
 
@@ -116,9 +129,25 @@ int main()
 
         szFirst = std::move(szSecond);
         szSecond = std::forward<String>(std::move(szThird));
-        szFourth = szFifth = std::move(szThird);
+        szFourth = szFifth = std::move(szThird); // ASS <- MASS
 
         kek_print();
+
+        checkpoint(1End);
+    }
+
+    checkpoint(2);
+    {
+        checkpoint(2A);
+
+        FastBox fb1("abc"); // C1, the same: FastBox fb1 = "abc";
+        FastBox fb2(fb1);   // CC, the same: FastBox fb2 = fb1;
+
+        checkpoint(2B);
+
+        SlowBox sb("xyz");  // C, C1, MASS, D (tmp_String)
+
+        checkpoint(2End);
     }
 
     checkpoint(3);

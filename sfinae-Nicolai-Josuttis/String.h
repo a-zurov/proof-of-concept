@@ -18,7 +18,7 @@ public: // The Rule of Three
     ~String();                  // D (dtor)
 
     String();                   // C0 (ctor)
-    String(const char* p);      // C1 (ctor)
+    String(const char* p);      // C1 (cnvctor)
     String(const String& s);    // CC (cpyctor)
 
     String& operator= (const String& rhs);      // ASS (assop)
