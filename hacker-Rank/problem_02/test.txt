@@ -1,6 +1,6 @@
-10 5
+10 6
 <tag1 value = "HelloWorld">
-<tagZ>
+<tagZ   ddc= " ssd" >
 <tag2 name = "Name1">
 </tagZ>
 <tag4 another = "xx" final = "ff">
@@ -14,3 +14,4 @@ tag1~name
 tag1~value
 tag1.tag2.tag3~yyy
 tag1.tag2.tag4~final
+tag1.tagZ~ddc

@@ -21,8 +21,8 @@ using namespace std;
 #include <fstream>
 #endif
 
-#define TAG_OPEN "<tag"
-#define TAG_OPEN_SIZE 4
+#define TAG_CLOSE "</"
+#define TAG_CLOSE_SIZE 2
 
 enum class Switch { name, value, delim };
 
@@ -30,7 +30,7 @@ int main()
 {
 
 #ifdef INPUT_FROM_FILE
-    ifstream input_stream("test.txt");
+    ifstream input_stream("test2.txt");
     if (!input_stream.is_open()) {
         std::cout << "File 'test.txt' is not found : test stopped..\n";
         return 0;
@@ -55,7 +55,7 @@ int main()
 
     for (int j = 0; j < N && getline(input_stream, line); ++j)
     {
-        if (0 != strcmp(TAG_OPEN, line.substr(0, TAG_OPEN_SIZE).c_str())) {
+        if (0 == strcmp(TAG_CLOSE, line.substr(0, TAG_CLOSE_SIZE).c_str())) {
 
             string tag_close = line.substr(2, line.size() - 3);
             std::size_t pos = tagfull.find(tag_close);
@@ -89,8 +89,19 @@ int main()
 
         while (getline(ss, pattern, ' '))
         {
+            if (pattern.empty()) continue;
+            if (pattern == "\"") {
+                if (!getline(ss, pattern, '\"')) continue;
+                pattern = "\" " + pattern + '\"';
+            }
+
             switch (sw) {
             case Switch::name:
+                if ('=' == *(pattern.end()-1)) {
+                    name = pattern.substr(0, pattern.size()-1);
+                    sw = Switch::value;
+                    continue;
+                }
                 name = pattern;
                 sw = Switch::delim;
                 break;
