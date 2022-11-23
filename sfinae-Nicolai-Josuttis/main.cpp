@@ -96,7 +96,7 @@ int main()
         cout_dump_msg("Ish govna kakya!!");
     }
 
-    checkpoint(1);
+    checkpoint(1Begin);
     {
         checkpoint(1A);
 
@@ -127,7 +127,7 @@ int main()
 
         checkpoint(1C);
 
-        szFirst = std::move(szSecond);
+        szFirst = std::move(szSecond);  // MASS
         szSecond = std::forward<String>(std::move(szThird));
         szFourth = szFifth = std::move(szThird); // ASS <- MASS
 
@@ -136,7 +136,7 @@ int main()
         checkpoint(1End);
     }
 
-    checkpoint(2);
+    checkpoint(2Begin);
     {
         checkpoint(2A);
 
@@ -145,13 +145,13 @@ int main()
 
         checkpoint(2B);
 
-        SlowBox sb1("xyz"); // C, C1, MASS, D (tmp_String)
+        SlowBox sb1("xyz"); // C0, C1, MASS, D (tmp_String)
         SlowBox sb2(sb1);   // CC, the same: SlowBox sb2 = sb1;
 
         checkpoint(2End);
     }
 
-    checkpoint(3);
+    checkpoint(3Begin);
     {
         String x("Bob");
         const String& y = x;
@@ -163,14 +163,18 @@ int main()
         a.boo(String("Rob"));
         a.boo(std::move(String("Den")));
         a.boo(std::move(x));
+
+        checkpoint(3End);
     }
 
-    checkpoint(4);
+    checkpoint(4Begin);
     {
         Cust c{ "Joe", "Fix", 42 };
         Cust f{ "Nico" };
         Cust g{ f };
         const Cust cc{ "Jim" };
         Cust h{ cc };
+
+        checkpoint(4End);
     }
 }
