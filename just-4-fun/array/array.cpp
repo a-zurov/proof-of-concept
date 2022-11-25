@@ -29,10 +29,10 @@ int main()
     }
     std::cout << '\n';
 
-    int* p = a + 4; // it's not just a joke below:
+    int* p = a + 4; // it's just a joke:
 
     std::cout   << a[4]         - a[3]      << " = "
                 << *(a + 4)     - *(3 + a)  << " = "
                 << *p           - 3[a]      << " = "
-                << ++3[p - 4]   - 3[p - 4]  << '\n';
+                << 0[p - 0]     - 3[p - 4]  << '\n';
 }
