@@ -13,6 +13,15 @@ void sort(T* p) {
     std::sort( *p, *(p + 1) );
 }
 
+template <>
+void sort( int(* p)[6])
+{
+    std::sort(  static_cast<int*>(*p),
+                static_cast<int*>(*(p + 1))
+            );
+    std::cout << "Yep, I'm here!" << '\n';
+}
+
 int main()
 {
     int a[6] = { 3, 6, 1, 5, 4, 2};
