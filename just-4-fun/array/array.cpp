@@ -22,11 +22,40 @@ void sort( int(* p)[6])
     std::cout << "Yep, I'm here!" << '\n';
 }
 
+//--------------------------------------------------------------------------
+
+template <typename T>
+std::remove_reference<T>&& underdone_move(T& x) {
+    return static_cast< std::remove_reference_t<T>&& >(x);
+}
+
+template <typename T>
+typename std::decay<T>::type move_like_transform_array_t_to_element_ptr(T* p) {
+    return static_cast<std::decay<T>::type>(*p);
+}
+
+template< typename T,
+             typename = std::enable_if_t< std::is_array<T>::value >
+        >
+void sort_2(T* p) {
+    std::sort(  move_like_transform_array_t_to_element_ptr(p),
+                move_like_transform_array_t_to_element_ptr(p + 1),
+        []( typename std::remove_pointer_t< typename std::decay<T>::type > a,
+            typename std::remove_pointer_t< typename std::decay<T>::type > b)
+        {
+            return a > b;
+        }
+    );
+}
+
+
 int main()
 {
     int a[6] = { 3, 6, 1, 5, 4, 2};
 
     sort(&a);
+
+    sort_2(&a);
 
     /*
     int(*ptr_a)[5] = &a;
