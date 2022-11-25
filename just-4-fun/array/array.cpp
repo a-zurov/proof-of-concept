@@ -25,12 +25,12 @@ void sort( int(* p)[6])
 //--------------------------------------------------------------------------
 
 template <typename T>
-std::remove_reference<T>&& underdone_move(T& x) {
+std::remove_reference<T>&& underdone_move_up(T& x) {
     return static_cast< std::remove_reference_t<T>&& >(x);
 }
 
 template <typename T>
-typename std::decay<T>::type move_like_transform_array_t_to_element_ptr(T* p) {
+typename std::decay<T>::type move_down_like_transform_array_t_to_element_ptr(T* p) {
     return static_cast<std::decay<T>::type>(*p);
 }
 
@@ -38,8 +38,8 @@ template< typename T,
              typename = std::enable_if_t< std::is_array<T>::value >
         >
 void sort_2(T* p) {
-    std::sort(  move_like_transform_array_t_to_element_ptr(p),
-                move_like_transform_array_t_to_element_ptr(p + 1),
+    std::sort(  move_down_like_transform_array_t_to_element_ptr(p),
+                move_down_like_transform_array_t_to_element_ptr(p + 1),
         []( typename std::remove_pointer_t< typename std::decay<T>::type > a,
             typename std::remove_pointer_t< typename std::decay<T>::type > b)
         {
