@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 
 #include "String.h"
 
@@ -19,6 +20,24 @@
 static constexpr cxx::constString const& g_CxxVersionName(cxx::getCxxVersionName());
 
 using String = cxx::String;
+
+struct SlowBox4StringVector {
+
+    std::vector<String>  m_vecStrings;
+
+    template <class... Args>
+    SlowBox4StringVector( Args... args) {
+
+        std::list<const char*> vecArgs = { args... };
+
+        m_vecStrings.reserve( vecArgs.size() );
+
+        while ( !vecArgs.empty() ) {
+            m_vecStrings.emplace_back( vecArgs.front() );
+            vecArgs.pop_front();
+        }
+    }
+};
 
 int main()
 {
@@ -38,6 +57,10 @@ int main()
             cout_dump_msg("03_A_" << j);
             vecStrings.push_back(String("abc"));
         }
+
+        checkpoint(03_B);
+
+        SlowBox4StringVector sbsv("abc", "cde", "xyz");
 
         checkpoint(03_End);
     }
