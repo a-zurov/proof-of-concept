@@ -25,7 +25,7 @@
 #define _DUMP_ENDL '\n'
 #endif
 
-#define checkpoint(x) std::cout << __MAKE_DUMP__ << " Checkpoint#" << #x << " **************" << _DUMP_ENDL
+#define checkpoint(x) std::cout << __MAKE_DUMP__ << " Checkpoint_" << #x << " **************" << _DUMP_ENDL
 
 #define _ALLOW_COUT_DUMP
 
