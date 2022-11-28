@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------------
 
 #include <iostream>
+#include <vector>
 
 #include "String.h"
 
@@ -24,8 +25,22 @@ int main()
     std::cout << "Hello Move Semantics with " << g_CxxVersionName << "!\n";
 
     //Checkpoint_01(); // class String initialization and assignment
-    Checkpoint_02(); // FastBox and SlowBox classes
+    //Checkpoint_02(); // FastBox and SlowBox classes
 
+    checkpoint(03_Begin);
+    {
+        std::vector<String> vecStrings;
+        vecStrings.reserve(2);
+
+        checkpoint(03_A);
+
+        for (size_t j = 0; j < 3; ++j) {
+            cout_dump_msg("03_A_" << j);
+            vecStrings.push_back(String("abc"));
+        }
+
+        checkpoint(03_End);
+    }
 
     //Checkpoint_0X();
     //Checkpoint_0Z();
