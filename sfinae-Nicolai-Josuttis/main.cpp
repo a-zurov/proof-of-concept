@@ -116,7 +116,6 @@ int main()
 
         kek_print();
 
-
         checkpoint(1B);
 
         szFirst = szThird = szSecond;   // ASS <- ASS
