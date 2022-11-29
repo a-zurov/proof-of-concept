@@ -138,6 +138,7 @@
     <ClCompile Include="String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Checkpoint_03.h" />
     <ClInclude Include="Checkpoint_01.h" />
     <ClInclude Include="Checkpoint_02.h" />
     <ClInclude Include="Customer.h" />
