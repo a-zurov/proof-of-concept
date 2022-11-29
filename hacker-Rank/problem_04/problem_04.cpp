@@ -79,9 +79,9 @@ int main()
     // print result
     cout << count;
 
-    return 0;
-
 #ifdef INPUT_FROM_FILE
     input_stream.close();
 #endif
+
+    return 0;
 }
