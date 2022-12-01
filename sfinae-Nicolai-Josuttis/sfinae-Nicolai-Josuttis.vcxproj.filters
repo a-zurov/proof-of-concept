@@ -44,5 +44,8 @@
     <ClInclude Include="Checkpoint_03.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Checkpoint_04.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -142,6 +142,7 @@
     <ClInclude Include="Checkpoint_01.h" />
     <ClInclude Include="Checkpoint_02.h" />
     <ClInclude Include="Customer.h" />
+    <ClInclude Include="Checkpoint_04.h" />
     <ClInclude Include="macro.h" />
     <ClInclude Include="String.h" />
   </ItemGroup>

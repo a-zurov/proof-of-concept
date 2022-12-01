@@ -13,6 +13,7 @@
 #include "Checkpoint_01.h"
 #include "Checkpoint_02.h"
 #include "Checkpoint_03.h"
+#include "Checkpoint_04.h"
 
 #include "Customer.h"
 
@@ -30,23 +31,7 @@ int main()
     //Checkpoint_02(); // FastBox and SlowBox classes
     //Checkpoint_03(); // std::vector::push_back catastrophe, emplace_back
 
-
-    int x = 1;
-
-    int&& rref_x = std::move(x);
-    int& ref_rref5 = rref_x;
-
-    ++rref_x;
-
-    std::cout << x << rref_x << ref_rref5  << '\n';
-
-    int&& rref_rref_x = std::move(rref_x);
-    int& ref_rref_rref_x = rref_rref_x;
-
-    ref_rref_rref_x = 0;
-
-    std::cout << x << rref_x << ref_rref5 << rref_rref_x << ref_rref_rref_x << '\n';
-
+    Checkpoint_04();
 
     //Checkpoint_0X();
     //Checkpoint_0Z();
