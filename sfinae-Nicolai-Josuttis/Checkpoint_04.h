@@ -6,7 +6,7 @@
 #include "String.h"
 
 template <typename T>
-typename std::remove_reference<T>::type && move(T&& x) {
+typename std::remove_reference<T>::type && move(T&& x) noexcept {
     cout_dump();
     return static_cast< typename std::remove_reference<T>::type && >(x);
 }
@@ -110,6 +110,8 @@ void Checkpoint_04()
 
         String str1 = "cde";
         String str2 = str1;
+        String str3 = "xyz";
+        String str4 = str3;
 
         checkpoint(04_B_CopyBox);
 
@@ -121,6 +123,10 @@ void Checkpoint_04()
         cb2.print();
         std::cout << str1 << '\n';
 
+        CopyBox cb3(str2, move(str3));
+        cb3.print();
+        std::cout << str2 << ' ' << str3 << '\n';
+
         checkpoint(04_B_MoveBox);
 
         MoveBox mb1("abc", str1);
@@ -131,15 +137,19 @@ void Checkpoint_04()
         mb2.print();
         std::cout << str1 << '\n';
 
+        MoveBox mb3(str2, move(str3));
+        mb3.print();
+        std::cout << str2 << ' ' << str3 << '\n';
+
         checkpoint(04_B_GreedyBox);
 
         GreedyBox gb1("abc", str2);
         gb1.print();
         std::cout << str2 << '\n';
 
-        GreedyBox gb2("abc", move(str2));
+        GreedyBox gb2("abc", move(str4));
         gb2.print();
-        std::cout << str2 << '\n';
+        std::cout << str4 << '\n';
 
         checkpoint(04_End);
     }
