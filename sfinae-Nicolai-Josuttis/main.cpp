@@ -42,6 +42,7 @@ int main()
 
     f(0);
     int x = 0;
+    f(x);
     int& ref_x = x;
     f(ref_x);
     int&& rref_x = std::move(x);
