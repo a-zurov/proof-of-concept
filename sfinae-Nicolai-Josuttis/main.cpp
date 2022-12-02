@@ -21,15 +21,6 @@ static constexpr cxx::constString const& g_CxxVersionName(cxx::getCxxVersionName
 
 using String = cxx::String;
 
-template<typename T>
-void f(T&& x) {
-
-    std::cout << (std::is_same< decltype(x), typename std::remove_reference<T>::type&& >::value ? "decltype(x) = T &&" : (
-        std::is_same< decltype(x), typename std::remove_reference<T>::type& >::value ? "decltype(x) = T &" : "decltype(x) = T"));
-
-    std::cout << '\n';
-}
-
 int main()
 {
     std::cout << "Hello Move Semantics with " << g_CxxVersionName << "!\n";
@@ -38,15 +29,7 @@ int main()
     //Checkpoint_02(); // FastBox and SlowBox classes
     //Checkpoint_03(); // std::vector::push_back catastrophe, emplace_back
 
-    Checkpoint_04();
-
-    f(0);
-    int x = 0;
-    f(x);
-    int& ref_x = x;
-    f(ref_x);
-    int&& rref_x = std::move(x);
-    f(rref_x);
+    Checkpoint_04(); // the main crutch of move semantics
 
     //Checkpoint_0X();
     //Checkpoint_0Z();

@@ -31,40 +31,63 @@ struct StringsBox {
     }
 };
 
-struct CopyBox2Strings : public StringsBox {
+struct CopyBox : public StringsBox {
 
     template< typename S1
         , typename S2 = String
         , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
-    > CopyBox2Strings(S1&& first, S2&& last = "")
+    > CopyBox(S1&& first, S2&& last = "")
         : StringsBox( first
                     , last ) {}
 };
 
-struct MoveBox2Strings : public StringsBox {
+struct MoveBox : public StringsBox {
 
     template< typename S1
         , typename S2 = String
         , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
-    > MoveBox2Strings(S1&& first, S2&& last = "")
+    > MoveBox(S1&& first, S2&& last = "")
         : StringsBox( std::is_same< decltype(first), typename std::remove_reference<S1>::type&& >::value ? move(first) : first
                     , std::is_same< decltype(last), typename std::remove_reference<S2>::type&& >::value ? move(last) : last ) {}
 };
 
-struct GreedyBox2Strings : public StringsBox {
+struct GreedyBox : public StringsBox {
 
     template< typename S1
         , typename S2 = String
         , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
-    > GreedyBox2Strings(S1&& first, S2&& last = "")
+    > GreedyBox(S1&& first, S2&& last = "")
         : StringsBox( move(first)
                     , move(last) ) {}
 };
+
+
+template<typename T>
+void f(T&& y) {
+
+    std::cout << ( std::is_same< decltype(y), typename std::remove_reference<T>::type&& >::value ? "decltype(y) = T &&" :
+                    ( std::is_same< decltype(y), typename std::remove_reference<T>::type& >::value ? "decltype(y) = T &" : "decltype(y) = T" )
+                 );
+
+    std::cout << '\n';
+}
 
 void Checkpoint_04()
 {
     checkpoint(04_Begin);
     {
+
+        f(0);
+
+        int y = 0;
+        f(y);
+
+        int& ref_y = y;
+        f(ref_y);
+
+        int&& rref_y = move(y);
+        f(rref_y);
+
         checkpoint(04_A);
 
         int x = 1;
@@ -90,38 +113,33 @@ void Checkpoint_04()
 
         checkpoint(04_B_CopyBox);
 
-        CopyBox2Strings cb1("abc", str1);
-
+        CopyBox cb1("abc", str1);
         cb1.print();
         std::cout << str1 << '\n';
 
-        CopyBox2Strings cb2("abc", move(str1));
+        CopyBox cb2("abc", move(str1));
         cb2.print();
         std::cout << str1 << '\n';
 
         checkpoint(04_B_MoveBox);
 
-        MoveBox2Strings mb1("abc", str1);
-
+        MoveBox mb1("abc", str1);
         mb1.print();
         std::cout << str1 << '\n';
 
-        MoveBox2Strings mb2("abc", move(str1));
+        MoveBox mb2("abc", move(str1));
         mb2.print();
         std::cout << str1 << '\n';
 
         checkpoint(04_B_GreedyBox);
 
-        GreedyBox2Strings gb1("abc", str2);
-
+        GreedyBox gb1("abc", str2);
         gb1.print();
         std::cout << str2 << '\n';
 
-        GreedyBox2Strings gb2("abc", str2);
-
+        GreedyBox gb2("abc", move(str2));
         gb2.print();
         std::cout << str2 << '\n';
-
 
         checkpoint(04_End);
     }
