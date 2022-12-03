@@ -61,12 +61,18 @@ struct GreedyBox : public StringsBox {
                     , move(last) ) {}
 };
 
+template <typename T >
+class C {
+    C() = delete;
+};
 
 template<typename T>
 void f(T&& y) {
 
-    std::cout << ( std::is_same< decltype(y), typename std::remove_reference<T>::type&& >::value ? "decltype(y) = T &&" :
-                    ( std::is_same< decltype(y), typename std::remove_reference<T>::type& >::value ? "decltype(y) = T &" : "decltype(y) = T" )
+    //C<T> c; // deduction Meyers' maneuver
+
+    std::cout << ( std::is_same< decltype(y), typename std::remove_reference<T>::type&& >::value ? "decltype(arg) = T &&" :
+                    ( std::is_same< decltype(y), typename std::remove_reference<T>::type& >::value ? "decltype(arg) = T &" : "decltype(arg) = T" )
                  );
 
     std::cout << '\n';
@@ -78,6 +84,9 @@ void Checkpoint_04()
     {
 
         f(0);
+
+        const int a = 1;
+        f(a);
 
         int y = 0;
         f(y);
