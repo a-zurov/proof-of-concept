@@ -151,6 +151,16 @@ void Checkpoint_04()
         gb2.print();
         std::cout << str4 << '\n';
 
+        checkpoint(04_C); // you shouldn't code like as below
+
+        String&& rref_str = String("abc");
+        String str("cde");
+        const String& cref_str = str;
+
+        MoveBox mb(rref_str, move(cref_str));
+        mb.print();
+        std::cout << str << '\n';
+
         checkpoint(04_End);
     }
 }
