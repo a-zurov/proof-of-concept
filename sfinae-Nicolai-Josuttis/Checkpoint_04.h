@@ -24,7 +24,10 @@ struct StringsBox {
         , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
     >StringsBox(S1&& first, S2&& last = "")
         : m_szFirst( std::forward<S1>(first) )
-        , m_szLast( std::forward<S2>(last) ) {}
+        , m_szLast( std::forward<S2>(last) )
+    {
+        cout_dump();
+    }
 
     void print() {
         std::cout << m_szFirst << " " << m_szLast << '\n';
@@ -38,7 +41,10 @@ struct CopyBox : public StringsBox {
         , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
     > CopyBox(S1&& first, S2&& last = "")
         : StringsBox( first
-                    , last ) {}
+                    , last )
+    {
+        cout_dump();
+    }
 };
 
 struct MoveBox : public StringsBox {
@@ -48,7 +54,10 @@ struct MoveBox : public StringsBox {
         , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
     > MoveBox(S1&& first, S2&& last = "")
         : StringsBox( std::is_same< decltype(first), typename std::remove_reference<S1>::type&& >::value ? move(first) : first
-                    , std::is_same< decltype(last), typename std::remove_reference<S2>::type&& >::value ? move(last) : last ) {}
+                    , std::is_same< decltype(last), typename std::remove_reference<S2>::type&& >::value ? move(last) : last )
+    {
+        cout_dump();
+    }
 };
 
 struct GreedyBox : public StringsBox {
@@ -58,7 +67,10 @@ struct GreedyBox : public StringsBox {
         , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
     > GreedyBox(S1&& first, S2&& last = "")
         : StringsBox( move(first)
-                    , move(last) ) {}
+                    , move(last) )
+    {
+        cout_dump();
+    }
 };
 
 template <typename T >
