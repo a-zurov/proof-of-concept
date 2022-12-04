@@ -67,12 +67,12 @@ class C {
 };
 
 template<typename T>
-void f(T&& y) {
+void f(T&& arg) {
 
     //C<T> c; // deduction Meyers' maneuver
 
-    std::cout << ( std::is_same< decltype(y), typename std::remove_reference<T>::type&& >::value ? "decltype(arg) = T &&" :
-                    ( std::is_same< decltype(y), typename std::remove_reference<T>::type& >::value ? "decltype(arg) = T &" : "decltype(arg) = T" )
+    std::cout << ( std::is_same< decltype(arg), typename std::remove_reference<T>::type&& >::value ? "decltype(arg) = T &&" :
+                    ( std::is_same< decltype(arg), typename std::remove_reference<T>::type& >::value ? "decltype(arg) = T &" : "decltype(arg) = T" )
                  );
 
     std::cout << '\n';
@@ -85,7 +85,7 @@ void Checkpoint_04()
 
         f(0);
 
-        const int a = 1;
+        const int a = 0;
         f(a);
 
         int y = 0;
