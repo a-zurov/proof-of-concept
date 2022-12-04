@@ -1,5 +1,7 @@
 #include "String.h"
 
+#define _ALLOW_STRING_BUFF_DUMP
+
 //////////////////////////////////////////////////////////////////////////
 
 BEGIN_NAMESPACE_CXX
@@ -26,12 +28,11 @@ String::String()
 
 String::String(const char* p)
 {
-    cout_dump_this();
-
     if (nullptr == p) {
 
         m_nSize = 0;
         m_pBuff = nullptr;
+        cout_dump_this();
         return;
     }
 
@@ -40,27 +41,40 @@ String::String(const char* p)
 
     memcpy(m_pBuff, p, m_nSize * sizeof(char));
     m_pBuff[m_nSize] = '\n';
+
+#ifdef _ALLOW_STRING_BUFF_DUMP
+    cout_dump_this_msg(m_nSize, m_pBuff);
+#else
+    cout_dump_this();
+#endif
 }
 
 String::String(const String& s)
     : m_nSize(s.m_nSize)
 {
-    cout_dump_this();
 
     if (nullptr == s.m_pBuff) {
         m_pBuff = nullptr;
+        cout_dump_this();
         return;
     }
 
     m_pBuff = new char[m_nSize + 1];
     memcpy(m_pBuff, s.m_pBuff, m_nSize + 1);
+
+#ifdef _ALLOW_STRING_BUFF_DUMP
+    cout_dump_this_msg(m_nSize, m_pBuff);
+#else
+    cout_dump_this();
+#endif
 }
 
 String& String::operator= (const String& rhs) // assignment operator
 {
-    cout_dump_this();
+
 
     if (this == &rhs) {
+        cout_dump_this();
         return *this;
     }
 
@@ -69,11 +83,19 @@ String& String::operator= (const String& rhs) // assignment operator
 
     if (nullptr == rhs.m_pBuff) {
         m_pBuff = nullptr;
+        cout_dump_this();
         return *this;
     }
 
     m_pBuff = new char[m_nSize + 1];
     memcpy(m_pBuff, rhs.m_pBuff, m_nSize + 1);
+
+#ifdef _ALLOW_STRING_BUFF_DUMP
+    cout_dump_this_msg(m_nSize, m_pBuff);
+#else
+    cout_dump_this();
+#endif
+
     return *this;
 }
 
@@ -85,7 +107,11 @@ String::String(String&& rhs) noexcept
     : m_nSize(rhs.m_nSize)
     , m_pBuff(rhs.m_pBuff)
 {
+#ifdef _ALLOW_STRING_BUFF_DUMP
+    cout_dump_this_msg(m_nSize, m_pBuff);
+#else
     cout_dump_this();
+#endif
 
     rhs.m_nSize = 0;
     rhs.m_pBuff = nullptr;
@@ -93,9 +119,8 @@ String::String(String&& rhs) noexcept
 
 String& String::operator= (String&& rhs) noexcept
 {
-    cout_dump_this();
-
     if (this == &rhs) {
+        cout_dump_this();
         return *this;
     }
 
@@ -106,6 +131,12 @@ String& String::operator= (String&& rhs) noexcept
 
     rhs.m_nSize = 0;
     rhs.m_pBuff = nullptr;
+
+#ifdef _ALLOW_STRING_BUFF_DUMP
+    cout_dump_this_msg(m_nSize, m_pBuff);
+#else
+    cout_dump_this();
+#endif
 
     return *this;
 }

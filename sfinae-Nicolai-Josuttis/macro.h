@@ -33,10 +33,12 @@
 #define cout_dump()         std::cout << __MAKE_DUMP__ << _DUMP_ENDL
 #define cout_dump_msg(x)    std::cout << __MAKE_DUMP__ << " " << x << _DUMP_ENDL
 #define cout_dump_this()    std::printf("%s : %d | %s %p\n", __FILENAME__, __LINE__, __PRETTY_FUNCTION__, (void*)this)
+#define cout_dump_this_msg(k,x) std::printf("%s : %d | %s %p %.*s\n", __FILENAME__, __LINE__, __PRETTY_FUNCTION__, (void*)this, (unsigned int)k, x)
 #else
 #define cout_dump()
 #define cout_dump_msg(x)
 #define cout_dump_this()
+#define cout_dump_this_msg(k,x)
 #endif
 
 //////////////////////////////////////////////////////////////////////////
