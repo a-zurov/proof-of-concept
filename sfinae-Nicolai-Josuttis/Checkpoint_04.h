@@ -6,13 +6,23 @@
 #include "String.h"
 
 template <typename T>
-typename std::remove_reference<T>::type && move(T&& x) noexcept {
-    cout_dump_msg(x);
-    return static_cast< typename std::remove_reference<T>::type && >(x);
+typename std::remove_reference<T>::type && move(T&& arg) noexcept {
+    cout_dump_msg(arg);
+    return static_cast< typename std::remove_reference<T>::type && >(arg);
+}
+
+template <typename T> // forward an lvalue as either an lvalue or an rvalue
+constexpr T&& forward(typename std::remove_reference<T>::type& arg) noexcept {
+    return static_cast<T&&>(arg);
+}
+
+template <typename T> // forward an rvalue as an rvalue
+constexpr T&& forward(typename std::remove_reference<T>::type&& arg) noexcept {
+    static_assert(!std::is_lvalue_reference<T>::value, "bad forward call");
+    return static_cast<T&&>(arg);
 }
 
 using String = cxx::String;
-
 
 struct StringsBox {
 
@@ -23,8 +33,8 @@ struct StringsBox {
         , typename S2 = String
         , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
     >StringsBox(S1&& first, S2&& last = "")
-        : m_szFirst( std::forward<S1>(first) )
-        , m_szLast( std::forward<S2>(last) )
+        : m_szFirst( forward<S1>(first) )
+        , m_szLast( forward<S2>(last) )
     {
         cout_dump();
     }
@@ -82,6 +92,19 @@ struct GreedyBox : public StringsBox {
             std::cout << "S1 arg : decltype(arg) = remove_reference<S1>::type&&\n";
         if (std::is_same< decltype(last), typename std::remove_reference<S2>::type&& >::value)
             std::cout << "S2 arg : decltype(arg) = remove_reference<S2>::type&&\n";
+    }
+};
+
+
+struct PerfectBox : public StringsBox {
+
+    template< typename S1
+        , typename S2 = String
+        , typename = std::enable_if_t< std::is_convertible_v<S1, String> >
+    > PerfectBox(S1&& first, S2&& last = "")
+        : StringsBox(forward<S1>(first), forward<S2>(last))
+    {
+        cout_dump();
     }
 };
 
@@ -186,6 +209,19 @@ void Checkpoint_04()
         GreedyBox gb2("abc", move(str4));
         gb2.print();
         std::cout << str4 << '\n';
+
+        checkpoint(04_B_PerfectBox);
+
+        str1 = "perfect";
+        str2 = "forwarding";
+
+        PerfectBox pb1(str1, str2);
+        pb1.print();
+        std::cout << str1 << ' ' << str2 << '\n';
+
+        PerfectBox pb2(move(str1), move(str2));
+        pb2.print();
+        std::cout << str1 << ' ' << str2 << '\n';
 
         checkpoint(04_C); // you shouldn't code like as below
 
