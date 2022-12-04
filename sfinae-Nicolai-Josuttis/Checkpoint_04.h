@@ -7,7 +7,7 @@
 
 template <typename T>
 typename std::remove_reference<T>::type && move(T&& x) noexcept {
-    cout_dump();
+    cout_dump_msg(x);
     return static_cast< typename std::remove_reference<T>::type && >(x);
 }
 
@@ -44,6 +44,10 @@ struct CopyBox : public StringsBox {
                     , last )
     {
         cout_dump();
+        if (std::is_same< decltype(first), typename std::remove_reference<S1>::type&& >::value)
+            std::cout << "S1 arg : decltype(arg) = remove_reference<S1>::type&&\n";
+        if (std::is_same< decltype(last), typename std::remove_reference<S2>::type&& >::value)
+            std::cout << "S2 arg : decltype(arg) = remove_reference<S2>::type&&\n";
     }
 };
 
@@ -57,6 +61,10 @@ struct MoveBox : public StringsBox {
                     , std::is_same< decltype(last), typename std::remove_reference<S2>::type&& >::value ? move(last) : last )
     {
         cout_dump();
+        if (std::is_same< decltype(first), typename std::remove_reference<S1>::type&& >::value)
+            std::cout << "S1 arg : decltype(arg) = remove_reference<S1>::type&&\n";
+        if (std::is_same< decltype(last), typename std::remove_reference<S2>::type&& >::value)
+            std::cout << "S2 arg : decltype(arg) = remove_reference<S2>::type&&\n";
     }
 };
 
@@ -70,6 +78,10 @@ struct GreedyBox : public StringsBox {
                     , move(last) )
     {
         cout_dump();
+        if (std::is_same< decltype(first), typename std::remove_reference<S1>::type&& >::value)
+            std::cout << "S1 arg : decltype(arg) = remove_reference<S1>::type&&\n";
+        if (std::is_same< decltype(last), typename std::remove_reference<S2>::type&& >::value)
+            std::cout << "S2 arg : decltype(arg) = remove_reference<S2>::type&&\n";
     }
 };
 
@@ -83,8 +95,8 @@ void f(T&& arg) {
 
     //C<T> c; // deduction Meyers' maneuver
 
-    std::cout << ( std::is_same< decltype(arg), typename std::remove_reference<T>::type&& >::value ? "decltype(arg) = T &&" :
-                    ( std::is_same< decltype(arg), typename std::remove_reference<T>::type& >::value ? "decltype(arg) = T &" : "decltype(arg) = T" )
+    std::cout << ( std::is_same< decltype(arg), typename std::remove_reference<T>::type&& >::value ? "decltype(arg) = T&&" :
+                    ( std::is_same< decltype(arg), typename std::remove_reference<T>::type& >::value ? "decltype(arg) = T&" : "decltype(arg) = T" )
                  );
 
     std::cout << '\n';
@@ -108,6 +120,9 @@ void Checkpoint_04()
 
         int&& rref_y = move(y);
         f(rref_y);
+
+        String s("xxx");
+        f(move(s));
 
         checkpoint(04_A);
 
