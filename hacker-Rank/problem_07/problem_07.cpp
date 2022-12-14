@@ -26,43 +26,28 @@ int main(int argc, char* argv[]) {
 #define input_stream std::cin
 #endif //INPUT_FROM_FILE
 
-    const uint32_t mod = 1 << 31;
-    const uint32_t bit_mod = mod - 1;
+    constexpr uint32_t bit_mod = (1 << 31) - 1;
 
     uint64_t N, S, P, Q;
     input_stream >> N >> S >> P >> Q;
 
-    uint64_t current = S % mod;
-    uint64_t next;
+    uint64_t tortoise = S & bit_mod;
+    uint64_t hare = tortoise;
+    uint64_t j = 1;
 
-    map< uint64_t, size_t> mapIntCnt;
-    mapIntCnt[current] = 0;
+    do {
+        tortoise = (tortoise * P + Q) & bit_mod;
 
-    for (uint64_t j = 1; j < N; ++j) {
+        hare = (hare * P + Q) & bit_mod;
+        hare = (hare * P + Q) & bit_mod;
 
-        /*
-        next = (current * P + Q) % mod;
-        if (mapIntCnt.count(next)) ++mapIntCnt[next];
-        else mapIntCnt.insert({ next, 0 });
-        */
+    } while (++j < N && tortoise != hare);
 
-        next = (current * P + Q) & bit_mod;
-        mapIntCnt[next];
-
-        current = next;
-    }
-
-    /*
-    for (auto m : mapIntCnt) {
-        cout << m.first << " : " << m.second << '\n';
-    }
-    */
+    cout << j << '\n';
 
 #ifdef INPUT_FROM_FILE
     input_stream.close();
 #endif
-
-    cout << mapIntCnt.size() << '\n';
 
     return 0;
 }
