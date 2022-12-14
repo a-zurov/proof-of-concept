@@ -1,8 +1,6 @@
-// problem_00 : main.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// problem_06.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //---------------------------------------------------------------------------------------------------------
 // https://www.hackerrank.com/challenges/attending-workshops
-
-using namespace std;
 
 // comment this macro and check includes before copying to HackerRank editor
 #define INPUT_FROM_FILE
@@ -11,6 +9,8 @@ using namespace std;
 #include <fstream>
 #include "./../bits/bits-stdc++.h"
 #endif
+
+using namespace std;
 
 //Define the structs Workshops and Available_Workshops.
 //Implement the functions initialize and CalculateMaxWorkshops

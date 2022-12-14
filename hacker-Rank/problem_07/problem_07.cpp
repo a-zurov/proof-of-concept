@@ -8,6 +8,7 @@
 #ifdef INPUT_FROM_FILE
 #include <fstream>
 #include "./../bits/bits-stdc++.h"
+#include "macro.h"
 #endif
 
 using namespace std;
@@ -15,11 +16,12 @@ using namespace std;
 int main(int argc, char* argv[]) {
 
 #ifdef INPUT_FROM_FILE
-    ifstream input_stream("test.txt"); // 25
+    ifstream input_stream("test.txt"); // 26
     if (!input_stream.is_open()) {
         std::cout << "File 'test.txt' is not found : test stopped..\n";
         return 0;
     }
+    DumpDuration dd("main");
 #else
 #define input_stream std::cin
 #endif //INPUT_FROM_FILE
@@ -32,35 +34,26 @@ int main(int argc, char* argv[]) {
     uint64_t current = S % mod;
     uint64_t next;
 
-    map< uint64_t, size_t> mapRes;
-
-    mapRes[current] = 0;
+    map< uint64_t, size_t> mapIntCnt;
+    mapIntCnt[current] = 0;
 
     for (uint64_t j = 1; j < N; ++j) {
 
         next = (current * P + Q) % mod;
 
-        if (mapRes.count(next)) ++mapRes[next];
-        else mapRes.insert({ next, 0 });
-
+        if (mapIntCnt.count(next)) ++mapIntCnt[next];
+        else mapIntCnt.insert({ next, 0 });
         current = next;
-
-        //cout << j << " : "  << mapRes.size() << '\n';
     }
-
-    size_t counter = 0;
-    for (auto m : mapRes) {
-
-        if (0 == m.second) ++counter;
-
-        //cout << m.first << " : " << m.second << '\n';
-    }
-
-    cout << counter;
 
 #ifdef INPUT_FROM_FILE
+    for (auto m : mapIntCnt) {
+        cout << m.first << " : " << m.second << '\n';
+    }
     input_stream.close();
 #endif
+
+    cout << mapIntCnt.size() << '\n';
 
     return 0;
 }
