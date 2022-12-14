@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
 #endif //INPUT_FROM_FILE
 
     const uint32_t mod = 1 << 31;
+    const uint32_t bit_mod = mod - 1;
 
     uint64_t N, S, P, Q;
     input_stream >> N >> S >> P >> Q;
@@ -39,17 +40,25 @@ int main(int argc, char* argv[]) {
 
     for (uint64_t j = 1; j < N; ++j) {
 
+        /*
         next = (current * P + Q) % mod;
-
         if (mapIntCnt.count(next)) ++mapIntCnt[next];
         else mapIntCnt.insert({ next, 0 });
+        */
+
+        next = (current * P + Q) & bit_mod;
+        mapIntCnt[next];
+
         current = next;
     }
 
-#ifdef INPUT_FROM_FILE
+    /*
     for (auto m : mapIntCnt) {
         cout << m.first << " : " << m.second << '\n';
     }
+    */
+
+#ifdef INPUT_FROM_FILE
     input_stream.close();
 #endif
 
