@@ -9,12 +9,14 @@ template <bool arg1>
 int suck_variadic_arg()
 {
     std::cout << counter++ << ": suck " << arg1 << '\n';
+
     return arg1;
 }
 template <bool arg1, bool arg2, bool... args>
 int suck_variadic_arg()
 {
     std::cout << counter++ << ": suck " << arg1 << '\n';
+
     return (suck_variadic_arg<arg2, args...>() << 1) + arg1;
 }
 
@@ -22,6 +24,7 @@ template <bool... args>
 static int reverse()
 {
     std::cout << "pumping complete/reverse started" << '\n';
+
     return suck_variadic_arg< args...>();
 };
 
@@ -33,8 +36,8 @@ struct Multiplexer
 {
     static int prepare_variadic_arg()
     {
-        std::cout << Digits << ": pump ";
-        std::cout << (bool)((1 << Digits) & Number) << '\n';
+        std::cout << Digits << ": pump " << (bool)((1 << Digits) & Number) << '\n';
+
         return Plunger< Number, Digits - 1, (bool)((1 << Digits)& Number), args...>::pump_variadic_arg();
     }
 };
@@ -53,8 +56,8 @@ struct Plunger< Number, 0, arg1, args...>
 {
     static int pump_variadic_arg()
     {
-        std::cout << 0 << ": pump ";
-        std::cout << (bool)(1 & Number) << '\n';
+        std::cout << 0 << ": pump " << (bool)(1 & Number) << '\n';
+
         return reverse< (bool)(1 & Number), arg1, args...>();
     }
 };
