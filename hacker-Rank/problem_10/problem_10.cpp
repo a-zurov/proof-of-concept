@@ -34,9 +34,10 @@ string timeConversion(const string& s) {
     ss >> meridiem;
 
     if (meridiem == "AM") {
-        if (hours == 12) hours = 0;
-    }
-    else {
+        if (hours == 12) {
+            hours = 0;
+        }
+    } else {
         if (hours != 12) {
             hours += 12;
         }

@@ -56,6 +56,7 @@ int main()
 #else
 #define input_stream std::cin
 #endif //INPUT_FROM_FILE
+
     int t; input_stream >> t;
 
     for (int i = 0; i != t; ++i) {
@@ -64,4 +65,8 @@ int main()
         CheckValues<6>::check(x, y);
         cout << "\n";
     }
+
+#ifdef INPUT_FROM_FILE
+    input_stream.close();
+#endif
 }
