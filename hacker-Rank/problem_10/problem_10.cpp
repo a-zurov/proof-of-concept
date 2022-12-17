@@ -1,6 +1,6 @@
 // problem_10.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // ------------------------------------------------------------------------------------------------
-// https://www.hackerrank.com/challenges/meridiem-conversion/problem
+// https://www.hackerrank.com/challenges/time-conversion/problem
 
 // comment this macro and check includes before copying to HackerRank editor
 #define INPUT_FROM_FILE
