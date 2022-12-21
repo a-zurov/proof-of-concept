@@ -2,9 +2,50 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include <cassert>
 
 #include "LRUCache.h"
 #include "LFUCache.h"
+
+#include "macro.h"
+
+void performance_test()
+{
+    DumpDuration dd("performance_test");
+
+    std::ifstream input_stream("test.txt"); // 26
+    if (!input_stream.is_open()) {
+        std::cout << "File 'test.txt' is not found : test stopped..\n";
+        return;
+    }
+
+    std::unique_ptr<LRUCache> spCache(new LRUCache(13));
+    std::unique_ptr<LRUCache_Fast> spCache_Fast(new LRUCache_Fast(13));
+
+    constexpr uint32_t bit_mod = (1 << 31) - 1;
+
+    uint64_t N, S, P, Q;
+    input_stream >> N >> S >> P >> Q;
+
+    uint64_t key = S & bit_mod;
+    uint64_t j = 1;
+
+    do {
+        key = (key * P + Q) & bit_mod;
+        if (0 == j % 3) {
+            assert(spCache->Get(key) == spCache_Fast->Get(key));
+        } else {
+            spCache->Put(key, j);
+            spCache_Fast->Put(key, j);
+        }
+    } while (++j < N);
+
+#ifdef INPUT_FROM_FILE
+    input_stream.close();
+#endif
+
+}
 
 int main()
 {
@@ -58,4 +99,5 @@ int main()
     spCache3->Put(4, 4);
     std::cout << spCache3->Get(2) << "\n"; // 2
 
+    performance_test();
 }

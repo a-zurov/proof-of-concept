@@ -3,8 +3,6 @@
 #include <list>
 #include <unordered_map>
 
-#include <cassert>
-
 class LRUCache
 {
     using ListItem_t = std::pair<int, int>; // { key, value }

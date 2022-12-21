@@ -1,4 +1,7 @@
+
 #include "LRUCache.h"
+
+#include <cassert>
 
 void LRUCache::MoveNodeToFront(const List_t::iterator& itSrc)
 {
