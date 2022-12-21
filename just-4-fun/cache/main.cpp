@@ -23,7 +23,7 @@ void performance_test()
     std::unique_ptr<LRUCache> spCache(new LRUCache(13));
     std::unique_ptr<LRUCache_Fast> spCache_Fast(new LRUCache_Fast(13));
 
-    constexpr uint32_t bit_mod = (1 << 31) - 1;
+    constexpr uint32_t bit_mod = (1 << 5) - 1;
 
     uint64_t N, S, P, Q;
     input_stream >> N >> S >> P >> Q;
@@ -33,6 +33,7 @@ void performance_test()
 
     do {
         key = (key * P + Q) & bit_mod;
+        //std::cout << key << '\n';
         if (0 == j % 3) {
             assert(spCache->Get(key) == spCache_Fast->Get(key));
         } else {
