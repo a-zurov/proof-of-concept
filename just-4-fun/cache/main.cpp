@@ -14,14 +14,14 @@ void performance_test()
 {
     DumpDuration dd("performance_test");
 
-    std::ifstream input_stream("test.txt"); // 26
+    std::ifstream input_stream("test.txt"); // 16
     if (!input_stream.is_open()) {
         std::cout << "File 'test.txt' is not found : test stopped..\n";
         return;
     }
 
-    std::unique_ptr<LRUCache> spCache(new LRUCache(13));
-    std::unique_ptr<LRUCache_Fast> spCache_Fast(new LRUCache_Fast(13));
+    std::unique_ptr<LRUCache> spCache(new LRUCache(10));
+    std::unique_ptr<LRUCache_Fast> spCache_Fast(new LRUCache_Fast(10));
 
     constexpr uint32_t bit_mod = (1 << 5) - 1;
 
