@@ -71,7 +71,38 @@ struct VariadicArgsPump
     }
 };
 
+// --------------------------------------------------------------------
+
+template <int N, int Counter>
+struct Cycle {
+
+    static int loop()
+    {
+        int j = N - Counter;
+        std::cout << j;
+        return Cycle< N, Counter - 1>::loop();
+    }
+};
+
+template <int N>
+struct Cycle <N, 0 > {
+
+    static int loop()
+    {
+        int j = N;
+        std::cout << j << '\n';
+        return 0;
+    }
+};
+
+template <int N>
+int start_simple_cycle() {
+    return Cycle<N, N>::loop();
+}
+
 int main()
 {
-    std::cout << VariadicArgsPump< 17, 7>::start();
+    std::cout << VariadicArgsPump< 17, 7>::start() << '\n';
+
+    start_simple_cycle<5>();
 }
