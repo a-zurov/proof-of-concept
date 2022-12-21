@@ -21,9 +21,15 @@
     <ClCompile Include="LFUCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LRUCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LFUCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LRUCache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

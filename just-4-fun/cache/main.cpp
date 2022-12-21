@@ -3,10 +3,18 @@
 
 #include <iostream>
 
+#include "LRUCache.h"
 #include "LFUCache.h"
 
 int main()
 {
+    std::unique_ptr<LRUCache> spCache(new LRUCache(2));
+
+    spCache->Put(1, 1);
+    spCache->Put(2, 2);
+    std::cout << spCache->Get(1) << "\n"; // 1
+    spCache->Put(3, 3);
+    std::cout << spCache->Get(2) << "\n"; // -1
 
     std::unique_ptr<LFUCache> spCache1(new LFUCache(2));
     spCache1->Put(1, 1);
@@ -41,4 +49,5 @@ int main()
     spCache3->Put(2, 2);
     spCache3->Put(4, 4);
     std::cout << spCache3->Get(2) << "\n"; // 2
+
 }

@@ -127,11 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LRUCache.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="LFUCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LFUCache.h" />
+    <ClInclude Include="LRUCache.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
