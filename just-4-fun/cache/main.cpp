@@ -16,6 +16,14 @@ int main()
     spCache->Put(3, 3);
     std::cout << spCache->Get(2) << "\n"; // -1
 
+    std::unique_ptr<LRUCache_Fast> spCache_Fast(new LRUCache_Fast(2));
+
+    spCache_Fast->Put(1, 1);
+    spCache_Fast->Put(2, 2);
+    std::cout << spCache_Fast->Get(1) << "\n"; // 1
+    spCache_Fast->Put(3, 3);
+    std::cout << spCache_Fast->Get(2) << "\n"; // -1
+
     std::unique_ptr<LFUCache> spCache1(new LFUCache(2));
     spCache1->Put(1, 1);
     spCache1->Put(2, 2);

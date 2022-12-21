@@ -3,6 +3,8 @@
 #include <list>
 #include <unordered_map>
 
+#include <cassert>
+
 class LRUCache
 {
     using ListItem_t = std::pair<int, int>; // { key, value }
@@ -22,3 +24,19 @@ public:
     void Put(int nKey, int nValue);
 };
 
+
+class LRUCache_Fast
+{
+    std::unordered_map<int, std::pair<int, std::list<int>::iterator>> m_map; // will keep only existing
+    std::list<int> m_list;
+    int m_size;
+
+    void erase(int key);
+    void push(int key, int value);
+
+public:
+    LRUCache_Fast(int capacity) : m_size(capacity) {}
+
+    int Get(int key);
+    void Put(int key, int value);
+};
