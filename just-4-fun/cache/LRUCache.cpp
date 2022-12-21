@@ -1,6 +1,6 @@
 #include "LRUCache.h"
 
-void LRUCache::MoveNodeToFront(List_t::iterator& itSrc)
+void LRUCache::MoveNodeToFront(const List_t::iterator& itSrc)
 {
     // move a cache list node corresponding itSrc to m_list.begin()
     m_list.splice(  m_list.begin(), // destination position

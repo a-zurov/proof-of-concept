@@ -13,7 +13,7 @@ class LFUCache
     Map_t m_map;
     int m_size;
 
-    void MoveNodeToFront(List_t::iterator& it);
+    void MoveNodeToFront(const List_t::iterator& it);
 
 public:
     LFUCache(int capacity) : m_size(capacity) {}

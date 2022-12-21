@@ -1,6 +1,6 @@
 #include "LFUCache.h"
 
-void LFUCache::MoveNodeToFront(List_t::iterator& itSrc)
+void LFUCache::MoveNodeToFront(const List_t::iterator& itSrc)
 {
     int counter = ++(itSrc->first);
     auto itDest = itSrc;
