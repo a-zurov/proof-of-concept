@@ -6,47 +6,67 @@
 
 using namespace std;
 
-int main()
-{
-    int nWeightMax = 11;
-    int nItemMax = 5;
-
-    vector<int> weight = { 0,2,5,3,7,4 };
-    vector<int> profit = { 0,4,3,5,1,2 };
+bool IsSum(int N, vector<int>& nums) {
 
     int arrProfitMaxSolution[31][31] = {};
 
-    for (int i = 1; i <= nItemMax; ++i) {
+    for (int w = 1; w <= N; ++w) {
+        arrProfitMaxSolution[0][w] = w < nums[0] ? 0 : nums[0];
+    }
 
-        cout << arrProfitMaxSolution[i][0] << ' ';
+    for (int i = 1; i < nums.size(); ++i) {
+        for (int w = 1; w <= N; ++w) {
+            if (w < nums[i])
+                arrProfitMaxSolution[i][w] = arrProfitMaxSolution[i - 1][w];
+            else
+                arrProfitMaxSolution[i][w] =
+                max(arrProfitMaxSolution[i - 1][w],
+                    arrProfitMaxSolution[i - 1][w - nums[i]] + nums[i]);
 
-        for (int w = 1; w <= nWeightMax; ++w) {
+            //cout << arrProfitMaxSolution[i][w] << ' ';
 
-            arrProfitMaxSolution[i][w] = w < weight[i] ? 0 : profit[i];
-
-            cout << arrProfitMaxSolution[i][w] << ' ';
+            if (N == arrProfitMaxSolution[i][w]) {
+                //cout << '\n';
+                return true;
+            }
         }
-        cout << '\n';
-    };
+        //cout << '\n';
+    }
+    return false;
+}
 
-    cout << '\n';
+int main()
+{
+    vector<int> nums = { 7,3,11,21,1,10 }; // Answer: 16 false
 
+    for (int j = 10; j < 21; ++j) {
+        cout << j << " is sum : " << (IsSum(j, nums) ? "true" : "false") << '\n';
+    }
 
-    for (int i = 1; i <= nItemMax; ++i) {
+    int N = 269; // Answer: 295
+    vector<int> weight = { 95,  4, 60, 32, 23, 72, 80, 62, 65, 46 };
+    vector<int> profit = { 55, 10, 47,  5,  4, 50,  8, 61, 85, 87 };
 
-        cout << arrProfitMaxSolution[i][0] << ' ';
+    int arrProfitMaxSolution[300][300] = {};
 
-        for (int w = 1; w <= nWeightMax; ++w) {
+    for (int w = 1; w <= N; ++w) {
+        arrProfitMaxSolution[0][w] = w < weight[0] ? 0 : profit[0];
+    }
+
+    for (int i = 1; i < profit.size(); ++i) {
+        for (int w = 1; w <= N; ++w) {
             if (w < weight[i])
                 arrProfitMaxSolution[i][w] = arrProfitMaxSolution[i-1][w];
             else
                 arrProfitMaxSolution[i][w] =
                     max( arrProfitMaxSolution[i-1][w], arrProfitMaxSolution[i-1][w - weight[i]] + profit[i] );
 
-            cout << arrProfitMaxSolution[i][w] << ' ';
+            //cout << arrProfitMaxSolution[i][w] << ' ';
         }
-        cout << '\n';
+        //cout << '\n';
     };
+
+    cout << "Napsack = " << N << ", Profit = " << arrProfitMaxSolution[profit.size()-1][N] << ' ';
 
     return 0;
 
