@@ -39,8 +39,8 @@ bool IsSum(int N, vector<int>& nums) {
                 arrProfitMaxSolution[i][w] = arrProfitMaxSolution[i - 1][w];
             else
                 arrProfitMaxSolution[i][w] =
-                max( arrProfitMaxSolution[i - 1][w],
-                     arrProfitMaxSolution[i - 1][w - nums[i]] + nums[i]);
+                    max( arrProfitMaxSolution[i - 1][w],
+                         arrProfitMaxSolution[i - 1][w - nums[i]] + nums[i]);
 
             if (N == arrProfitMaxSolution[i][w]) {
                 return true;
