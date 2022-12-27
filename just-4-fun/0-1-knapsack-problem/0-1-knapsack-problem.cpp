@@ -6,9 +6,22 @@
 
 using namespace std;
 
-bool IsSum(int N, vector<int>& nums) {
+/*
+// Leetcode 416. Partition Equal Subset Sum
+// https://leetcode.com/problems/partition-equal-subset-sum/description/
 
-    //int arrProfitMaxSolution[31][31] = {};
+bool canPartition(vector<int>& nums) {
+
+    int sum = 0;
+    for (auto n : nums) {
+        sum += n;
+    }
+    if (sum % 2) return false;
+    return IsSum(sum/2, nums );
+}
+*/
+
+bool IsSum(int N, vector<int>& nums) {
 
     vector<vector<int>> arrProfitMaxSolution;
     arrProfitMaxSolution.resize(nums.size());
@@ -26,17 +39,13 @@ bool IsSum(int N, vector<int>& nums) {
                 arrProfitMaxSolution[i][w] = arrProfitMaxSolution[i - 1][w];
             else
                 arrProfitMaxSolution[i][w] =
-                max(arrProfitMaxSolution[i - 1][w],
-                    arrProfitMaxSolution[i - 1][w - nums[i]] + nums[i]);
-
-            //cout << arrProfitMaxSolution[i][w] << ' ';
+                max( arrProfitMaxSolution[i - 1][w],
+                     arrProfitMaxSolution[i - 1][w - nums[i]] + nums[i]);
 
             if (N == arrProfitMaxSolution[i][w]) {
-                //cout << '\n';
                 return true;
             }
         }
-        //cout << '\n';
     }
     return false;
 }
@@ -65,7 +74,8 @@ int main()
                 arrProfitMaxSolution[i][w] = arrProfitMaxSolution[i-1][w];
             else
                 arrProfitMaxSolution[i][w] =
-                    max( arrProfitMaxSolution[i-1][w], arrProfitMaxSolution[i-1][w - weight[i]] + profit[i] );
+                    max( arrProfitMaxSolution[i-1][w],
+                         arrProfitMaxSolution[i-1][w - weight[i]] + profit[i] );
 
             //cout << arrProfitMaxSolution[i][w] << ' ';
         }
