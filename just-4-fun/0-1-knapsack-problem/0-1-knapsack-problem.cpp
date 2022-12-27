@@ -8,7 +8,13 @@ using namespace std;
 
 bool IsSum(int N, vector<int>& nums) {
 
-    int arrProfitMaxSolution[31][31] = {};
+    //int arrProfitMaxSolution[31][31] = {};
+
+    vector<vector<int>> arrProfitMaxSolution;
+    arrProfitMaxSolution.resize(nums.size());
+    for (auto& v : arrProfitMaxSolution) {
+        v.resize(N + 1);
+    }
 
     for (int w = 1; w <= N; ++w) {
         arrProfitMaxSolution[0][w] = w < nums[0] ? 0 : nums[0];
