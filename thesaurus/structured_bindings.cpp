@@ -1,5 +1,5 @@
 // structured_bindings.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// g++ -std=c++17 -c structured_bindings.cpp
 
 #include <iostream>
 #include <map>
