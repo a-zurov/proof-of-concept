@@ -5,6 +5,10 @@
 #include <map>
 #include <tuple>
 
+std::tuple <std::string, int> CreatePerson() {
+    return { "Cherno", 24 };
+}
+
 int main()
 {
     std::pair<int, std::string> p1 = { 5, "abc" };
@@ -30,4 +34,7 @@ int main()
     auto x = std::get<double>(t);
     auto y = std::get<2>(t);
     std::cout << x << ' ' << y << '\n';
+
+    auto [name, age] = CreatePerson();
+    std::cout << name << ' ' << age << '\n';
 }
