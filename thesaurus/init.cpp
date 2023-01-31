@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include <vector>
+#include <string>
 #include <thread>
 #include <chrono>
 
@@ -21,9 +21,10 @@ struct myclass_t {
 // std::initializer_list supremacy ----------------
 struct S {
     int k{42};
-    S(int j, bool Ü) : k(j) { std::cout << "ctor1" << '\n'; }
-    S(int j, double d) : k(j) { std::cout << "ctor2" << '\n'; }
-    S(std::initializer_list<int> l) { std::cout << "ctor3" << '\n'; }
+    S(int j, bool Ü) : k(j) { std::cout << "ctor with bool" << '\n'; }
+    S(int j, double d) : k(j) { std::cout << "ctor with double" << '\n'; }
+    S(int j, std::string d) : k(j) { std::cout << "ctor with std::string" << '\n'; }
+    S(std::initializer_list<int> l) { std::cout << "ctor with std::initializer_list" << '\n'; }
 };
 
 //-------------------------------------------------
@@ -68,7 +69,10 @@ int main() {
     S s0( 10, false );
     S s1{ 10, false };
     S s2( 10, .5 );
-    //S s3{ 10, .5 }; // CE invalid narrowing conversion from double to int
+    //S s3{ 10, .5 };    // CE invalid narrowing conversion from double to
+    //S s4{ 10, "abc" }; // CE conversion from 'const char [4]' to 'bool' requires a narrowing conversion
+    using namespace std::string_literals;
+    S s5{ 10, "abc"s };
 
     // aggregate initialization by the initializer list ----------
     // since C++17
