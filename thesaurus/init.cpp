@@ -21,9 +21,9 @@ struct myclass_t {
 // std::initializer_list supremacy ----------------
 struct S {
     int k{42};
-    S(int j, bool Ü) : k(j) { std::cout << "ctor with bool" << '\n'; }
-    S(int j, double d) : k(j) { std::cout << "ctor with double" << '\n'; }
-    S(int j, std::string d) : k(j) { std::cout << "ctor with std::string" << '\n'; }
+    S(int j, bool x) : k(j) { std::cout << "ctor with bool" << '\n'; }
+    S(int j, double x) : k(j) { std::cout << "ctor with double" << '\n'; }
+    S(int j, std::string x) : k(j) { std::cout << "ctor with std::string" << '\n'; }
     S(std::initializer_list<int> l) { std::cout << "ctor with std::initializer_list" << '\n'; }
 };
 
