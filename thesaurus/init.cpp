@@ -9,7 +9,7 @@
 
 //-------------------------------------------------
 // The most vexing parse is a counterintuitive form
-// of syntactic ambiguity resolution in the C++.
+// of syntactic ambiguity resolution in the C++
 
 struct list_t {};
 struct myclass_t {
@@ -46,14 +46,14 @@ struct Derived : public Middle {
 
 int main() {
 
-    // most vexing parse in direct initialization --------------
-    myclass_t m1( (list_t()), (list_t() ) ); // (A) most vexing parse without parentheses
+    // the most vexing parse in direct initialization --------------
+    myclass_t m1( (list_t()), (list_t() ) ); // (A) the most vexing parse without parentheses
     myclass_t m2{ list_t(), list_t() };
 
     std::cout << m1.x << '\n'; // CE without additional parentheses in (A)
     std::cout << m2.x << '\n';
 
-    // the idea of uniform initialization -----------------------
+    // the idea of uniform initialization --------------------------
     std::thread th{
         []() {
             auto start = std::chrono::high_resolution_clock::now();
@@ -69,7 +69,7 @@ int main() {
     S s0( 10, false );
     S s1{ 10, false };
     S s2( 10, .5 );
-    //S s3{ 10, .5 };    // CE invalid narrowing conversion from double to
+    //S s3{ 10, .5 };    // CE invalid narrowing conversion from double to int
     //S s4{ 10, "abc" }; // CE conversion from 'const char [4]' to 'bool' requires a narrowing conversion
     using namespace std::string_literals;
     S s5{ 10, "abc"s };
