@@ -1,24 +1,24 @@
 // cdecl.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // ------------------------------------------
-// resolve cdecl: char* (*(&some_t)[10]) (const int*&);
+// resolve cdecl: char const * (*(&some_t)[10]) (const int * &);
 
 #include <iostream>
 
-typedef char* (*(&ref_arr_ptr_func_t)[10]) (const int*&);
+typedef const char* (*(&ref_arr_ptr_func_t)[10]) (const int*&);
 
 void print(const ref_arr_ptr_func_t arr) {
 
     const int n = 10;
     const int* pcn = &n;
     for (const auto& p : arr) {
-        std::cout << *p(pcn);
+        std::cout << *(p(pcn));
     }
 }
 
-static char a = 'a';
-static char b = 'b';
+static const char a = 'a';
+static const char b = 'b';
 
-char* f(const int*& x) {
+const char* f(const int*& x) {
 
     if (10 == *x) {
         return &a;
@@ -39,11 +39,11 @@ int main() {
     const int j = 0;
     const int* pcj = &j;
 
-    using ptr_func_t = char* (*)(const int*&);
+    using ptr_func_t = const char* (*)(const int*&);
     ptr_func_t pf = f;
-    std::cout << *(*pf)(pcj) << '\n';
+    std::cout << *(pf(pcj)) << '\n';
 
-    char* (*arr[10]) (const int*&);
+    const char* (*arr[10]) (const int*&);
     std::fill(std::begin(arr), std::end(arr), f);
     print(arr);
 }
