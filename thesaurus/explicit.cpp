@@ -65,10 +65,10 @@ int main() {
 #ifdef __MAKE_EXPLICIT__
 
     S s1{};
-    //S s2 = {};
+    //S s2 = {}; // CE no appropriate default constructor available
     S s3 = S{};
 
-    //f<S>({});
+    //f<S>({}); // CE void f<S>(const T&)': cannot convert argument from 'initializer list' to 'const T&'
     f<S>(S{});
 
     S s4{ 3 };
@@ -79,16 +79,16 @@ int main() {
     f<S>(S{ 3 });
 
     S s7{ 3, 5 };
-    //S s8 = {3, 5};
+    //S s8 = {3, 5}; // CE copy-list-initialization cannot use an explicit constructor
     S s9 = S{ 3, 5 };
 
-    //f<S>({3, 5});
+    //f<S>({3, 5}); // CE void f<S>(const T&)': cannot convert argument from 'initializer list' to 'const T&'
     f<S>(S{ 3, 5 });
 
     if (s3) cout_dump();
     if (S{ 1024 }) cout_dump();
-    //if (S{ 1024 } + 5) cout_dump();
-    //bool b1 = S{ 1024 };
+    //if (S{ 1024 } + 5) cout_dump(); // CE there is no acceptable conversion
+    //bool b1 = S{ 1024 }; // CE 'initializing': cannot convert from 'S' to 'bool'
     bool b2 = static_cast<bool>(S{ 1024 });
 
 #else
