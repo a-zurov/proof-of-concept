@@ -43,6 +43,12 @@ struct Data {
         cout_dump_msg(m_iid);
         return *this;
     }
+
+    Data& operator=(const Id& id) {
+        m_iid = id.m_id;
+        cout_dump_msg(m_iid);
+        return *this;
+    }
 };
 
 int f(const Data& d) {
