@@ -24,16 +24,21 @@
 #define __EXPLICIT__
 #endif
 
+struct Data;
 
 struct Id {
     int m_id;
+
     Id(int j = 0) : m_id(j) {
         cout_dump_msg(m_id);
     }
+
+    operator Data() const;
 };
 
 struct Data {
     int m_iid;
+
     Data(Id id) : m_iid(id.m_id) {
         cout_dump_msg(m_iid);
     }
@@ -50,6 +55,11 @@ struct Data {
         return *this;
     }
 };
+
+Id::operator Data() const {
+    cout_dump();
+    return Data(*this);
+}
 
 int f(const Data& d) {
     cout_dump_msg(d.m_iid);
