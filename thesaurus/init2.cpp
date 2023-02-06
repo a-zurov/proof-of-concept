@@ -14,6 +14,7 @@
 #define __MAKE_DUMP__ __FILENAME__ << " : " << __LINE__ << " | " << __PRETTY_FUNCTION__
 
 #define cout_dump() std::cout << __MAKE_DUMP__ << '\n'
+#define cout_dump_msg(x) std::cout << __MAKE_DUMP__ << ' ' << x << '\n'
 
 #define __MAKE_EXPLICIT__ // <- switch here (!)
 
@@ -27,19 +28,28 @@
 struct Id {
     int m_id;
     Id(int j = 0) : m_id(j) {
-        cout_dump();
+        cout_dump_msg(m_id);
     }
 };
 
 struct Data {
     int m_iid;
     Data(Id id) : m_iid(id.m_id) {
-        cout_dump();
+        cout_dump_msg(m_iid);
     }
 };
+
+void f(const Data& d) {
+    cout_dump_msg(d.m_iid);
+}
 
 int main() {
 
     Data d1 = Data(Id());
-    std::cout << d1.m_iid;
+    std::cout << d1.m_iid << '\n';
+
+    Data d2 = Id(1);
+    std::cout << d2.m_iid << '\n';
+
+    f(Id(2));
 }
