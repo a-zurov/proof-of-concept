@@ -39,7 +39,7 @@ struct Id {
 struct Data {
     int m_iid;
 
-    Data(Id id) : m_iid(id.m_id) {
+    explicit Data(Id id) : m_iid(id.m_id) {
         cout_dump_msg(m_iid);
     }
 
