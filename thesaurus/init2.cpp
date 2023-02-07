@@ -16,7 +16,7 @@
 #define cout_dump() std::cout << __MAKE_DUMP__ << '\n'
 #define cout_dump_msg(x) std::cout << __MAKE_DUMP__ << ' ' << x << '\n'
 
-#define __MAKE_EXPLICIT__ // <- switch here (!)
+//#define __MAKE_EXPLICIT__ // <- switch here (!)
 
 #ifdef __MAKE_EXPLICIT__
 #define __EXPLICIT__ explicit
@@ -33,7 +33,7 @@ struct Id {
         cout_dump_msg(m_id);
     }
 
-    operator Data() const;
+    __EXPLICIT__ operator Data() const;
 
     operator int() const;
 };
@@ -83,11 +83,19 @@ int main() {
     std::cout << d1.m_iid << '\n';
 
     // copy-initialization via implicit conversion
+#ifdef __MAKE_EXPLICIT__
+    Data d2 = static_cast<int>(Id(1));
+#else
     Data d2 = Id(1);
+#endif
     std::cout << d2.m_iid << '\n';
 
     // more copy-initialization via implicit conversion
+#ifdef __MAKE_EXPLICIT__
+    std::cout << f(static_cast<int>(Id(2))) << '\n';
+#else
     std::cout << f(Id(2)) << '\n';
+#endif
 
     // assignment not initialization
     d2 = Id(3);
