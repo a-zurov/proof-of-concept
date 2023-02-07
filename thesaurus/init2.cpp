@@ -34,12 +34,18 @@ struct Id {
     }
 
     operator Data() const;
+
+    operator int() const;
 };
 
 struct Data {
     int m_iid;
 
     explicit Data(Id id) : m_iid(id.m_id) {
+        cout_dump_msg(m_iid);
+    }
+
+    Data(int j) : m_iid(j) {
         cout_dump_msg(m_iid);
     }
 
@@ -61,6 +67,11 @@ Id::operator Data() const {
     return Data(*this);
 }
 
+Id::operator int() const {
+    cout_dump();
+    return this->m_id;
+}
+
 int f(const Data& d) {
     cout_dump_msg(d.m_iid);
     return d.m_iid;
@@ -75,7 +86,7 @@ int main() {
     Data d2 = Id(1);
     std::cout << d2.m_iid << '\n';
 
-    // more implicit conversion
+    // more copy-initialization via implicit conversion
     std::cout << f(Id(2)) << '\n';
 
     // assignment not initialization
