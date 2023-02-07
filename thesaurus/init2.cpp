@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <memory>
 
 #ifdef _MSC_VER
 #define __PRETTY_FUNCTION__ __FUNCSIG__
@@ -35,7 +36,7 @@ struct Id {
 
     __EXPLICIT__ operator Data() const;
 
-    operator int() const;
+    __EXPLICIT__ operator int() const;
 };
 
 struct Data {
@@ -100,4 +101,14 @@ int main() {
     // assignment not initialization
     d2 = Id(3);
     std::cout << d2.m_iid << '\n';
+
+    // explicit type-cast operator
+    auto id = Id(4);
+#ifdef __MAKE_EXPLICIT__
+    if (static_cast<int>(Id(5))) cout_dump_msg("explicit");
+    if (auto x = id.operator int() / 2) cout_dump_msg(x);
+#else
+    if (Id(5)) cout_dump_msg("implicit");
+    if (auto x = id / 2) cout_dump_msg(x);
+#endif
 }
