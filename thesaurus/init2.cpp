@@ -42,6 +42,10 @@ struct Id {
 struct Data {
     int m_iid;
 
+    ~Data() {
+        cout_dump_msg(m_iid);
+    }
+
     explicit Data(Id id) : m_iid(id.m_id) {
         cout_dump_msg(m_iid);
     }
@@ -78,6 +82,10 @@ int f(const Data& d) {
     return d.m_iid;
 }
 
+void g(std::unique_ptr<Data>&& p) {
+    cout_dump_msg(p->m_iid);
+}
+
 int main() {
 
     Data d1 = Data(Id());
@@ -111,4 +119,8 @@ int main() {
     if (Id(5)) cout_dump_msg("implicit");
     if (auto x = id / 2) cout_dump_msg(x);
 #endif
+
+    // std::unique_ptr has explicit ctor
+    std::unique_ptr<Data> p(new Data(6));
+    g(std::move(p));
 }
