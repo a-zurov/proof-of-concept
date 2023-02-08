@@ -86,6 +86,10 @@ void g(std::unique_ptr<Data>&& p) {
     cout_dump_msg(p->m_iid);
 }
 
+void h(std::shared_ptr<Data> p) {
+    cout_dump_msg(p->m_iid);
+}
+
 int main() {
 
     Data d1 = Data(Id());
@@ -120,7 +124,13 @@ int main() {
     if (auto x = id / 2) cout_dump_msg(x);
 #endif
 
-    // std::unique_ptr has explicit ctor
-    std::unique_ptr<Data> p(new Data(6));
+    // std::shared_ptr has explicit ctor and copyable
+    // h(new Data(6)); // CE due to ctor for class 'std::shared_ptr<Data>' is declared 'explicit'
+    std::shared_ptr<Data> sp(new Data(6));
+    h(sp);
+    std::cout << sp->m_iid << '\n';
+
+    // std::unique_ptr has explicit ctor and nocopyable
+    std::unique_ptr<Data> p(new Data(7));
     g(std::move(p));
 }
