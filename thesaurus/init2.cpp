@@ -90,6 +90,15 @@ void h(std::shared_ptr<Data> p) {
     cout_dump_msg(p->m_iid);
 }
 
+void bar(...) {
+    cout_dump();
+}
+
+void bar(Id id) {
+    cout_dump();
+}
+
+
 int main() {
 
     Data d1 = Data(Id());
@@ -133,4 +142,8 @@ int main() {
     // std::unique_ptr has explicit ctor and nocopyable
     std::unique_ptr<Data> p(new Data(7));
     g(std::move(p));
+
+    // overload metrics hint
+    bar(8l);
+    bar('c');
 }
