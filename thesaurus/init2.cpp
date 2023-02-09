@@ -98,6 +98,14 @@ void bar(Id id) {
     cout_dump();
 }
 
+void foo(Data d) {
+    cout_dump();
+}
+
+void foo(int j) {
+    cout_dump();
+}
+
 
 int main() {
 
@@ -146,4 +154,10 @@ int main() {
     // overload metrics hint
     bar(8l);
     bar('c');
+
+#ifndef __MAKE_EXPLICIT__
+    // positive hack
+    // foo(Id(9)); // CE 'foo': ambiguous call to overloaded function
+    foo(+Id(9));
+#endif
 }
