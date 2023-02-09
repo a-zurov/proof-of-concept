@@ -12,10 +12,23 @@ struct Id {
     int& access() {
         return m_id;
     }
+
+    int& better_access() & { // ref-annotation
+        return m_id;
+    }
 };
 
 int main() {
 
-    int& x = Id{}.access();
-    std::cout << x;
+    int& x = Id{}.access(); // dangling reference
+    std::cout << x << '\n'; // UB (!)
+
+    // int y = Id{}.better_access(); // CE: a non-const reference may only be bound to an lvalue
+    // const int& z = Id{}.better_access(); // CE: cannot convert 'this' pointer from 'Id' to 'Id &'
+
+    {
+        Id id;
+        int& w = id.better_access(); // Ok in this scope
+        std::cout << w;
+    }
 }
