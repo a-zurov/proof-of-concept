@@ -66,7 +66,7 @@ struct S {
 
     Boolean operator&&(const S& rhs) const
     {
-        cout_dump_msg(m_str);
+        cout_dump_msg(m_str << " && " << rhs.m_str);
         return m_bval && rhs.m_bval;
     }
 
