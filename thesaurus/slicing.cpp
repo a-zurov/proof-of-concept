@@ -29,8 +29,14 @@ struct Base {
     Base(int j) : b_(j) {
         cout_dump_msg(b_);
     }
+
     virtual void dump(std::ostream& os) const {
         os << __MAKE_DUMP__ << "\n Base dump: " << b_;
+    }
+
+    virtual Base* clone() const {
+        cout_dump();
+        return new Base(b_);
     }
 };
 
@@ -41,9 +47,21 @@ struct Derived : public Base {
     Derived(int j) : Base(j/2), d_(j) {
         cout_dump_msg(b_ << ' ' << d_);
     }
+
     void dump(std::ostream& os) const override {
         os << __MAKE_DUMP__ << "\n Derived dump: " << b_ << " " << d_;
     }
+
+    Derived* clone() const override {
+        cout_dump();
+        return new Derived(d_, b_);
+    }
+
+protected:
+    Derived(int d, int b) : Base(b), d_(d) {
+        cout_dump_msg(b_ << ' ' << d_);
+    }
+
 };
 
 std::ostream& operator<< (std::ostream & os, const Base & base) {
@@ -80,4 +98,6 @@ int main() {
     std::cout << ref_b << '\n';
     ref_b = d2; // slicing
     std::cout << ref_b << '\n';
+
+    par(ref_b.clone());
 }
