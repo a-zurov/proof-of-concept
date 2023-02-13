@@ -61,7 +61,6 @@ protected:
     Derived(int d, int b) : Base(b), d_(d) {
         cout_dump_msg(b_ << ' ' << d_);
     }
-
 };
 
 std::ostream& operator<< (std::ostream & os, const Base & base) {
@@ -88,7 +87,7 @@ void par(Base* ptr) {
 int main() {
 
     Derived d(12);
-    foo(d); // slicing
+    foo(d); // slicing due to non-polymorph copy-init
     bar(d);
     par(&d);
 
@@ -96,8 +95,10 @@ int main() {
     Derived d2(8);
     Base& ref_b = d1;
     std::cout << ref_b << '\n';
-    ref_b = d2; // slicing
+    ref_b = d2; // slicing due to non-polymorph implicit assignment
     std::cout << ref_b << '\n';
 
-    par(ref_b.clone());
+    Base* ptr_b = ref_b.clone();
+    par(ptr_b);
+    delete ptr_b;
 }
