@@ -69,9 +69,15 @@ void par(Base* ptr) {
 
 int main() {
 
-    Derived d(10);
-
-    foo(d);
+    Derived d(12);
+    foo(d); // slicing
     bar(d);
     par(&d);
+
+    Derived d1(10);
+    Derived d2(8);
+    Base& ref_b = d1;
+    std::cout << ref_b << '\n';
+    ref_b = d2; // slicing
+    std::cout << ref_b << '\n';
 }
