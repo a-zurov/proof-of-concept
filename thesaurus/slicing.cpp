@@ -20,6 +20,12 @@
 #define cout_dump() std::cout << __MAKE_DUMP__ << '\n'
 #define cout_dump_msg(x) std::cout << __MAKE_DUMP__ << ' ' << x << '\n'
 
+#define __VASSOP__ // suppress slicing (due to non-polymorph implicit assignment)
+
+#ifdef __VASSOP__
+struct Derived; // ?
+#endif
+
 struct Base {
 
     int b_;
@@ -29,6 +35,23 @@ struct Base {
     Base(int j) : b_(j) {
         cout_dump_msg(b_);
     }
+
+#ifdef __VASSOP__
+    Base& operator= (const Base& rhs) {
+        if (this == &rhs) {
+            return *this;
+        }
+        b_ = rhs.b_;
+        cout_dump_msg(b_);
+        return *this;
+    }
+
+    virtual Base& operator= (const Derived& rhs) {
+        cout_dump_msg(b_);
+        // return operator= (*static_cast<const Base*>(& rhs));
+        return operator= ((const Base&)rhs); // ?
+    }
+#endif //__VASSOP__
 
     virtual void dump(std::ostream& os) const {
         os << __MAKE_DUMP__ << "\n Base dump: " << b_;
@@ -47,6 +70,18 @@ struct Derived : public Base {
     Derived(int j) : Base(j/2), d_(j) {
         cout_dump_msg(b_ << ' ' << d_);
     }
+
+#ifdef __VASSOP__
+    Derived& operator= (const Derived& rhs) override {
+        if (this == &rhs) {
+            return *this;
+        }
+        b_ = rhs.b_;
+        d_ = rhs.d_;
+        cout_dump_msg(b_ << ' ' << d_);
+        return *this;
+    }
+#endif //__VASSOP__
 
     void dump(std::ostream& os) const override {
         os << __MAKE_DUMP__ << "\n Derived dump: " << b_ << " " << d_;
