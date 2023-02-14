@@ -98,11 +98,15 @@ protected:
     }
 };
 
+#ifdef __VASSOP__
+
 Base& Base::operator= (const Derived& rhs) {
     cout_dump_msg(rhs.b_ << ' ' << rhs.d_);
     // return operator= (*static_cast<const Base*>(& rhs));
     return operator= ((const Base&)rhs); // ?
 }
+
+#endif //__VASSOP__
 
 std::ostream& operator<< (std::ostream & os, const Base & base) {
     // cout_dump();
