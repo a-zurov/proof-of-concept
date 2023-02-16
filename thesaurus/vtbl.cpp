@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <cassert>
 
 #ifdef _MSC_VER
 #define __PRETTY_FUNCTION__ __FUNCSIG__
@@ -45,6 +46,8 @@ int main() {
     a1.foo();
     cout_dump_msg(&a1);
     cout_dump_msg(&a1.a_);
+
+    assert((sizeof(decltype(&A::foo)) == sizeof(void*)));
 
     B b1;
     b1.foo();
