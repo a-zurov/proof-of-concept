@@ -21,7 +21,7 @@ struct A {
 
     int a_{};
 
-    void foo(void) {
+    virtual void foo(void) {
         cout_dump_msg(this);
     }
 
@@ -34,7 +34,7 @@ struct B : public A {
 
     int b_{};
 
-    void foo(void) {
+    void foo(void) override {
         cout_dump_msg(this);
     }
 };
@@ -51,6 +51,7 @@ int main() {
     assert((sizeof(decltype(&A::foo)) == sizeof(void*)));
 #else
     cout_dump_msg((void*)&A::foo);
+    cout_dump_msg((void*)&B::foo);
     cout_dump_msg((void*)&A::bar);
     cout_dump_msg((void*)&B::bar);
     assert(((void*)&A::bar == (void*)&B::bar));
