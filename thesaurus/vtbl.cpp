@@ -51,10 +51,14 @@ int main() {
     assert((sizeof(decltype(&A::foo)) == sizeof(void*)));
 #else
     cout_dump_msg((void*)&A::foo);
+    cout_dump_msg((void*)&A::bar);
+    cout_dump_msg((void*)&B::bar);
 #endif
+    assert(&A::bar == &B::bar);
 
     B b1;
     b1.foo();
+    b1.bar();
     cout_dump_msg(&b1.a_);
     cout_dump_msg(&b1.b_);
 }
