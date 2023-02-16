@@ -47,7 +47,11 @@ int main() {
     cout_dump_msg(&a1);
     cout_dump_msg(&a1.a_);
 
+#ifdef _MSC_VER
     assert((sizeof(decltype(&A::foo)) == sizeof(void*)));
+#else
+    cout_dump_msg((void*)&A::foo);
+#endif
 
     B b1;
     b1.foo();
