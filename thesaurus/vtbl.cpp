@@ -53,8 +53,8 @@ int main() {
     cout_dump_msg((void*)&A::foo);
     cout_dump_msg((void*)&A::bar);
     cout_dump_msg((void*)&B::bar);
+    assert(((void*)&A::bar == (void*)&B::bar));
 #endif
-    assert(&A::bar == &B::bar);
 
     B b1;
     b1.foo();
