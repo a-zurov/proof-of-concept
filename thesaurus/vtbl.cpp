@@ -75,6 +75,11 @@ int main() {
     cout_dump_msg(*(void**)&a1);
     assert(*(void**)&a1 == *(void**)&a2);
 
+#ifndef _MSC_VER
+    assert(((void*)&A::foo == *(void**)*(void**)&a1));
+    assert(((void*)&A::foo == *(void**)*(void**)&a2));
+#endif
+
     B b1, b2;
     b1.foo();
     cout_dump_msg(&b1);
@@ -83,4 +88,9 @@ int main() {
 
     cout_dump_msg((void**)&b1);
     assert(*(void**)&b1 == *(void**)&b2);
+
+#ifndef _MSC_VER
+    assert(((void*)&B::foo == *(void**)*(void**)&b1));
+    assert(((void*)&B::foo == *(void**)*(void**)&b2));
+#endif
 }
