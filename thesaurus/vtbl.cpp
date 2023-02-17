@@ -17,9 +17,15 @@
 #define cout_dump() std::cout << __MAKE_DUMP__ << '\n'
 #define cout_dump_msg(x) std::cout << __MAKE_DUMP__ << ' ' << x << '\n'
 
-template<typename T, typename R>
+template<   typename T,
+            typename R,
+            typename = std::is_convertible<R(T::*)(), void*>
+        >
 void* void_cast(R(T::* f)())
 {
+#ifdef _MSC_VER
+    assert(sizeof(R(T::*)()) == sizeof(void*));
+#endif
     union
     {
         R(T::* pf)();
