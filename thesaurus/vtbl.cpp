@@ -17,16 +17,28 @@
 #define cout_dump() std::cout << __MAKE_DUMP__ << '\n'
 #define cout_dump_msg(x) std::cout << __MAKE_DUMP__ << ' ' << x << '\n'
 
+template<typename T, typename R>
+void* void_cast(R(T::* f)())
+{
+    union
+    {
+        R(T::* pf)();
+        void* p;
+    };
+    pf = f;
+    return p;
+}
+
 struct A {
 
     int a_{};
 
     virtual void foo(void) {
-        cout_dump_msg(this);
+        cout_dump_msg("this = " << this);
     }
 
     void bar(void) {
-        cout_dump_msg(this);
+        cout_dump_msg("this = " << this);
     }
 };
 
@@ -35,31 +47,34 @@ struct B : public A {
     int b_{};
 
     void foo(void) override {
-        cout_dump_msg(this);
+        cout_dump_msg("this = " << this);
     }
 };
 
-
 int main() {
 
-    A a1;
+#ifndef _MSC_VER
+    cout_dump_msg((void*)&A::foo);
+    cout_dump_msg((void*)&B::foo);
+#endif
+
+    cout_dump_msg(void_cast(&A::bar));
+    assert(void_cast(&A::bar) == void_cast(&B::bar));
+
+    A a1, a2;
     a1.foo();
     cout_dump_msg(&a1);
     cout_dump_msg(&a1.a_);
 
-#ifdef _MSC_VER
-    assert((sizeof(decltype(&A::foo)) == sizeof(void*)));
-#else
-    cout_dump_msg((void*)&A::foo);
-    cout_dump_msg((void*)&B::foo);
-    cout_dump_msg((void*)&A::bar);
-    cout_dump_msg((void*)&B::bar);
-    assert(((void*)&A::bar == (void*)&B::bar));
-#endif
+    cout_dump_msg(*(void**)&a1);
+    assert(*(void**)&a1 == *(void**)&a2);
 
-    B b1;
+    B b1, b2;
     b1.foo();
-    b1.bar();
+    cout_dump_msg(&b1);
     cout_dump_msg(&b1.a_);
     cout_dump_msg(&b1.b_);
+
+    cout_dump_msg((void**)&b1);
+    assert(*(void**)&b1 == *(void**)&b2);
 }
