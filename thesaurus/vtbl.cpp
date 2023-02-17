@@ -86,7 +86,7 @@ int main() {
     cout_dump_msg(&b1.a_);
     cout_dump_msg(&b1.b_);
 
-    cout_dump_msg((void**)&b1);
+    cout_dump_msg(*(void**)&b1);
     assert(*(void**)&b1 == *(void**)&b2);
 
 #ifndef _MSC_VER
