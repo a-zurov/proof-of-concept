@@ -40,9 +40,9 @@ struct A {
 
     //int a_{};
 
-    virtual void foo(void) {
+    virtual void foo(void) = 0; /* {
         cout_dump_msg("this = " << this);
-    }
+    }*/
 
     void bar(void) {
         cout_dump_msg("this = " << this);
@@ -53,7 +53,7 @@ struct B : public A {
 
     int b_{};
 
-    void foo(void) override {
+    virtual void foo(void) {
         cout_dump_msg("this = " << this);
     }
 };
@@ -76,19 +76,19 @@ int main() {
     cout_dump_msg(void_cast(&A::bar));
     assert(void_cast(&A::bar) == void_cast(&B::bar));
 
-    A a1, a2;
-    a1.foo();
-    cout_dump_msg(&a1);
+    //A a1, a2;
+    //a1.foo();
+    //cout_dump_msg(&a1);
     //cout_dump_msg(&a1.a_);
 
-    cout_dump_msg(*(void**)&a1);
-    assert(*(void**)&a1 == *(void**)&a2);
-
+    //cout_dump_msg(*(void**)&a1);
+    //assert(*(void**)&a1 == *(void**)&a2);
+/*
 #ifndef _MSC_VER
     assert(((void*)&A::foo == *(void**)*(void**)&a1));
     assert(((void*)&A::foo == *(void**)*(void**)&a2));
 #endif
-
+*/
     B b1, b2;
     b1.foo();
     cout_dump_msg(&b1);
