@@ -40,7 +40,7 @@ struct A {
 
     //int a_{};
 
-    virtual void foo(void) = 0; /* {
+    /* virtual void foo(void) {
         cout_dump_msg("this = " << this);
     }*/
 
