@@ -50,6 +50,8 @@ struct A : Empty {
     }
 };
 
+struct NonEmpty : A, Empty {};
+
 struct B : public A {
 
     int b_{};
@@ -60,8 +62,11 @@ struct B : public A {
 };
 
 int main() {
+
+    cout_dump_msg(sizeof(Empty));
+	cout_dump_msg(sizeof(NonEmpty));
     cout_dump_msg(alignof(A));
-    cout_dump_msg(sizeof(A));
+    cout_dump_msg(sizeof(A));    
     cout_dump_msg(alignof(B));
     cout_dump_msg(sizeof(B));
     cout_dump_msg(offsetof(B, b_));
