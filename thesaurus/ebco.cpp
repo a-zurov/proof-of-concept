@@ -38,12 +38,6 @@ void* void_cast(R(T::* f)())
 
 struct A {
 
-    //int a_{};
-
-    /* virtual void foo(void) {
-        cout_dump_msg("this = " << this);
-    }*/
-
     void bar(void) {
         cout_dump_msg("this = " << this);
     }
@@ -62,37 +56,20 @@ int main() {
 
     cout_dump_msg(alignof(A));
     cout_dump_msg(sizeof(A));
-    //cout_dump_msg(offsetof(A, a_));
     cout_dump_msg(alignof(B));
     cout_dump_msg(sizeof(B));
-    //cout_dump_msg(offsetof(B, a_));
     cout_dump_msg(offsetof(B, b_));
 
 #ifndef _MSC_VER
-    //cout_dump_msg((void*)&A::foo);
     cout_dump_msg((void*)&B::foo);
 #endif
 
     cout_dump_msg(void_cast(&A::bar));
     assert(void_cast(&A::bar) == void_cast(&B::bar));
 
-    //A a1, a2;
-    //a1.foo();
-    //cout_dump_msg(&a1);
-    //cout_dump_msg(&a1.a_);
-
-    //cout_dump_msg(*(void**)&a1);
-    //assert(*(void**)&a1 == *(void**)&a2);
-/*
-#ifndef _MSC_VER
-    assert(((void*)&A::foo == *(void**)*(void**)&a1));
-    assert(((void*)&A::foo == *(void**)*(void**)&a2));
-#endif
-*/
     B b1, b2;
     b1.foo();
     cout_dump_msg(&b1);
-    //cout_dump_msg(&b1.a_);
     cout_dump_msg(&b1.b_);
 
     cout_dump_msg(*(void**)&b1);
