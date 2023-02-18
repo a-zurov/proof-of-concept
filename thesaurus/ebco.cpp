@@ -36,7 +36,14 @@ void* void_cast(R(T::* f)())
     return p;
 }
 
-struct A {
+struct Empty {
+
+    void ops(void) {
+        cout_dump_msg("this = " << this);
+    }
+};
+
+struct A : Empty {
 
     void bar(void) {
         cout_dump_msg("this = " << this);
@@ -66,6 +73,7 @@ int main() {
 
     cout_dump_msg(void_cast(&A::bar));
     assert(void_cast(&A::bar) == void_cast(&B::bar));
+    assert(void_cast(&Empty::ops) == void_cast(&B::ops));
 
     B b1, b2;
     b1.foo();
