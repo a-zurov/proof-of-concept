@@ -69,7 +69,7 @@ int main() {
     cout_dump_msg(offsetof(B, b_));
 
 #ifndef _MSC_VER
-    cout_dump_msg((void*)&A::foo);
+    //cout_dump_msg((void*)&A::foo);
     cout_dump_msg((void*)&B::foo);
 #endif
 
