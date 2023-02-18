@@ -60,7 +60,6 @@ struct B : public A {
 };
 
 int main() {
-
     cout_dump_msg(alignof(A));
     cout_dump_msg(sizeof(A));
     cout_dump_msg(alignof(B));
