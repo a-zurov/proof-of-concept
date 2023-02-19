@@ -52,7 +52,7 @@ struct A : Empty {
 
 struct NonEmpty : A, Empty {};
 
-struct B : public A {
+struct B : public A { // try struct B : NonEmpty
 
     int b_{};
 
