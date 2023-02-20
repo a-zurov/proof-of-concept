@@ -1,4 +1,4 @@
-// vtbl.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// pvc.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // ------------------------------------------
 
 #include <iostream>
@@ -35,12 +35,17 @@ void* void_cast(R(T::* f)())
     return p;
 }
 
-struct A {
+struct IEmpty {
+    virtual void foo(void) = 0;
+};
+
+struct A : IEmpty {
 
     int a_;
 
     A(int j = 0) : a_(j) {
         cout_dump_msg("this = " << this);
+        foo();
     }
 
     virtual void foo(void) {
@@ -62,9 +67,14 @@ struct B : public A {
 
     B(int j = 0, int k = 0) : A(j), b_(k)  {
         cout_dump_msg("this = " << this);
+        foo();
     }
 
     void foo(void) override {
+        cout_dump_msg("this = " << this);
+    }
+
+    ~B() {
         cout_dump_msg("this = " << this);
     }
 };
