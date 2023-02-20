@@ -36,8 +36,15 @@ void* void_cast(R(T::* f)())
 }
 
 struct IBase {
+
+#if defined(PVC)
+    IBase() { unsafe(); }
+#endif
+
     virtual void foo(void) = 0;
+
     virtual ~IBase() {}
+
     void unsafe() {
         cout_dump_msg("this = " << this);
         foo();
