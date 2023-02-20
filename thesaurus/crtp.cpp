@@ -18,25 +18,25 @@
 #define cout_dump_msg(x) std::cout << __MAKE_DUMP__ << ' ' << x << '\n'
 
 template<typename CountedType>
-class CCounter
+class BaseCounter
 {
 private:
     static std::size_t count_;
 
 protected:
-    CCounter() {
+    BaseCounter() {
         cout_dump_msg( ++count_ << " this = " << this );
     }
 
-    CCounter(CCounter<CountedType> const& cc) {
+    BaseCounter( BaseCounter<CountedType> const& cc ) {
         cout_dump_msg( ++count_ << " this = " << this << ' ' << &cc );
     }
 
-    CCounter(CCounter<CountedType>&& cc) noexcept {
+    BaseCounter( BaseCounter<CountedType>&& cc ) noexcept {
         cout_dump_msg( ++count_ << " this = " << this << ' ' << &cc );
     }
 
-    ~CCounter() {
+    ~BaseCounter() {
         cout_dump_msg( --count_ << " this = " << this );
     }
 
@@ -47,30 +47,30 @@ public:
 };
 
 template<typename CountedType>
-std::size_t CCounter<CountedType>::count_ = 0;
+std::size_t BaseCounter<CountedType>::count_ = 0;
 
 template<typename T>
-class A : public CCounter<A<T>>
+class Derived : public BaseCounter<Derived<T>>
 {
-    T a_;
+    T x_;
 };
 
-using B = A<int>;
+using D = Derived<int>;
 
 int main() {
 
-    cout_dump_msg(sizeof(B));
+    cout_dump_msg(sizeof(D)); // EBCO
 
-    B a1, a2;
-    cout_dump_msg(B::alive());
+    D d1, d2;
+    cout_dump_msg(D::alive());
 
     {
-        std::vector<B> v1{ a1, std::move(a2) };
-        cout_dump_msg(B::alive());
+        std::vector<D> v1{ d1, std::move(d2) };
+        cout_dump_msg(D::alive());
 
-        v1.emplace_back(B());
-        cout_dump_msg(B::alive());
+        v1.emplace_back(D());
+        cout_dump_msg(D::alive());
     }
 
-    cout_dump_msg(B::alive());
+    cout_dump_msg(D::alive());
 }
