@@ -48,7 +48,7 @@ struct A : IEmpty {
         foo();
     }
 
-    virtual void foo(void) {
+    void foo(void) override {
         cout_dump_msg("this = " << this);
     }
 
