@@ -35,11 +35,12 @@ void* void_cast(R(T::* f)())
     return p;
 }
 
-struct IEmpty {
+struct IBase {
     virtual void foo(void) = 0;
+    virtual ~IBase() {}
 };
 
-struct A : IEmpty {
+struct A : IBase {
 
     int a_;
 
@@ -80,6 +81,8 @@ struct B : public A {
 };
 
 int main() {
+
+    cout_dump_msg(sizeof(IBase));
 
 #ifndef _MSC_VER
     cout_dump_msg((void*)&A::foo);
