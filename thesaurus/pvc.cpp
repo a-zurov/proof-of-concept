@@ -38,6 +38,10 @@ void* void_cast(R(T::* f)())
 struct IBase {
     virtual void foo(void) = 0;
     virtual ~IBase() {}
+    void unsafe() {
+        cout_dump_msg("this = " << this);
+        foo();
+    }
 };
 
 struct A : IBase {
@@ -47,6 +51,8 @@ struct A : IBase {
     A(int j = 0) : a_(j) {
         cout_dump_msg("this = " << this);
         foo();
+        unsafe();
+        IBase::unsafe();
     }
 
     void foo(void) override {
@@ -69,6 +75,10 @@ struct B : public A {
     B(int j = 0, int k = 0) : A(j), b_(k)  {
         cout_dump_msg("this = " << this);
         foo();
+        A::foo();
+        IBase::unsafe();
+        A::unsafe();
+        unsafe();
     }
 
     void foo(void) override {
@@ -76,6 +86,10 @@ struct B : public A {
     }
 
     ~B() {
+        cout_dump_msg("this = " << this);
+    }
+
+    void unsafe() {
         cout_dump_msg("this = " << this);
     }
 };
