@@ -1,6 +1,6 @@
-// static_cast.cpp : This file contains the 'main' function. Program execution begins and ends there.
-// -----------------------------------------------
-// Static casts with statically calculated offsets
+// slicing2.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// --------------------------------------------------------------
+// Static casts leads to slicing but it's not a polymorphic behaviour
 
 #include <iostream>
 #include <cstddef>
@@ -45,7 +45,7 @@ struct Base {
 
 std::vector<std::thread> Base::vec_threads_;
 
-struct InputBase :virtual Base {
+struct InputBase : virtual Base {
 
     InputBase() {
         vec_threads_.emplace_back(*this);
