@@ -3,6 +3,7 @@
 // Static casts with statically calculated offsets
 
 #include <iostream>
+#include <cstddef>
 
 #if defined( _MSC_VER )
 #define __PRETTY_FUNCTION__ __FUNCSIG__
@@ -17,27 +18,56 @@
 #define cout_dump_msg(x) std::cout << __MAKE_DUMP__ << ' ' << x << '\n'
 
 struct Base {
-    int x_, y_;
+    int a_;
+    Base(int a = 0) : a_{a} {
+        cout_dump_msg("sizeof = " << sizeof(Base));
+        cout_dump_msg("this = " << this);
+        cout_dump_msg("offsetof(a_) = " << offsetof(Base, a_));
+        cout_dump_msg("&a_  = " << &a_);
+    }
     virtual void fill() = 0;
-    virtual ~Base() { cout_dump(); }
+    virtual ~Base() {
+        cout_dump();
+    }
 };
 
 struct InputBase {
     int b_;
-    InputBase(int b) : b_{b} {}
-    virtual ~InputBase() { cout_dump(); }
+    InputBase(int b) : b_{b} {
+        cout_dump_msg("sizeof = " << sizeof(InputBase));
+        cout_dump_msg("this = " << this);
+        cout_dump_msg("offsetof(b_) = " << offsetof(InputBase, b_));
+        cout_dump_msg("&b_  = " << &b_);
+    }
+    virtual ~InputBase() {
+        cout_dump();
+    }
 };
 
 struct OutputBase {
     int c_;
-    OutputBase(int c) : c_{c} {}
-    virtual ~OutputBase() { cout_dump(); }
+    OutputBase(int c) : c_{c} {
+        cout_dump_msg("sizeof = " << sizeof(OutputBase));
+        cout_dump_msg("this = " << this);
+        cout_dump_msg("offsetof(c_) = " << offsetof(OutputBase, c_));
+        cout_dump_msg("&c_  = " << &c_);
+    }
+    virtual ~OutputBase() {
+        cout_dump();
+    }
 };
 
-struct IODerived : Base, InputBase, OutputBase {
+struct IODerived final : Base, InputBase, OutputBase {
     int d_;
-    void fill() override { cout_dump(); }
-    IODerived(int d) : InputBase(d*2), OutputBase(d*3), d_{d} {}
+    void fill() override {
+        cout_dump();
+    }
+    IODerived(int d) : InputBase(d*2), OutputBase(d*3), d_{d} {
+        cout_dump_msg("sizeof = " << sizeof(IODerived));
+        cout_dump_msg("this = " << this);
+        cout_dump_msg("offsetof(d_) = " << offsetof(IODerived, d_));
+        cout_dump_msg("&d_  = " << &d_);
+    }
 };
 
 int main() {
@@ -67,8 +97,6 @@ int main() {
     }
 
     Base* pB = static_cast<Base*>(pIOD);
-
     pB->fill();
-
     delete pB;
 }
