@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <cstddef>
+#include <cassert>
 #include <vector>
 #include <thread>
 #include <mutex>
@@ -53,8 +54,11 @@ std::vector<std::thread> Base::vec_threads_;
 
 struct InputBase : virtual Base {
 
+    int b_{};
+
     InputBase() {
         cout_dump_msg_lock("this = " << std::hex << this);
+        foo();
         vec_threads_.emplace_back( std::thread{ *this, this } );
     }
     InputBase(const InputBase& ib) {
@@ -74,6 +78,8 @@ struct InputBase : virtual Base {
 };
 
 struct OutputBase : virtual Base {
+
+    int c_{};
 
     OutputBase() {
         cout_dump_msg_lock_ex("this = " << std::hex << this);
@@ -96,6 +102,8 @@ struct OutputBase : virtual Base {
 };
 
 struct IODerived final : InputBase, OutputBase {
+
+    int d_{};
 
     IODerived() : InputBase(), OutputBase() {
 
@@ -128,11 +136,23 @@ struct IODerived final : InputBase, OutputBase {
 
 int main() {
 
+    cout_dump_msg(sizeof(InputBase));
+    cout_dump_msg(offsetof(InputBase, b_));
+    cout_dump_msg(alignof(InputBase));
+
+    cout_dump_msg(sizeof(IODerived));
+    cout_dump_msg(offsetof(IODerived, d_));
+    cout_dump_msg(alignof(IODerived));
+
     IODerived d;
 
     for (auto& th : Base::vec_threads_) {
         th.join();
     }
+
+#ifndef _MSC_VER
+    assert(((void*)&IODerived::foo == *(void**)*(void**)&d));
+#endif
 
     //std::thread th{ &IODerived::foo, &d };
     //th.join();
