@@ -22,22 +22,26 @@
 
 std::mutex g_mutex;
 
-#define cout_dump_lock() { std::lock_guard<std::mutex> lock(g_mutex); \
-                         std::cout << __MAKE_DUMP__ << '\n'; }
+#define cout_dump_lock()        { std::lock_guard<std::mutex> lock(g_mutex); \
+                                    cout_dump(); }
+#define cout_dump_msg_lock(x)   { std::lock_guard<std::mutex> lock(g_mutex); \
+                                    cout_dump_msg(x); }
 
-//#define _DUMP_EX
+#define _DUMP_EX
 
 #if defined (_DUMP_EX )
-#define cout_dump_lock_ex() cout_dump_lock()
+#define cout_dump_lock_ex()         cout_dump_lock()
+#define cout_dump_lock_msg_ex(x)    cout_dump_msg_lock(x)
 #else
 #define cout_dump_lock_ex()
+#define cout_dump_lock_msg_ex(x)
 #endif
 
 struct Base {
 
     static std::vector<std::thread> vec_threads_;
 
-    virtual void operator ()() = 0;
+    virtual void operator ()(Base*) = 0;
     virtual ~Base() {
         cout_dump_lock_ex();
     }
@@ -48,10 +52,14 @@ std::vector<std::thread> Base::vec_threads_;
 struct InputBase : virtual Base {
 
     InputBase() {
-        vec_threads_.emplace_back(*this);
+        cout_dump_lock_msg_ex("this = " << std::hex << this);
+        vec_threads_.emplace_back(std::thread(*this, this));
     }
-    void operator ()() override {
-        cout_dump_lock();
+    InputBase(const InputBase& ib) {
+        cout_dump_lock_msg_ex("this = " << std::hex << this << ' ' << &ib);
+    }
+    void operator ()(Base* p) override {
+        cout_dump_msg_lock("this = " << std::hex << this << ' ' << p);
     }
     virtual ~InputBase() {
         cout_dump_lock_ex();
@@ -61,10 +69,13 @@ struct InputBase : virtual Base {
 struct OutputBase : virtual Base {
 
     OutputBase() {
-        vec_threads_.emplace_back(*this);
+        vec_threads_.emplace_back(std::thread(*this, this));
     }
-    void operator ()() override {
-        cout_dump_lock();
+    OutputBase(const OutputBase& ob) {
+        cout_dump_lock_msg_ex("this = " << std::hex << this << ' ' << &ob);
+    }
+    void operator ()(Base* p) override {
+        cout_dump_msg_lock("this = " << std::hex << this << ' ' << p);
     }
     virtual ~OutputBase() {
         cout_dump_lock_ex();
@@ -75,17 +86,17 @@ struct IODerived final : InputBase, OutputBase {
 
     IODerived() : InputBase(), OutputBase() {
 
-        vec_threads_.emplace_back(*this);
-        vec_threads_.emplace_back(*static_cast<InputBase*>(this));
-        vec_threads_.emplace_back(*static_cast<OutputBase*>(this));
+        vec_threads_.emplace_back(std::thread(*this, this));
+        vec_threads_.emplace_back(std::thread(*static_cast<InputBase*>(this), this));
+        vec_threads_.emplace_back(std::thread(*static_cast<OutputBase*>(this), this));
 
 #if defined (_DUMP_EX )
-        static_cast<InputBase*>(this)->operator()();
-        static_cast<OutputBase*>(this)->operator()();
+        static_cast<InputBase*>(this)->operator()(this);
+        static_cast<OutputBase*>(this)->operator()(this);
 #endif
     }
-    void operator ()() override {
-        cout_dump_lock();
+    void operator ()(Base* p) override {
+        cout_dump_msg_lock("this = " << std::hex << this << ' ' << p);
     }
     virtual ~IODerived() {
         cout_dump_lock_ex();
