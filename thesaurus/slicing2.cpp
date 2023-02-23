@@ -7,6 +7,7 @@
 #include <vector>
 #include <thread>
 #include <mutex>
+#include <chrono>
 
 #if defined( _MSC_VER )
 #define __PRETTY_FUNCTION__ __FUNCSIG__
@@ -57,18 +58,18 @@ struct InputBase : virtual Base {
         vec_threads_.emplace_back( std::thread{ *this, this } );
     }
     InputBase(const InputBase& ib) {
-        cout_dump_msg_lock("this = " << std::hex << this << ' ' << &ib);
+        cout_dump_msg_lock("this = " << std::hex << this << " from " << &ib);
     }
     void foo() override {
-        cout_dump_lock();
+        cout_dump_msg_lock("this = " << std::hex << this);
     }
     void operator ()(Base* p) override {
-        cout_dump_msg_lock("this = " << std::hex << this << ' ' << p);
-        p->foo();
+        cout_dump_msg_lock("this = " << std::hex << this << " Base* p = " << p);
         foo();
+        p->foo();
     }
     virtual ~InputBase() {
-        cout_dump_lock();
+        cout_dump_msg_lock("this = " << std::hex << this);
     }
 };
 
@@ -79,15 +80,15 @@ struct OutputBase : virtual Base {
         vec_threads_.emplace_back( std::thread{ *this, this } );
     }
     OutputBase(const OutputBase& ob) {
-        cout_dump_msg_lock_ex("this = " << std::hex << this << ' ' << &ob);
+        cout_dump_msg_lock_ex("this = " << std::hex << this << " from " << &ob);
     }
     void foo() override {
         cout_dump_lock_ex();
     }
     void operator ()(Base* p) override {
-        cout_dump_msg_lock_ex("this = " << std::hex << this << ' ' << p);
-        p->foo();
+        cout_dump_msg_lock_ex("this = " << std::hex << this << " Base* p = " << p);
         foo();
+        p->foo();
     }
     virtual ~OutputBase() {
         cout_dump_lock_ex();
@@ -98,24 +99,27 @@ struct IODerived final : InputBase, OutputBase {
 
     IODerived() : InputBase(), OutputBase() {
 
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        cout_dump_msg_lock("this = " << std::hex << this);
+
         vec_threads_.emplace_back( std::thread{ *this, this } );
 
         //vec_threads_.emplace_back( std::thread{ *static_cast<InputBase*>(this), this } );
         //vec_threads_.emplace_back( std::thread{ *static_cast<OutputBase*>(this), this } );
         //static_cast<InputBase*>(this)->operator()(this);
         //static_cast<OutputBase*>(this)->operator()(this);
-
     }
     IODerived(const IODerived& ob) {
-        cout_dump_msg_lock("this = " << std::hex << this << ' ' << &ob);
+        cout_dump_msg_lock("this = " << std::hex << this << " from " << &ob);
     }
     void foo() override {
         cout_dump_msg_lock("this = " << std::hex << this);
     }
     void operator ()(Base* p) override {
-        cout_dump_msg_lock("this = " << std::hex << this << ' ' << p);
-        p->foo();
+        cout_dump_msg_lock("this = " << std::hex << this << " Base* p = " << p);
         foo();
+        p->foo();
     }
     virtual ~IODerived() {
         cout_dump_lock();
@@ -132,5 +136,4 @@ int main() {
 
     //std::thread th{ &IODerived::foo, &d };
     //th.join();
-
 }
