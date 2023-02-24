@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <cstring>
+#include <cassert>
+#include <type_traits>
 #include <memory>
 
 #if defined( _MSC_VER )
@@ -80,7 +82,28 @@ bool foo(int j, char* pch) {
     return true;
 }
 
+template <typename T>
+using decay_t = std::decay_t<T>;
+
+template <typename T>
+void boo(decay_t<T>) {
+    cout_dump();
+}
+
 int main() {
+
+    using func_t = bool(int, char*);
+    using ptr_func_t = bool(*)(int, char*);
+    using ref_func_t = bool(&)(int, char*);
+    using ref_ptr_func_t = bool(*&)(int, char*);
+    using rref_ptr_func_t = bool(*&&)(int, char*);
+
+    boo<func_t>(foo);
+
+    assert((std::is_same< decay_t<func_t>, decay_t<ptr_func_t> >::value));
+    assert((std::is_same< decay_t<func_t>, decay_t<ref_func_t> >::value));
+    assert((std::is_same< decay_t<func_t>, decay_t<ref_ptr_func_t> >::value));
+    assert((std::is_same< decay_t<func_t>, decay_t<rref_ptr_func_t> >::value));
 
     function f = foo;
     f(10, const_cast<char*>("xyz"));
