@@ -52,13 +52,16 @@ struct resource_holder
 };
 
 struct A {
-    int x, y, z;
+    int x_, y_, z_;
 };
 
 int main() {
 
     resource_holder h1{ A{ 1, 2, 3 } };
     resource_holder h2{ std::move(h1) };
+
+    cout_dump_msg( static_cast<resource_container<A>*>(h2.m_container.get())->m_resource.x_ );
+    cout_dump_msg( static_cast<resource_container<A>*>(h2.m_container.get())->m_resource.y_ );
 
     A a{ 3,2,1 };
     resource_holder h3{ a };
