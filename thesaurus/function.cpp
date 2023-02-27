@@ -53,11 +53,17 @@ struct callable : callable_base
     }
 };
 
+template<typename A, typename B>
+using disable_if_same_or_derived =
+typename std::enable_if<
+    !std::is_base_of<A, typename  std::remove_reference<B>::type>::value
+    >::type;
+
 struct function
 {
     std::unique_ptr<callable_base> m_callable;
 
-    template<typename T>
+    template<typename T, typename = disable_if_same_or_derived<function,T>>
     function(T&& t) : m_callable{ new callable<std::decay_t<T>>( std::forward<T>(t) ) } {
         cout_dump();
     }
