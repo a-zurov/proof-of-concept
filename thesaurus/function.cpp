@@ -90,7 +90,19 @@ void boo(decay_t<T>) {
     cout_dump();
 }
 
+struct S {
+    S() { cout_dump(); }
+    S(const S&) { cout_dump(); }
+};
+
+void goo(S) {
+    cout_dump();
+}
+
 int main() {
+
+    S s;
+    goo(s);
 
     using func_t = bool(int, char*);
     using ptr_func_t = bool(*)(int, char*);
