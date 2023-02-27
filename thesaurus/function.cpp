@@ -99,6 +99,11 @@ void goo(S) {
     cout_dump();
 }
 
+bool ops(function f) {
+    cout_dump();
+    return f(5, const_cast<char*>("abc"));
+}
+
 int main() {
 
     S s;
@@ -119,4 +124,6 @@ int main() {
 
     function f = foo;
     f(10, const_cast<char*>("xyz"));
+
+    ops(f);
 }
