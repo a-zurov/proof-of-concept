@@ -110,6 +110,23 @@ bool ops(function f) {
     return f(5, const_cast<char*>("abc"));
 }
 
+template <typename R, typename... A>
+struct function2 {
+
+    using pfunc_t = R(*)(A...);
+
+    pfunc_t pfunc_;
+
+    function2(pfunc_t pfunc) : pfunc_(pfunc) {
+        cout_dump();
+    }
+
+    R operator()(A... a) {
+        cout_dump();
+        return pfunc_(a...);
+    }
+};
+
 int main() {
 
     S s;
@@ -130,6 +147,8 @@ int main() {
 
     function f = foo;
     f(10, const_cast<char*>("xyz"));
-
     ops(f);
+
+    function2 f2 = foo;
+    ops(f2);
 }
