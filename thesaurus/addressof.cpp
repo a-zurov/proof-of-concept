@@ -23,13 +23,20 @@
 #define cout_dump()
 #endif
 
+template<class T>
+T* addressof(T& arg)
+{
+    return reinterpret_cast<T*>(
+        &const_cast<char&>(reinterpret_cast<const volatile char&>(arg))
+        );
+}
 
 template<typename T>
 struct A
 {
     T* m_ptr;
 
-    A(T& t) : m_ptr(&t) {
+    A(T& t) : m_ptr(addressof(t)) {
         cout_dump();
     }
 
