@@ -62,6 +62,11 @@ struct B {
         m_ptr = rhs.m_ptr;
         return *this;
     }
+
+    T* operator &() const {
+        cout_dump();
+        return m_ptr;
+    }
 };
 
 int main(int argc, char** argv) {
