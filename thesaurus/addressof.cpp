@@ -71,9 +71,11 @@ int main(int argc, char** argv) {
 #ifdef _MSC_VER
     auto a = A(x);
     auto b = B(x);
+    auto c = A(b);
 #else
     auto a = A<int>(x);
     auto b = B<int>(x);
+    auto c = A<B<int>>(b);
 #endif
 
 }
