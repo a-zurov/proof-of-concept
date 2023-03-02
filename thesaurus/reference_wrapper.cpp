@@ -172,8 +172,9 @@ int main(int argc, char** argv) {
         printf("can use input parameter\t: %s <number-of-elements>\n",
             std::strrchr(argv[0], __DELIM__) + 1);
     } else {
-        size_t N = strtol(argv[1], NULL, 10);
+        int N = strtol(argv[1], NULL, 10);
         assert(N > 0);
+        printf("input parameter\t: %d \n", N);
         vec.resize(N);
         for (size_t j = 0; j < N; ++j) {
             vec[j] = rand() % N;
