@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
     functor_predicate<int> fpred;
 
     vector<reference_wrapper<int>> vec_rw1{ vec.begin(), vec.end() };
-    std::sort(vec_rw0.begin(), vec_rw0.end(), fpred);
+    std::sort(vec_rw1.begin(), vec_rw1.end(), fpred);
     assert(0 == fpred.m_count);
 
 #ifdef _MSC_VER
