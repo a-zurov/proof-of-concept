@@ -8,6 +8,7 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 #if defined( _MSC_VER )
 #define __PRETTY_FUNCTION__ __FUNCSIG__
@@ -64,11 +65,29 @@ struct reference_wrapper
         return *_Ptr;
     }
 
+#if 0
     template <typename U>
     bool operator()(const U& lhs, const U& rhs) {
         cout_dump();
         return _Ptr->operator()(lhs, rhs);
     }
+#else
+
+#ifdef _MSC_VER
+#define  __invoke__ std::invoke
+#else
+#define  __invoke__ std::__invoke
+#endif
+
+    template <class... _Types>
+    inline auto operator()(_Types&&... _Args) const noexcept(noexcept( __invoke__(*_Ptr, static_cast<_Types&&>(_Args)...)))
+        -> decltype( __invoke__(*_Ptr, static_cast<_Types&&>(_Args)...)) {
+        return __invoke__(*_Ptr, std::forward<_Types>(_Args)...);
+    }
+
+#undef  __invoke__
+
+#endif
 };
 
 template<typename T>
