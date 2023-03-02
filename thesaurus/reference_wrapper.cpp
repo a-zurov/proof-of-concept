@@ -49,6 +49,16 @@ struct reference_wrapper
         m_ptr = rhs.m_ptr;
         return *this;
     }
+
+    operator T& () const {
+        cout_dump();
+        return this->get();
+    }
+
+    T& get() const {
+        cout_dump();
+        return *m_ptr;
+    }
 };
 
 template<typename T>
