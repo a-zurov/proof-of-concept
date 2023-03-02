@@ -38,19 +38,19 @@ T* addressof(T& arg)
 template<typename T>
 struct reference_wrapper
 {
-    T* m_ptr;
+    T* _Ptr;
 
-    reference_wrapper(T& t) : m_ptr(addressof(t)) {
+    reference_wrapper(T& t) : _Ptr(addressof(t)) {
         cout_dump();
     }
 
-    reference_wrapper(const reference_wrapper<T>& other) : m_ptr(other.m_ptr) {
+    reference_wrapper(const reference_wrapper<T>& other) : _Ptr(other._Ptr) {
         cout_dump();
     }
 
     reference_wrapper& operator=(const reference_wrapper<T>& rhs) {
         cout_dump();
-        m_ptr = rhs.m_ptr;
+        _Ptr = rhs._Ptr;
         return *this;
     }
 
@@ -61,38 +61,38 @@ struct reference_wrapper
 
     T& get() const {
         cout_dump();
-        return *m_ptr;
+        return *_Ptr;
     }
 
     template <typename U>
     bool operator()(const U& lhs, const U& rhs) {
         cout_dump();
-        return m_ptr->operator()(lhs, rhs);
+        return _Ptr->operator()(lhs, rhs);
     }
 };
 
 template<typename T>
 struct B {
 
-    T* m_ptr;
+    T* _Ptr;
 
-    B(T& t) : m_ptr(&t) {
+    B(T& t) : _Ptr(&t) {
         cout_dump();
     }
 
-    B(const B<T>& other) : m_ptr(other.m_ptr) {
+    B(const B<T>& other) : _Ptr(other._Ptr) {
         cout_dump();
     }
 
     B& operator=(const B<T>& rhs) {
         cout_dump();
-        m_ptr = rhs.m_ptr;
+        _Ptr = rhs._Ptr;
         return *this;
     }
 
     T* operator &() const {
         cout_dump();
-        return m_ptr;
+        return _Ptr;
     }
 };
 
