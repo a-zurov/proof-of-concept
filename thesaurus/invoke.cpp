@@ -43,7 +43,7 @@ inline void foo(F f, _Types&&... args) {
 
 template<typename F, class... _Types>
 auto foo(F f, _Types&&... args) -> std::enable_if_t<
-    not std::is_member_function_pointer<F>::value and not std::is_class<F>::value
+    not std::is_class<F>::value and not std::is_member_function_pointer<F>::value
 >
 {
     cout_dump();
@@ -70,9 +70,7 @@ auto foo(F f, _Ty1 arg1, _Types2... args) -> std::enable_if_t <
 
 template<class _Ty1, class... _Types2>
 auto foo(_Ty1 arg1, _Types2... args) -> std::enable_if_t<
-    std::is_class<_Ty1>::value and
-    not std::is_member_function_pointer<_Ty1>::value and
-    not std::is_function<_Ty1>::value
+    std::is_class<_Ty1>::value
 >
 {
     cout_dump();
