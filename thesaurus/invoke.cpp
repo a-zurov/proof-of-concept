@@ -43,7 +43,7 @@ inline void foo(F f, _Types&&... args) {
 
 template<typename F, class... _Types>
 auto foo(F f, _Types&&... args) -> std::enable_if_t<
-    not std::is_member_function_pointer<F>::value
+    not std::is_member_function_pointer<F>::value and not std::is_class<F>::value
 >
 {
     cout_dump();
@@ -68,6 +68,17 @@ auto foo(F f, _Ty1 arg1, _Types2... args) -> std::enable_if_t <
     (arg1->*f)(std::forward<_Types2>(args)...);
 }
 
+template<class _Ty1, class... _Types2>
+auto foo(_Ty1 arg1, _Types2... args) -> std::enable_if_t<
+    std::is_class<_Ty1>::value and
+    not std::is_member_function_pointer<_Ty1>::value and
+    not std::is_function<_Ty1>::value
+>
+{
+    cout_dump();
+    arg1.operator()(std::forward<_Types2>(args)...);
+}
+
 #endif // invoke_switch
 
 void bar(int x1, int x2, int x3) {
@@ -82,6 +93,10 @@ struct Bar
 
     void operator()(int j, const std::string& s) {
         cout_dump_msg(j << ' ' << s);
+    }
+
+    void operator()(const std::string& s, int j) {
+        cout_dump_msg(s << ' ' << j);
     }
 
     void ops(int x) {
@@ -102,7 +117,9 @@ int main(int argc, char** argv) {
     foo(&Bar::bar, b, x2, 3, x1);
     foo(&Bar::bar, &b, 3, x1, x2);
 
-    foo(&Bar::operator(), b, 9, "abc");
+    //foo(&Bar::operator(), b, 9, "abc");
+    foo(b, 42, "xyz");
+    foo(b, "abc", 24);
 
     void (Bar::* mp_ops_int)(int) = &Bar::ops;
     void (Bar::* mp_ops_2int)(int, int) = &Bar::ops;
