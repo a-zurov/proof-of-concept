@@ -51,7 +51,7 @@ auto foo(F f, _Types&&... args) -> std::enable_if_t<
 }
 
 template<typename F, class _Ty1, class... _Types2>
-auto foo(F f, _Ty1 arg1, _Types2... args) -> std::enable_if_t<
+auto foo(F f, _Ty1 arg1, _Types2&&... args) -> std::enable_if_t<
     std::is_member_function_pointer<F>::value and not std::is_pointer<_Ty1>::value
 >
 {
@@ -60,7 +60,7 @@ auto foo(F f, _Ty1 arg1, _Types2... args) -> std::enable_if_t<
 }
 
 template<typename F, class _Ty1, class... _Types2>
-auto foo(F f, _Ty1 arg1, _Types2... args) -> std::enable_if_t <
+auto foo(F f, _Ty1 arg1, _Types2&&... args) -> std::enable_if_t <
     std::is_member_function_pointer<F>::value and std::is_pointer<_Ty1>::value
 >
 {
@@ -69,7 +69,7 @@ auto foo(F f, _Ty1 arg1, _Types2... args) -> std::enable_if_t <
 }
 
 template<class _Ty1, class... _Types2>
-auto foo(_Ty1 arg1, _Types2... args) -> std::enable_if_t<
+auto foo(_Ty1 arg1, _Types2&&... args) -> std::enable_if_t<
     std::is_class<_Ty1>::value
 >
 {
