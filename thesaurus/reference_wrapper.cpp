@@ -166,6 +166,10 @@ struct functor_predicate
         ++ms_fcall_count;
         return lhs > rhs;
     }
+
+    bool operator()(const T& lhs, const T& mhs, const T& rhs) {
+        return mhs, lhs > rhs;
+    }
 };
 
 template <typename T>
