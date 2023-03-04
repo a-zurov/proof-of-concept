@@ -83,6 +83,14 @@ struct Bar
     void operator()(int j, const std::string& s) {
         cout_dump_msg(j << ' ' << s);
     }
+
+    void ops(int x) {
+        cout_dump_msg(x);
+    }
+
+    void ops(int x1, int x2) {
+        cout_dump_msg(x1 << ' ' << x2);
+    }
 };
 
 int main(int argc, char** argv) {
@@ -95,4 +103,10 @@ int main(int argc, char** argv) {
     foo(&Bar::bar, &b, 3, x1, x2);
 
     foo(&Bar::operator(), b, 9, "abc");
+
+    void (Bar::* mp_ops_int)(int) = &Bar::ops;
+    void (Bar::* mp_ops_2int)(int, int) = &Bar::ops;
+
+    foo(mp_ops_int, b, 100);
+    foo(mp_ops_2int, &b, 200, 300);
 }
