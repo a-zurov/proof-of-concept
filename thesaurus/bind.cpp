@@ -33,14 +33,14 @@ struct argument_list
     std::tuple<_Types...> tupleArgs_;
 
     template<class... T>
-    constexpr argument_list(T&&... args) noexcept
+    argument_list(T&&... args) noexcept
         : tupleArgs_{ std::forward<T>(args)... }
     {
         cout_dump();
     }
 
     template<size_t n>
-    constexpr decltype(auto) operator[](std::integral_constant<size_t, n>) noexcept {
+    decltype(auto) operator[](std::integral_constant<size_t, n>) noexcept {
         cout_dump();
         return std::get<n>(tupleArgs_);
     }
@@ -52,16 +52,16 @@ struct callee_list
     std::tuple<_Types&&...> tupleArgs_;
 
     template<class... _TyArgs>
-    constexpr callee_list(_TyArgs&&... args) noexcept
-        : tupleArgs_{ std::forward<_TyArgs>(args)... }
+    callee_list(_TyArgs&&... args) noexcept
+        : tupleArgs_( std::forward<_TyArgs>(args)... )
     {
         cout_dump();
     }
 
     template< class T,
-        typename = std::enable_if_t< std::is_placeholder<std::remove_reference_t<T>>::value != 0 >
+        typename = std::enable_if_t< (std::is_placeholder<std::remove_reference_t<T>>::value != 0) >
     >
-    constexpr decltype(auto) operator[](T) noexcept
+    decltype(auto) operator[](T) noexcept
     {
         cout_dump();
         return std::get<std::is_placeholder<T>::value - 1>(std::move(tupleArgs_));
@@ -69,10 +69,10 @@ struct callee_list
 
     template < typename T
         , typename = std::enable_if_t<
-            std::is_placeholder<std::remove_reference_t<T>>::value == 0
+            (std::is_placeholder<std::remove_reference_t<T>>::value == 0)
         >
     >
-    constexpr decltype(auto) operator[](T&& t) noexcept
+    decltype(auto) operator[](T&& t) noexcept
     {
         cout_dump();
         return static_cast<T&&>(t);
@@ -87,24 +87,26 @@ struct binder
     argument_list<_Types...> argumentList_;
 
     template<class _Fn, class ... _TyArgs>
-    constexpr binder(_Fn&& f, _TyArgs&&... args) noexcept
-        : f_{ std::forward<_Fn>(f) }
+    binder(_Fn f, _TyArgs&&... args) noexcept
+        : f_{ f }
         , argumentList_{ std::forward<_TyArgs>(args)...}
     {
         cout_dump();
     }
 
     template<class ... _TyArgs>
-    constexpr decltype(auto) operator()(_TyArgs&&... args)
+    decltype(auto) operator()(_TyArgs&&... args)
     {
-        return call(std::make_index_sequence<sizeof...(_Types)>{}, static_cast<_TyArgs&&>(args)...);
+        cout_dump();
+        return call( std::make_index_sequence<sizeof...(_Types)>{}, static_cast<_TyArgs&&>(args)...);
     }
 
 private:
 
     template<class ... _TyArgs, size_t ... Seq>
-    constexpr decltype(auto) call(std::index_sequence<Seq...>, _TyArgs&&... args)
+    decltype(auto) call( std::index_sequence<Seq...> , _TyArgs&&... args)
     {
+        cout_dump();
         return f_(
                     (
                         callee_list<_TyArgs...>{ static_cast<_TyArgs&&>(args)...} [
@@ -118,11 +120,15 @@ private:
 template<class F, class ... _Types>
 binder<F, _Types...> bind2(F&& f, _Types&&... args)
 {
-    return binder<F, _Types...>{ std::forward<F>(f), std::forward<_Types>(args)...};
+    return binder<F, _Types...>{ static_cast<F&&>(f), static_cast<_Types&&>(args)...};
 }
 
-void foo(const std::string& str) {
-    cout_dump_msg(str);
+void foo1(int j) {
+    cout_dump_msg(j);
+}
+
+void foo2(int j, const std::string& str) {
+    cout_dump_msg(j << ' ' << str);
 }
 
 int sum(int a, int b) {
@@ -133,9 +139,17 @@ using namespace std::placeholders;
 
 int main(int argc, char** argv) {
 
-    std::function<void(const std::string&)> f = bind2(foo, _1);
-    f("xyz");
+    bind2(foo1, 1)();
 
-    cout_dump_msg(bind2(sum, 1, 2)());
+    std::function<void(int)> f1 = bind2(foo1, _1);
+    f1(100);
+
+    std::function<void(int, const std::string&)> f2 = bind2(foo2, 42, _2);
+    f2(500, "xyz");
+
+    std::function<void(int, const std::string&)> f3 = bind2(foo2, _1, _2);
+    f3(500, "abc");
+
+    cout_dump_msg(bind2(sum, 2, 3)());
     cout_dump_msg(bind2(sum, _1, _2)(20, 30));
 }
