@@ -35,7 +35,7 @@ void copy_init_arg(T arg) {
 template<typename T>
 void byref_init_arg(T& arg) {
     cout_dump();
-    assert((not std::is_same< decltype(arg), typename std::remove_reference<T>::type >::value));
+    assert((std::is_same< decltype(arg), typename std::remove_reference<T>::type& >::value));
 }
 
 void ops(int j) {
