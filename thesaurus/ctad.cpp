@@ -42,6 +42,26 @@ void ops(int j) {
     cout_dump_msg(j);
 }
 
+std::string& foo(std::string& s) {
+    return s;
+}
+
+auto bar1(std::string& s)
+{
+    return foo(s);
+}
+
+auto bar2(std::string& s) -> decltype(foo(s))
+{
+    return foo(s);
+}
+
+decltype(auto) bar3(std::string& s)
+{
+    return foo(s);
+}
+
+
 int main() {
 
     int x = 27;
@@ -65,4 +85,20 @@ int main() {
     byref_init_arg(cref_x);
 
     byref_init_arg(ptr);
+
+
+    std::string s("abc");
+
+    auto s1 = bar1(s);
+    assert((std::is_same< decltype(s1), std::string>::value));
+
+    decltype(auto) s2 = bar2(s);
+    auto s2_auto = bar2(s);
+    assert((std::is_same< decltype(s2), std::string&>::value));
+    assert((std::is_same< decltype(s2_auto), std::string>::value));
+
+    decltype(auto) s3 = bar3(s);
+    auto s3_auto = bar3(s);
+    assert((std::is_same< decltype(s3), std::string&>::value));
+    assert((std::is_same< decltype(s3_auto), std::string>::value));
 }
