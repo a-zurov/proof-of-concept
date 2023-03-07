@@ -61,6 +61,33 @@ decltype(auto) bar3(std::string& s)
     return foo(s);
 }
 
+template< typename T >
+void l_value_no_assert(T&& arg) {
+    cout_dump();
+    // category(arg) = l-value
+    // type(arg) = type
+    // inside template:
+    // deducted(T) = type &
+    assert((std::is_same< T, std::remove_reference_t<T>& >::value));
+    // signature(T&& + deducted(T)) = T (&& + &) = type &
+    assert((std::is_same< decltype(static_cast<T&&>(arg)), std::remove_reference_t<T>& >::value));
+    // decltype(arg) = type &
+    assert((std::is_same< decltype(arg), std::remove_reference_t<T>& >::value));
+}
+
+template< typename T>
+void r_value_no_assert(T&& arg) {
+    cout_dump();
+    // category(arg) = r-value
+    // type(arg) = type
+    // inside template:
+    // deducted(T) = type
+    assert((std::is_same< T, std::remove_reference_t<T> >::value)); // the main crutch
+    // signature(T&& + deducted(T)) = T (&& + 0) = type &&
+    assert((std::is_same< decltype(static_cast<T&&>(arg)), std::remove_reference_t<T>&& >::value));
+    // decltype(arg) = type &&
+    assert((std::is_same< decltype(arg), std::remove_reference_t<T>&& >::value));
+}
 
 int main() {
 
@@ -101,4 +128,10 @@ int main() {
     auto s3_auto = bar3(s);
     assert((std::is_same< decltype(s3), std::string&>::value));
     assert((std::is_same< decltype(s3_auto), std::string>::value));
+
+    int k = 3;
+    l_value_no_assert(k);
+    //l_value_no_assert(3);
+    //r_value_no_assert(k);
+    r_value_no_assert(3);
 }
