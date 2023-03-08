@@ -61,11 +61,29 @@ decltype(auto) bar3(std::string& s)
     return foo(s);
 }
 
+// move-semantics --------------------------------------
+
+template<typename U>
+U&& forward(std::remove_reference_t<U>& x) noexcept {
+    return static_cast<U&&>(x);
+}
+
+template <typename W>
+struct S {
+    W w_;
+
+    template< typename T >
+    S(T&& arg) : w_(static_cast<W>(arg)) {
+        cout_dump();
+    }
+};
+
 template< typename T >
 void l_value_no_assert(T&& arg) {
     cout_dump();
     // category(arg) = l-value
     // type(arg) = type
+    // -----------------------------------
     // inside template:
     // deducted(T) = type &
     assert((std::is_same< T, std::remove_reference_t<T>& >::value));
@@ -73,6 +91,17 @@ void l_value_no_assert(T&& arg) {
     assert((std::is_same< decltype(static_cast<T&&>(arg)), std::remove_reference_t<T>& >::value));
     // decltype(arg) = type &
     assert((std::is_same< decltype(arg), std::remove_reference_t<T>& >::value));
+    // inside forward (it's signature is not a universal reference):
+    // U = deducted(T) = type &
+    // forward(std::remove_reference_t<type &>& arg) = forward(type & arg)
+    // static_cast<U&&>(x) = static_cast<type(&& + &)>(x) = type & arg
+    // -----------------------------------
+    // in S-ctor signature:
+    // category(forward<T>(arg)) = r-value
+    // type(forward<T>(arg)) = type &
+    S<T&&> s_lref_w(forward<T>(arg));
+    S<std::remove_reference_t<T>&&> s_rref_w(forward<T>(arg));
+    assert((not std::is_same<decltype(s_lref_w.w_), decltype(s_rref_w.w_)>::value));
 }
 
 template< typename T>
@@ -80,6 +109,7 @@ void r_value_no_assert(T&& arg) {
     cout_dump();
     // category(arg) = r-value
     // type(arg) = type
+    // -----------------------------------
     // inside template:
     // deducted(T) = type
     assert((std::is_same< T, std::remove_reference_t<T> >::value)); // the main crutch
@@ -87,6 +117,17 @@ void r_value_no_assert(T&& arg) {
     assert((std::is_same< decltype(static_cast<T&&>(arg)), std::remove_reference_t<T>&& >::value));
     // decltype(arg) = type &&
     assert((std::is_same< decltype(arg), std::remove_reference_t<T>&& >::value));
+    // inside forward (it's signature is not a universal reference):
+    // U = deducted(T) = type
+    // forward(std::remove_reference_t<type>& arg) = forward(type & arg)
+    // static_cast<U&&>(x) = static_cast<type(&& + 0)>(x) = type && arg
+    // -----------------------------------
+    // in S-ctor signature:
+    // category(forward<T>(arg)) = r-value
+    // type(forward<T>(arg)) = type &&
+    S<T&&> s_rref1_w(forward<T>(arg));
+    S<std::remove_reference_t<T>&&> s_rref2_w(forward<T>(arg));
+    assert((std::is_same<decltype(s_rref1_w.w_), decltype(s_rref2_w.w_)>::value));
 }
 
 int main() {
