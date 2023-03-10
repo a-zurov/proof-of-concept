@@ -47,9 +47,9 @@ struct ThreadPool {
     >;
 private:
     // the task's queue
-    std::queue<std::function<void()>> queTasks;
+    std::queue<std::function<void()>> queTasks_;
     // need to keep threads tracking because we should join them
-    std::vector<std::thread> vecThreads;
+    std::vector<std::thread> vecThreads_;
     // synchronization
     std::mutex mutex_;
     std::condition_variable condition_;
@@ -59,20 +59,20 @@ private:
 ThreadPool::ThreadPool(size_t threads) : stop_(false)
 {
     for (size_t i = 0; i < threads; ++i) {
-        vecThreads.emplace_back(
+        vecThreads_.emplace_back(
             [this]() {
                 for (;;) {
                     std::function<void()> task;
                     {
                         std::unique_lock<std::mutex> lock(this->mutex_);
                         this->condition_.wait( lock, [this] {
-                            return this->stop_ || !this->queTasks.empty();
+                            return this->stop_ || !this->queTasks_.empty();
                             }
                         );
-                        if (this->stop_ && this->queTasks.empty())
+                        if (this->stop_ && this->queTasks_.empty())
                             return;
-                        task = std::move(this->queTasks.front());
-                        this->queTasks.pop();
+                        task = std::move(this->queTasks_.front());
+                        this->queTasks_.pop();
                     }
                     task();
                 }
@@ -101,7 +101,7 @@ auto ThreadPool::enqueue(F&& f, Args&&... args) -> std::future<
         // don't allow enqueueing after stopping the pool
         if (stop_) throw std::runtime_error("enqueue on stopped ThreadPool");
 
-        queTasks.emplace([spTask]() { (*spTask)(); });
+        queTasks_.emplace([spTask]() { (*spTask)(); });
     }
 
     condition_.notify_one();
@@ -118,12 +118,13 @@ inline ThreadPool::~ThreadPool()
     }
     condition_.notify_all();
 
-    for (std::thread& worker : vecThreads) {
+    for (std::thread& worker : vecThreads_) {
         worker.join();
     }
 }
 
 int foo(int x, int& y) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     return x * y++;
 };
 
@@ -136,14 +137,23 @@ int main(int argc, char** argv) {
     int N = 8;
     std::vector<int> v(N);
     for (int i = 0; i < N; ++i) {
-        int x = rand() % N;
         results.emplace_back(
-            pool.enqueue(foo, x, std::ref(v[i] = i))
+            pool.enqueue(foo, i, std::ref(v[i] = i))
         );
     }
+//#define __RACE_CONDITION__
+#ifdef __RACE_CONDITION__
     int j = 0;
-    for (auto& result : results)
+    for (auto&& result : results)
         cout_dump_msg(result.get() << ':' << v[j++]);
+#else
+    int j = 0;
+    std::vector<int> res;
+    for (auto&& result : results)
+        res.push_back(result.get());
+    for (int k : v)
+        cout_dump_msg(res[j++] << ':' << k);
+#endif
 
     results.clear();
 
@@ -158,8 +168,14 @@ int main(int argc, char** argv) {
             )
         );
     }
+    int k = 0;
     for (auto& result : results) {
+//#define __DEADLOCK__
+#ifdef __DEADLOCK__
+        cout_dump_msg_lock(result.get());
+#else
         auto res = result.get();
-        cout_dump_msg_lock(res);
+        cout_dump_msg_lock(res << ':' << ++k);
+#endif
     }
 }
