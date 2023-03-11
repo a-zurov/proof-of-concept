@@ -28,7 +28,7 @@
 std::mutex g_mutex;
 
 #define cout_dump_msg_lock(x) { std::lock_guard<std::mutex> lock(g_mutex); \
-cout_dump_msg(x); }
+                                cout_dump_msg(x); }
 
 #define ALLOW_DUMP
 #ifdef ALLOW_DUMP
@@ -41,9 +41,9 @@ struct ThreadPool {
 
     ~ThreadPool();
     ThreadPool(size_t);
-    template<class F, class... Args>
-    auto enqueue(F&& f, Args&&... args) -> std::future<
-        typename std::result_of<F(Args...)>::type
+    template<class F, class... _TyArgs>
+    auto enqueue(F&& f, _TyArgs&&... args) -> std::future<
+        typename std::result_of<F(_TyArgs...)>::type
     >;
 private:
     // the task's queue
@@ -56,9 +56,9 @@ private:
     bool stop_;
 };
 
-ThreadPool::ThreadPool(size_t threads) : stop_(false)
+ThreadPool::ThreadPool(size_t nThreads) : stop_(false)
 {
-    for (size_t i = 0; i < threads; ++i) {
+    for (size_t i = 0; i < nThreads; ++i) {
         vecThreads_.emplace_back(
             [this]() {
                 for (;;) {
@@ -82,15 +82,15 @@ ThreadPool::ThreadPool(size_t threads) : stop_(false)
 }
 
 // add new task to the pool
-template<class F, class... Args>
-auto ThreadPool::enqueue(F&& f, Args&&... args) -> std::future<
-    typename std::result_of<F(Args...)>::type
+template<class F, class... _TyArgs>
+auto ThreadPool::enqueue(F&& f, _TyArgs&&... args) -> std::future<
+    typename std::result_of<F(_TyArgs...)>::type
 >
 {
-    using return_type = typename std::result_of<F(Args...)>::type;
+    using return_type = typename std::result_of<F(_TyArgs...)>::type;
 
     auto spTask = std::make_shared<std::packaged_task<return_type()>>(
-        std::bind(std::forward<F>(f), std::forward<Args>(args)...)
+        std::bind(std::forward<F>(f), std::forward<_TyArgs>(args)...)
         );
 
     std::future<return_type> res = spTask->get_future();
@@ -118,8 +118,8 @@ inline ThreadPool::~ThreadPool()
     }
     condition_.notify_all();
 
-    for (std::thread& worker : vecThreads_) {
-        worker.join();
+    for (std::thread& th : vecThreads_) {
+        th.join();
     }
 }
 
@@ -128,30 +128,29 @@ int foo(int x, int& y) {
     return x * y++;
 };
 
-int main(int argc, char** argv) {
+int main() {
 
     ThreadPool pool(4);
 
-    std::vector< std::future<int> > results;
+    std::vector<std::future<int>> results;
 
     int N = 8;
-    std::vector<int> v(N);
+    std::vector<int> vec(N);
     for (int i = 0; i < N; ++i) {
         results.emplace_back(
-            pool.enqueue(foo, i, std::ref(v[i] = i))
+            pool.enqueue(foo, i, std::ref(vec[i] = i))
         );
     }
+    int j = 0;
 //#define __RACE_CONDITION__
 #ifdef __RACE_CONDITION__
-    int j = 0;
     for (auto&& result : results)
-        cout_dump_msg(result.get() << ':' << v[j++]);
+        cout_dump_msg(result.get() << ':' << vec[j++]);
 #else
-    int j = 0;
     std::vector<int> res;
     for (auto&& result : results)
         res.push_back(result.get());
-    for (int k : v)
+    for (int k : vec)
         cout_dump_msg(res[j++] << ':' << k);
 #endif
 
@@ -162,7 +161,7 @@ int main(int argc, char** argv) {
             pool.enqueue(
                 [i]() {
                     std::this_thread::sleep_for(std::chrono::seconds(1));
-                    cout_dump_msg_lock(i << ':' << std::this_thread::get_id());
+                    cout_dump_msg_lock(i << ':' << std::hex << std::this_thread::get_id());
                     return i * i;
                 }
             )
@@ -175,7 +174,7 @@ int main(int argc, char** argv) {
         cout_dump_msg_lock(result.get());
 #else
         auto res = result.get();
-        cout_dump_msg_lock(res << ':' << ++k);
+        cout_dump_msg_lock(std::dec << res << ':' << ++k);
 #endif
     }
 }
