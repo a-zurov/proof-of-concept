@@ -136,20 +136,19 @@ int main() {
     std::vector<int> vec(N);
     for (int i = 0; i < N; ++i) {
         results.emplace_back(
-           pool.enqueue(foo, i, std::ref(vec[i] = i))
+            pool.enqueue(foo, i, std::ref(vec[i] = i))
         );
     }
     int j = 0;
+    for (auto&& result : results) {
 //#define __RACE_CONDITION__
 #ifdef __RACE_CONDITION__
-    for (auto&& result : results)
         cout_dump_msg(result.get() << ':' << vec[j++]);
 #else
-    for (auto&& result : results) {
         int res = result.get();
-        cout_dump_msg(res << ':' << ++j);
-    }
+        cout_dump_msg(res << ':' << vec[j++]);
 #endif
+    }
     results.clear();
 
     for (int i = 0; i < N; ++i) {
