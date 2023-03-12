@@ -37,7 +37,7 @@ std::mutex g_mutex;
 #define cout_dump()
 #endif
 
-struct ThreadPool {
+struct ThreadPool final {
 
     ~ThreadPool();
     ThreadPool(size_t);
@@ -94,7 +94,6 @@ auto ThreadPool::enqueue(F&& f, _TyArgs&&... args) -> std::future<
         );
 
     std::future<return_type> res = spTask->get_future();
-
     {
         std::unique_lock<std::mutex> lock(mutex_);
 
@@ -103,7 +102,6 @@ auto ThreadPool::enqueue(F&& f, _TyArgs&&... args) -> std::future<
 
         queTasks_.emplace([spTask]() { (*spTask)(); });
     }
-
     condition_.notify_one();
 
     return res;
@@ -138,7 +136,7 @@ int main() {
     std::vector<int> vec(N);
     for (int i = 0; i < N; ++i) {
         results.emplace_back(
-            pool.enqueue(foo, i, std::ref(vec[i] = i))
+           pool.enqueue(foo, i, std::ref(vec[i] = i))
         );
     }
     int j = 0;
@@ -147,13 +145,11 @@ int main() {
     for (auto&& result : results)
         cout_dump_msg(result.get() << ':' << vec[j++]);
 #else
-    std::vector<int> res;
-    for (auto&& result : results)
-        res.push_back(result.get());
-    for (int k : vec)
-        cout_dump_msg(res[j++] << ':' << k);
+    for (auto&& result : results) {
+        int res = result.get();
+        cout_dump_msg(res << ':' << ++j);
+    }
 #endif
-
     results.clear();
 
     for (int i = 0; i < N; ++i) {
@@ -168,7 +164,7 @@ int main() {
         );
     }
     int k = 0;
-    for (auto& result : results) {
+    for (auto&& result : results) {
 //#define __DEADLOCK__
 #ifdef __DEADLOCK__
         cout_dump_msg_lock(result.get());
