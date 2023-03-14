@@ -14,10 +14,14 @@
 #include <condition_variable>
 #include <future>
 
+#define Cxx_17__ 201703L
+
 #if defined( _MSC_VER )
+#define __CXX_VER__ _MSVC_LANG
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #define __DELIM__ '\\'
 #else
+#define __CXX_VER__ __cplusplus
 #define __DELIM__ '/'
 #endif
 #define __FILENAME__ ( std::strrchr( "/" __FILE__, __DELIM__ ) + 1 )
@@ -43,7 +47,11 @@ struct ThreadPool final {
     ThreadPool(size_t);
     template<class F, class... _TyArgs>
     auto enqueue(F&& f, _TyArgs&&... args) -> std::future<
+#if ( Cxx_17__ > __CXX_VER__ )
         typename std::result_of<F(_TyArgs...)>::type
+#else
+        typename std::invoke_result_t<F, _TyArgs...>
+#endif
     >;
 private:
     // the task's queue
@@ -84,10 +92,18 @@ ThreadPool::ThreadPool(size_t nThreads) : stop_(false)
 // add new task to the pool
 template<class F, class... _TyArgs>
 auto ThreadPool::enqueue(F&& f, _TyArgs&&... args) -> std::future<
+#if ( Cxx_17__ > __CXX_VER__ )
     typename std::result_of<F(_TyArgs...)>::type
+#else
+    typename std::invoke_result_t<F, _TyArgs...>
+#endif
 >
 {
-    using return_type = typename std::result_of<F(_TyArgs...)>::type;
+#if ( Cxx_17__ > __CXX_VER__ )
+    using return_type = std::result_of<F(_TyArgs...)>::type;
+#else
+    using return_type = std::invoke_result_t<F, _TyArgs...>;
+#endif
 
     auto spTask = std::make_shared<std::packaged_task<return_type()>>(
         std::bind(std::forward<F>(f), std::forward<_TyArgs>(args)...)
