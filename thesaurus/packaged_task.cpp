@@ -1,4 +1,6 @@
 // packaged_task.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// -----------------------------------------------------------------------
+// g++ -std=c++17 -pthread packaged_task.cpp
 
 #include <iostream>
 #include <thread>
