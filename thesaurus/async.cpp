@@ -28,7 +28,7 @@ template<typename F, typename... _TyArgs>
 auto async(F&& f, _TyArgs&&... args)
 {
 #if ( Cxx_17__ > __CXX_VER__ )
-    using return_type = std::result_of<F(_TyArgs...)>::type;
+    using return_type = typename std::result_of<F(_TyArgs...)>::type;
 #else
     using return_type = std::invoke_result_t<F, _TyArgs...>;
 #endif
