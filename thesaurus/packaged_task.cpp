@@ -80,7 +80,7 @@ int main()
     auto future4 = promise4.get_future();
     std::thread th4(
         [promise = std::move(promise4)](int j, int k) mutable {
-            promise.set_value(std::move(sum(j, k)));
+            promise.set_value(sum(j, k));
         }
     , 2, 11);
 
