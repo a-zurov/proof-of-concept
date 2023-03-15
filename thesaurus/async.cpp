@@ -53,16 +53,43 @@ auto async(F&& f, _TyArgs&&... args)
     return future;
 }
 
+template<typename F, typename... _TyArgs>
+auto async2(F&& f, _TyArgs&&... args)
+{
+    std::packaged_task<std::remove_reference_t<F>> outer_task(f);
+
+    auto future = outer_task.get_future();
+
+    auto lambda = [task = std::move(outer_task)](_TyArgs&&... args) mutable {
+        task(args...);
+    };
+
+    std::thread(
+        std::move(lambda),
+        std::forward<_TyArgs>(args)...
+    ).detach();
+
+    return future;
+}
+
 int foo() {
     throw std::runtime_error("foo exception");
 }
 
 int main()
 {
-    auto future = async(foo);
+    auto future1 = async(foo);
+    auto future2 = async2(foo);
 
     try {
-        cout_dump_msg(future.get());
+        cout_dump_msg(future1.get());
+    }
+    catch (std::runtime_error& ex) {
+        cout_dump_msg(ex.what());
+    }
+
+    try {
+        cout_dump_msg(future2.get());
     }
     catch (std::runtime_error& ex) {
         cout_dump_msg(ex.what());
