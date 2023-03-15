@@ -36,10 +36,11 @@ auto async(F&& f, _TyArgs&&... args)
     std::promise<return_type> outer_promise;
 
     auto future = outer_promise.get_future();
+    auto function = (std::decay_t<F>)f;
 
-    auto lambda = [promise = std::move(outer_promise), f](_TyArgs&&... args) mutable {
+    auto lambda = [promise = std::move(outer_promise), function](_TyArgs&&... args) mutable {
         try {
-            promise.set_value(f(args...));
+            promise.set_value(function(args...));
         }
         catch (...) {
             promise.set_exception(std::current_exception());
