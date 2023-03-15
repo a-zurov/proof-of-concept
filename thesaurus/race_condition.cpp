@@ -11,43 +11,41 @@
 
 class ForwardList {
 
-    std::mutex m_mutex;
-
     struct Node {
-        Node* next;
+        Node* next_;
     };
+
+    Node* head_{ nullptr };
+    std::mutex mutex_;
 
 public:
     void Push() {
 
-        Node* new_node = new Node{};
+        Node* new_head = new Node{};
 
 #ifndef RACE_CONDITION
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
 #endif
-        new_node->next = head_;
-        head_ = new_node;
+        new_head->next_ = head_;
+        head_ = new_head;
     }
 
     void Pop() {
 
 #ifndef RACE_CONDITION
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(mutex_);
 #endif
-
-        Node* head = head_;
-        head_ = head->next;
-        delete head;
+        Node* p = head_;
+        head_ = p->next_; // not safe (!) but works
+        delete p;
     }
-
-private:
-    Node* head_{ nullptr };
 };
 
 int main() {
+
     ForwardList list;
 
-    // Just works
+    // Work test
 
     list.Push();
     list.Push();
@@ -60,8 +58,7 @@ int main() {
 
     std::vector<std::thread> threads;
 
-    for (size_t i = 0; i < 5; ++i)
-    {
+    for (size_t i = 0; i < 5; ++i) {
         threads.emplace_back(
             [&]() {
                 for (size_t k = 0; k < 100500; ++k) {
