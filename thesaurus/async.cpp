@@ -34,7 +34,6 @@ auto async(F&& f, _TyArgs&&... args)
 #endif
 
     std::promise<return_type> outer_promise;
-
     auto future = outer_promise.get_future();
     auto function = (std::decay_t<F>)f;
 
@@ -58,7 +57,6 @@ template<typename F, typename... _TyArgs>
 auto async2(F&& f, _TyArgs&&... args)
 {
     std::packaged_task<std::remove_reference_t<F>> outer_task(f);
-
     auto future = outer_task.get_future();
 
     auto lambda = [task = std::move(outer_task)](_TyArgs&&... args) mutable {
@@ -77,6 +75,28 @@ int foo() {
     throw std::runtime_error("foo exception");
 }
 
+struct S {
+    std::string s_;
+    ~S() {
+        cout_dump_msg(s_);
+    }
+    S(const std::string s) : s_(s) {
+        cout_dump_msg(s_);
+    }
+    S(const S& other) : s_(other.s_) {
+        cout_dump_msg(s_ << ' ' << other.s_);
+    }
+    S(S&& other) noexcept : s_(std::move(other.s_)) {
+        cout_dump_msg(s_ << ' ' << other.s_);
+    }
+};
+
+int foo1(S s1, S s2) {
+    cout_dump_msg(s1.s_ << ' ' << s2.s_);
+    throw std::runtime_error("foo1 exception");
+}
+
+
 int main()
 {
     auto future1 = async(foo);
@@ -91,6 +111,24 @@ int main()
 
     try {
         cout_dump_msg(future2.get());
+    }
+    catch (std::runtime_error& ex) {
+        cout_dump_msg(ex.what());
+    }
+
+    S s{ "xyz" };
+    auto future3 = async(foo1, S{"abc"}, std::move(s));
+    auto future4 = async2(foo1, S{"qwe"}, S{"abc"});
+
+    try {
+        cout_dump_msg(future3.get());
+    }
+    catch (std::runtime_error& ex) {
+        cout_dump_msg(ex.what());
+    }
+
+    try {
+        cout_dump_msg(future4.get());
     }
     catch (std::runtime_error& ex) {
         cout_dump_msg(ex.what());
