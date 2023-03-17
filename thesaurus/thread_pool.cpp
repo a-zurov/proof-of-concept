@@ -45,6 +45,12 @@ struct ThreadPool final {
 
     ~ThreadPool();
     ThreadPool(size_t);
+
+    ThreadPool(const ThreadPool& other) = delete;
+    ThreadPool(ThreadPool&& other) noexcept = delete;
+    ThreadPool operator=(const ThreadPool& other) = delete;
+    ThreadPool& operator=(ThreadPool&& other) noexcept = delete;
+
     template<class F, class... _TyArgs>
     auto enqueue(F&& f, _TyArgs&&... args) -> std::future<
 #if ( Cxx_17__ > __CXX_VER__ )
@@ -100,7 +106,7 @@ auto ThreadPool::enqueue(F&& f, _TyArgs&&... args) -> std::future<
 >
 {
 #if ( Cxx_17__ > __CXX_VER__ )
-    using return_type = std::result_of<F(_TyArgs...)>::type;
+    using return_type = typename std::result_of<F(_TyArgs...)>::type;
 #else
     using return_type = std::invoke_result_t<F, _TyArgs...>;
 #endif
@@ -133,7 +139,14 @@ inline ThreadPool::~ThreadPool()
     condition_.notify_all();
 
     for (std::thread& th : vecThreads_) {
-        th.join();
+        if (th.joinable()) {
+            try {
+                th.join();
+            }
+            catch (std::system_error& ex) {
+                cout_dump_msg(ex.what());
+            }
+        }
     }
 }
 
@@ -157,13 +170,21 @@ int main() {
     }
     int j = 0;
     for (auto&& result : results) {
+        try {
 //#define __RACE_CONDITION__
 #ifdef __RACE_CONDITION__
-        cout_dump_msg(result.get() << ':' << vec[j++]);
+            cout_dump_msg(result.get() << ':' << vec[j++]);
 #else
-        int res = result.get();
-        cout_dump_msg(res << ':' << vec[j++]);
+            int res = result.get();
+            cout_dump_msg(res << ':' << vec[j++]);
 #endif
+        }
+        catch (std::runtime_error& ex) {
+            cout_dump_msg(ex.what());
+        }
+        catch (...) {
+            cout_dump_msg("error");
+        }
     }
     results.clear();
 
@@ -180,12 +201,20 @@ int main() {
     }
     int k = 0;
     for (auto&& result : results) {
+        try {
 //#define __DEADLOCK__
 #ifdef __DEADLOCK__
-        cout_dump_msg_lock(result.get());
+            cout_dump_msg_lock(result.get());
 #else
-        auto res = result.get();
-        cout_dump_msg_lock(std::dec << res << ':' << ++k);
+            auto res = result.get();
+            cout_dump_msg_lock(std::dec << res << ':' << ++k);
 #endif
+        }
+        catch (std::runtime_error& ex) {
+            cout_dump_msg(ex.what());
+        }
+        catch (...) {
+            cout_dump_msg("error");
+        }
     }
 }
