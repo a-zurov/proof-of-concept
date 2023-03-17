@@ -152,8 +152,10 @@ inline ThreadPool::~ThreadPool()
 
 int foo(int x, int& y) {
     std::this_thread::sleep_for(std::chrono::seconds(1));
+    if(5 == x) throw std::runtime_error("foo exception");
     return x * y++;
 };
+
 
 int main() {
 
@@ -194,6 +196,7 @@ int main() {
                 [i]() {
                     std::this_thread::sleep_for(std::chrono::seconds(1));
                     cout_dump_msg_lock(i << ':' << std::hex << std::this_thread::get_id());
+                    if (5 == i) throw std::runtime_error("lambda exception");
                     return i * i;
                 }
             )
