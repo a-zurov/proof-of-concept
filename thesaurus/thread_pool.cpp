@@ -165,7 +165,8 @@ std::mutex tankMutex[g_nTanks];
 int tankFuel[g_nTanks] = { 100, 100, 100 };
 
 int maneuver(int fuelNeeded, int id) {
-    for (int i = 0; i < g_nTanks; i++) {
+
+    for (int i = 0; i < g_nTanks; ++i) {
 
         if (tankMutex[i].try_lock()) {
 
@@ -182,10 +183,13 @@ int maneuver(int fuelNeeded, int id) {
         }
         else {
             if (g_nTanks == i + 1) {
+                i = 0;
+//#define __LIVELOCK__
+#ifdef __LIVELOCK__
                 printf("[%d] No tank available, waiting..\n", id);
                 std::this_thread::sleep_for(std::chrono::milliseconds(B));
-                ++fuelNeeded;
-                i = 0;
+                fuelNeeded += B;
+#endif
             }
         }
     }
