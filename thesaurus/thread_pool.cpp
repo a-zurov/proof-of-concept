@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <string>
 #include <functional>
 #include <memory>
 #include <thread>
@@ -156,6 +157,39 @@ int foo(int x, int& y) {
     return x * y++;
 };
 
+//------------------------------------------------
+// std::mutex::try_lock() and Livelock antipattern
+
+constexpr int g_nTanks = 3, A = 5, B = 2;
+std::mutex tankMutex[g_nTanks];
+int tankFuel[g_nTanks] = { 100, 100, 100 };
+
+int maneuver(int fuelNeeded, int id) {
+    for (int i = 0; i < g_nTanks; i++) {
+
+        if (tankMutex[i].try_lock()) {
+
+            if (tankFuel[i] - fuelNeeded < 0) {
+                tankMutex[i].unlock();
+                throw std::runtime_error("Tank " + std::to_string(i) + " : No more fuel exception\n");
+            }
+            tankFuel[i] -= fuelNeeded;
+            printf("[%d] Maneuver started..\n", id);
+            std::this_thread::sleep_for(std::chrono::milliseconds(fuelNeeded*A));
+            printf("[%d] Tank %d : Fuel left = %d\n", id, i, tankFuel[i]);
+            tankMutex[i].unlock();
+            return fuelNeeded;
+        }
+        else {
+            if (g_nTanks == i + 1) {
+                printf("[%d] No tank available, waiting..\n", id);
+                std::this_thread::sleep_for(std::chrono::milliseconds(B));
+                ++fuelNeeded;
+                i = 0;
+            }
+        }
+    }
+}
 
 int main() {
 
@@ -218,6 +252,27 @@ int main() {
         }
         catch (...) {
             cout_dump_msg("error");
+        }
+    }
+    results.clear();
+
+//------------------------------------------------
+// std::mutex::try_lock() and Livelock antipattern
+
+    int fuelTotal = g_nTanks*100;
+    for (int task_id = 0, task_max = g_nTanks*10; task_id < task_max; ++task_id) {
+        int fuelNeeded = (rand() % 30);
+        results.emplace_back(
+            pool.enqueue(maneuver, fuelNeeded, task_id)
+        );
+    }
+    for (auto&& result : results) {
+        try {
+            int fuelSpent = result.get();
+            printf("Total fuel left = %d\n", fuelTotal -= fuelSpent);
+        }
+        catch (std::runtime_error& ex) {
+            printf("%s", ex.what());
         }
     }
 }
