@@ -76,7 +76,7 @@ struct SPSCRingBuffer {
 
     struct
 #ifdef __ALIGNAS_AVOID_FALSE_SHARING__
-        alignas(__hardware_destructive_interference_size__)
+    alignas(__hardware_destructive_interference_size__)
 #endif
     Slot {
         T value;
@@ -89,19 +89,26 @@ struct SPSCRingBuffer {
 #endif
 
     std::atomic<size_t> head_{ 0 };
+    size_t tail_cached_{ 0 };
 
 #ifdef __ALIGNAS_AVOID_FALSE_SHARING__
     char padding2_[__hardware_destructive_interference_size__]{};
 #endif
 
     std::atomic<size_t> tail_{ 0 };
+    size_t head_cached_{ 0 };
 
     explicit SPSCRingBuffer(const size_t capacity) : buffer_(capacity + 1) {}
 
     bool TryProduce(T value) {
 
         const size_t curr_tail = tail_.load();
-        const size_t curr_head = head_.load();
+
+        if (Next(curr_tail) == head_cached_) {
+            head_cached_ = head_.load();
+        }
+
+        const size_t curr_head = head_cached_;
 
         if (IsFull(curr_head, curr_tail)) {
             return false;
@@ -115,7 +122,12 @@ struct SPSCRingBuffer {
     bool TryConsume(T& value) {
 
         const size_t curr_head = head_.load();
-        const size_t curr_tail = tail_.load();
+
+        if (curr_head == tail_cached_) {
+          tail_cached_ = tail_.load();
+        }
+
+        const size_t curr_tail = tail_cached_;
 
         if (IsEmpty(curr_head, curr_tail)) {
             return false;
