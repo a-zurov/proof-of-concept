@@ -38,7 +38,7 @@ struct ShardedCounter {
 
     struct
 #ifdef __ALIGNAS_AVOID_FALSE_SHARING__
-        alignas(__hardware_destructive_interference_size__)
+    alignas(__hardware_destructive_interference_size__)
 #endif
     AtomicCounter {
 
@@ -124,7 +124,7 @@ struct SPSCRingBuffer {
         const size_t curr_head = head_.load();
 
         if (curr_head == tail_cached_) {
-          tail_cached_ = tail_.load();
+            tail_cached_ = tail_.load();
         }
 
         const size_t curr_tail = tail_cached_;
