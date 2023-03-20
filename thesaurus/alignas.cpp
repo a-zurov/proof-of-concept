@@ -10,15 +10,33 @@
 #include <thread>
 #include <vector>
 
-//#define __ALIGNAS_64__
+#define Cxx_17__ 201703L
+
+#if defined( _MSC_VER )
+#define __CXX_VER__ _MSVC_LANG
+#if ( Cxx_17__ <= __CXX_VER__ )
+#define __hardware_destructive_interference_size__ std::hardware_destructive_interference_size
+#endif
+#else
+#define __CXX_VER__ __cplusplus
+#if ( Cxx_17__ <= __CXX_VER__ and Cxx_17__ <= __cpp_lib_hardware_interference_size )
+#define __hardware_destructive_interference_size__ std::hardware_destructive_interference_size
+#endif
+#endif
+
+#ifndef __hardware_destructive_interference_size__
+#define __hardware_destructive_interference_size__ 64u
+#endif
 
 static const int g_nThreads = 4;
+
+#define __ALIGNAS_AVOID_FALSE_SHARING__ // performance switch
 
 struct ShardedCounter {
 
     struct
-#ifdef __ALIGNAS_64__
-    alignas(64)
+#ifdef __ALIGNAS_AVOID_FALSE_SHARING__
+        alignas(__hardware_destructive_interference_size__)
 #endif
     AtomicCounter {
 
@@ -52,7 +70,7 @@ int main() {
 
     printf("sizeof(ShardedCounter::AtomicCounter) = %zu\n", sizeof(ShardedCounter::AtomicCounter));
 
-#ifdef __ALIGNAS_64__
+#ifdef __ALIGNAS_AVOID_FALSE_SHARING__
     assert((sizeof(ShardedCounter::AtomicCounter) == 64u));
 #endif
 
