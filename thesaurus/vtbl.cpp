@@ -4,13 +4,24 @@
 #include <iostream>
 #include <cstring>
 #include <cassert>
+#include <functional>
 
 #ifdef _MSC_VER
+#define __CXX_VER__ _MSVC_LANG
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #define __DELIM__ '\\'
 #else
+#define __CXX_VER__ __cplusplus
 #define __DELIM__ '/'
 #endif
+
+#define Cxx_20__ 202002L
+
+#if ( Cxx_20__ <= __CXX_VER__ )
+#include <array>
+#include <bit>
+#endif
+
 #define __FILENAME__ ( std::strrchr( "/" __FILE__, __DELIM__ ) + 1 )
 #define __MAKE_DUMP__ __FILENAME__ << " : " << __LINE__ << " | " << __PRETTY_FUNCTION__
 
@@ -58,6 +69,18 @@ struct B : public A {
 };
 
 int main() {
+
+    A a;
+    auto method = &A::foo;
+    std::invoke(method, &a);
+#if ( Cxx_20__ <= __CXX_VER__ )
+    using bytearray = std::array<std::byte, sizeof(method)>;
+    auto const& casted = std::bit_cast<bytearray, decltype(method)>(method);
+    std::cout << "0x" << std::hex;
+    for (auto b : casted)
+        std::cout << std::to_integer<int>(b) << ' ';
+    std::cout << '\n';
+#endif
 
 #ifndef _MSC_VER
     cout_dump_msg((void*)&A::foo);
