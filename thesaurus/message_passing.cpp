@@ -23,6 +23,9 @@ int main()
                     // TODO: Store
                     a = j;
                     x.store(j);
+                    while (y.load() != j); {
+                        std::this_thread::yield();
+                    }
                 }
             }
         };
@@ -34,6 +37,7 @@ int main()
                     int j = x.load();
                     if (!j) continue;
                     int b = a;
+                    y.store(j);
                     if (j != b) {
                         std::cout << j << ' ' << b << '\n';
                     }
