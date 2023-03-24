@@ -15,10 +15,14 @@ int main()
 
     for (int k = 0; k < g_nTries; ++k) {
 
+        x.store(0);
+
         std::thread producer{
             [&a, &x, &y]() {
                 for (int j = 1; j < g_nSignals; ++j) {
                     // TODO: Store
+
+                    x.store(j);
                 }
             }
         };
@@ -26,6 +30,8 @@ int main()
             [&a, &x, &y]() {
                 for (;;) {
                     // TODO: Load
+
+                    int j = x.load();
                 }
             }
         };
