@@ -21,7 +21,7 @@ int main()
             [&a, &x, &y]() {
                 for (int j = 1; j < g_nSignals; ++j) {
                     // TODO: Store
-
+                    a = j;
                     x.store(j);
                 }
             }
@@ -32,6 +32,10 @@ int main()
                     // TODO: Load
 
                     int j = x.load();
+                    int b = a;
+                    if (j != b) {
+                        std::cout << j << ' ' << b << '\n';
+                    }
                 }
             }
         };
