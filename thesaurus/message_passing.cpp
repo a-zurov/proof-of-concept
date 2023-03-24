@@ -32,6 +32,7 @@ int main()
                     // TODO: Load
 
                     int j = x.load();
+                    if (!j) continue;
                     int b = a;
                     if (j != b) {
                         std::cout << j << ' ' << b << '\n';
