@@ -4,7 +4,7 @@
 #include <iostream>
 #include <thread>
 
-static const int g_nTries = 1, g_nSignals = 100;
+static const int g_nTries = 10, g_nSignals = 100;
 
 int main()
 {
@@ -16,6 +16,7 @@ int main()
     for (int k = 0; k < g_nTries; ++k) {
 
         x.store(0);
+        y.store(0);
 
         std::thread producer{
             [&a, &x, &y]() {
@@ -52,5 +53,4 @@ int main()
         producer.join();
         consumer.join();
     }
-
 }
