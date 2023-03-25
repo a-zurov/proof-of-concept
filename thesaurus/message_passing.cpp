@@ -31,11 +31,16 @@ int main()
         };
         std::thread consumer{
             [&a, &x, &y]() {
+                int p = 0;
                 for (;;) {
                     // TODO: Load
-
                     int j = x.load();
                     if (!j) continue;
+                    if (p == j) {
+                        std::this_thread::yield();
+                        continue;
+                    }
+                    p = j;
                     int b = a;
                     y.store(j);
                     if (j != b) {
