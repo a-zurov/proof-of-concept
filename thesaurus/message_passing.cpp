@@ -20,7 +20,6 @@ int main()
         std::thread producer{
             [&a, &x, &y]() {
                 for (int j = 1; j < g_nSignals; ++j) {
-                    // TODO: Store
                     a = j;
                     x.store(j);
                     while (y.load() != j); {
@@ -33,7 +32,6 @@ int main()
             [&a, &x, &y]() {
                 int p = 0;
                 for (;;) {
-                    // TODO: Load
                     int j = x.load();
                     if (!j) continue;
                     if (p == j) {
@@ -46,6 +44,7 @@ int main()
                     if (j != b) {
                         std::cout << j << ' ' << b << '\n';
                     }
+                    if (g_nSignals - 1 == j) break;
                 }
             }
         };
