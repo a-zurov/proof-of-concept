@@ -1,8 +1,9 @@
 // message_passing.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
+#include <atomic>
 #include <thread>
+#include <cassert>
 
 static const int g_nTries = 10, g_nSignals = 100;
 
@@ -42,9 +43,7 @@ int main()
                     p = j;
                     int b = a;
                     y.store(j);
-                    if (j != b) {
-                        std::cout << j << ' ' << b << '\n';
-                    }
+                    assert(j == b);
                     if (g_nSignals - 1 == j) break;
                 }
             }
