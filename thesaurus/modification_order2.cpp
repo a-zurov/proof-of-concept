@@ -9,6 +9,7 @@
 #include <cassert>
 #include <string>
 #include <map>
+#include <set>
 
 using pair_t = std::pair<int, int>;
 
@@ -95,17 +96,21 @@ int main() {
             );
         }
 
-        std::string str_result;
+        std::set<pair_t> set_result;
         for (auto&& result : results) {
             try {
-                pair_t res = result.get();
-                str_result.append('['+ std::to_string(res.first) + ',' + std::to_string(res.second)+']');
+                set_result.insert(result.get());
             }
             catch (std::runtime_error& ex) {
                 cout_dump_msg(ex.what());
             }
         }
         assert(z.load() != 0);
+
+        std::string str_result;
+        for (const auto& res : set_result) {
+            str_result.append('[' + std::to_string(res.first) + ',' + std::to_string(res.second) + ']');
+        }
 
         str_result.append(':' + std::to_string(z.load()));
 
