@@ -129,7 +129,9 @@ int main() {
                 cout_dump_msg(ex.what());
             }
         }
+#if defined( SC_DRF__ ) // expectations formal declaration
         assert(z.load() != 0);
+#endif
 
         finish = clock();
         total_time += finish - start;
