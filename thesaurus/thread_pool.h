@@ -18,7 +18,9 @@
 #define __CXX_VER__ _MSVC_LANG
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #define __DELIM__ '\\'
+#if ( Cxx_17__ <= __CXX_VER__ )
 #define __hardware_destructive_interference_size__ std::hardware_destructive_interference_size
+#endif
 #else
 #define __CXX_VER__ __cplusplus
 #define __DELIM__ '/'
