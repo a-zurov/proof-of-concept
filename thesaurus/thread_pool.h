@@ -18,10 +18,19 @@
 #define __CXX_VER__ _MSVC_LANG
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #define __DELIM__ '\\'
+#define __hardware_destructive_interference_size__ std::hardware_destructive_interference_size
 #else
 #define __CXX_VER__ __cplusplus
 #define __DELIM__ '/'
+#if ( Cxx_17__ <= __CXX_VER__ and Cxx_17__ <= __cpp_lib_hardware_interference_size )
+#define __hardware_destructive_interference_size__ std::hardware_destructive_interference_size
 #endif
+#endif
+
+#ifndef __hardware_destructive_interference_size__
+#define __hardware_destructive_interference_size__ 64u
+#endif
+
 #define __FILENAME__ ( std::strrchr( "/" __FILE__, __DELIM__ ) + 1 )
 #define __MAKE_DUMP__ __FILENAME__ << " : " << __LINE__ << " | " << __PRETTY_FUNCTION__
 

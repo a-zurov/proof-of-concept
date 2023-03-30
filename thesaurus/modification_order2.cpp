@@ -11,6 +11,16 @@
 #include <map>
 #include <set>
 
+
+//#define SC_DRF__
+#if defined( SC_DRF__ )
+#define release__ std::memory_order_seq_cst
+#define acquire__ std::memory_order_seq_cst
+#else
+#define release__ std::memory_order_release
+#define acquire__ std::memory_order_acquire
+#endif
+
 using pair_t = std::pair<int, int>;
 
 enum ID {
@@ -20,86 +30,100 @@ enum ID {
     id_read_y_x
 };
 
+struct SharedMem {
+    int odd_{};
+    char padding[__hardware_destructive_interference_size__]{};
+    int even_{};
+};
+
 std::atomic<bool> x, y;
 std::atomic<int> z;
 
-pair_t write_x(int& j) {
+pair_t write_x(SharedMem& s) {
 
-    j = (int)id_write_x;
-    x.store(true);
-    return std::make_pair((int)id_write_x, j);
+    s.odd_ = (int)id_write_x;
+    x.store(true, release__);
+    return std::make_pair((int)id_write_x, s.odd_);
 }
 
-pair_t write_y(int& j) {
+pair_t write_y(SharedMem& s) {
 
-    j = (int)id_write_y;
-    y.store(true);
-    return std::make_pair((int)id_write_y, j);
+    s.even_ = (int)id_write_y;
+    y.store(true, release__);
+    return std::make_pair((int)id_write_y, s.even_);
 }
 
-pair_t read_x_y(int& j) {
+pair_t read_x_y(SharedMem& s) {
 
-    while (!x.load()) {
+    while (!x.load(acquire__)) {
         std::this_thread::yield();
     };
-    int k = j;
-    if (y.load()) {
-        k = (k == j) ? j*10 : j;
+    int k = s.odd_;
+    if (y.load(acquire__)) {
+        k = s.even_;
         ++z;
     }
     return std::make_pair((int)id_read_x_y, k);
 }
 
-pair_t read_y_x(int& j) {
+pair_t read_y_x(SharedMem& s) {
 
-    while (!y.load()) {
+    while (!y.load(acquire__)) {
         std::this_thread::yield();
     };
-    int k = j;
-    if (x.load()) {
-        k = (k == j) ? j*10 : j;
+    int k = s.even_;
+    if (x.load(acquire__)) {
+        k = s.odd_;
         ++z;
     }
     return std::make_pair((int)id_read_y_x, k);
 }
 
+
 int main() {
+
+    clock_t start, finish, total_time = 0;
 
     std::map<std::string, int> map_result;
 
-    std::vector<std::function<pair_t(int&)>> vecCalls;
+    std::vector<std::function<pair_t(SharedMem&)>> vecCalls;
 
     vecCalls.push_back(write_x);
     vecCalls.push_back(write_y);
     vecCalls.push_back(read_x_y);
     vecCalls.push_back(read_y_x);
 
-    const int N = vecCalls.size();
-    const int M = 1'000'000;
+    SharedMem s;
 
     ThreadPool pool(4);
 
     std::vector<std::future<pair_t>> results;
 
+    const int M = 100'000;
+    const int N = vecCalls.size();
+
     for (int k = 0; k < M; ++k) {
+
+        start = clock();
 
         x = false;
         y = false;
         z = 0;
-        int offset = rand() % N;
+        s.odd_ = 0;
+        s.even_ = 0;
 
-        int shared = 0;
+        int offset = rand() % N;
 
         for (int j = 0; j < N; ++j) {
             results.emplace_back(
-                pool.enqueue(vecCalls[(offset + j) % 4], std::ref(shared))
+                pool.enqueue(vecCalls[(offset + j) % N], std::ref(s))
             );
         }
 
         std::set<pair_t> set_result;
-        for (auto&& result : results) {
+        for (auto&& res : results) {
             try {
-                set_result.insert(result.get());
+                set_result.insert(res.get());
             }
             catch (std::runtime_error& ex) {
                 cout_dump_msg(ex.what());
@@ -107,11 +131,13 @@ int main() {
         }
         assert(z.load() != 0);
 
+        finish = clock();
+        total_time += finish - start;
+
         std::string str_result;
         for (const auto& res : set_result) {
             str_result.append('[' + std::to_string(res.first) + ',' + std::to_string(res.second) + ']');
         }
-
         str_result.append(':' + std::to_string(z.load()));
 
         ++map_result[str_result];
@@ -119,8 +145,8 @@ int main() {
         results.clear();
     }
 
-    for (const auto& [key, value] : map_result) {
-        std::cout << key << ' ' << value << '\n';
+    for (const auto& [key, val] : map_result) {
+        std::cout << key << ' ' << 100 * val / M << '%' << '\n';
     }
-    std::cout << "Total = " << map_result.size();
+    std::cout << "States = " << map_result.size() << " Time = " << (double)total_time / CLOCKS_PER_SEC;
 }
