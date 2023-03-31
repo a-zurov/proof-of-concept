@@ -32,8 +32,8 @@ std::atomic<int> z;
 
 pair_t write_x(SharedMem& s) {
 
-    s.odd_ = (int)id_write_x;
     x.store(true, std::memory_order_relaxed);
+    s.odd_ = (int)id_write_x;
     return std::make_pair((int)id_write_x, s.odd_);
 }
 
