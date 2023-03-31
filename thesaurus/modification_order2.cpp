@@ -42,7 +42,7 @@ pair_t write_x(SharedMem& s) {
 pair_t write_y(SharedMem& s) {
 
     s.even_ = (int)id_write_y;
-    y.store(true, std::memory_order_relaxed);
+    y.store(true, std::memory_order_release);
     return std::make_pair((int)id_write_y, s.even_);
 }
 
@@ -56,7 +56,7 @@ pair_t read_x_y(SharedMem& s) {
         std::this_thread::yield();
     };
     int k = s.odd_;
-    if (y.load(std::memory_order_relaxed)) {
+    if (y.load(std::memory_order_acquire)) {
         k = s.even_;
         ++z;
     }
@@ -65,11 +65,11 @@ pair_t read_x_y(SharedMem& s) {
 
 pair_t read_y_x(SharedMem& s) {
 
-    while (!y.load(std::memory_order_seq_cst)) {
+    while (!y.load(std::memory_order_acquire)) {
         std::this_thread::yield();
     };
     int k = s.even_;
-    if (x.load(std::memory_order_seq_cst)) {
+    if (x.load(std::memory_order_relaxed)) {
         k = s.odd_;
         ++z;
     }
