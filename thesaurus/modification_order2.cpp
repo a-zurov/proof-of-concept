@@ -12,15 +12,6 @@
 #include <set>
 
 
-//#define SC_DRF__
-#if defined( SC_DRF__ )
-#define release__ std::memory_order_seq_cst
-#define acquire__ std::memory_order_seq_cst
-#else
-#define release__ std::memory_order_release
-#define acquire__ std::memory_order_acquire
-#endif
-
 using pair_t = std::pair<int, int>;
 
 enum ID {
@@ -42,24 +33,24 @@ std::atomic<int> z;
 pair_t write_x(SharedMem& s) {
 
     s.odd_ = (int)id_write_x;
-    x.store(true, release__);
+    x.store(true, std::memory_order_seq_cst);
     return std::make_pair((int)id_write_x, s.odd_);
 }
 
 pair_t write_y(SharedMem& s) {
 
     s.even_ = (int)id_write_y;
-    y.store(true, release__);
+    y.store(true, std::memory_order_seq_cst);
     return std::make_pair((int)id_write_y, s.even_);
 }
 
 pair_t read_x_y(SharedMem& s) {
 
-    while (!x.load(acquire__)) {
+    while (!x.load(std::memory_order_seq_cst)) {
         std::this_thread::yield();
     };
     int k = s.odd_;
-    if (y.load(acquire__)) {
+    if (y.load(std::memory_order_seq_cst)) {
         k = s.even_;
         ++z;
     }
@@ -68,11 +59,11 @@ pair_t read_x_y(SharedMem& s) {
 
 pair_t read_y_x(SharedMem& s) {
 
-    while (!y.load(acquire__)) {
+    while (!y.load(std::memory_order_seq_cst)) {
         std::this_thread::yield();
     };
     int k = s.even_;
-    if (x.load(acquire__)) {
+    if (x.load(std::memory_order_seq_cst)) {
         k = s.odd_;
         ++z;
     }
@@ -148,7 +139,7 @@ int main() {
     }
 
     for (const auto& [key, val] : map_result) {
-        std::cout << key << ' ' << 100 * val / M << '%' << '\n';
+        std::cout << key << ' ' << 100 * (double)val / M << '%' << '\n';
     }
     std::cout << "States = " << map_result.size() << " Time = " << (double)total_time / CLOCKS_PER_SEC;
 }
