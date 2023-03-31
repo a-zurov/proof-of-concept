@@ -27,13 +27,15 @@ struct SharedMem {
     int even_{};
 };
 
-std::atomic<bool> x, y;
+std::atomic<bool> x, x1, y;
 std::atomic<int> z;
 
 pair_t write_x(SharedMem& s) {
 
     x.store(true, std::memory_order_relaxed);
     s.odd_ = (int)id_write_x;
+    std::atomic_thread_fence(std::memory_order_release);
+    x1.store(true, std::memory_order_relaxed);
     return std::make_pair((int)id_write_x, s.odd_);
 }
 
@@ -46,6 +48,10 @@ pair_t write_y(SharedMem& s) {
 
 pair_t read_x_y(SharedMem& s) {
 
+    while (!x1.load(std::memory_order_relaxed)) {
+        std::this_thread::yield();
+    };
+    std::atomic_thread_fence(std::memory_order_acquire);
     while (!x.load(std::memory_order_relaxed)) {
         std::this_thread::yield();
     };
@@ -98,6 +104,7 @@ int main() {
         start = clock();
 
         x = false;
+        x1 = false;
         y = false;
         z = 0;
         s.odd_ = 0;
