@@ -33,24 +33,24 @@ std::atomic<int> z;
 pair_t write_x(SharedMem& s) {
 
     s.odd_ = (int)id_write_x;
-    x.store(true, std::memory_order_seq_cst);
+    x.store(true, std::memory_order_relaxed);
     return std::make_pair((int)id_write_x, s.odd_);
 }
 
 pair_t write_y(SharedMem& s) {
 
     s.even_ = (int)id_write_y;
-    y.store(true, std::memory_order_seq_cst);
+    y.store(true, std::memory_order_relaxed);
     return std::make_pair((int)id_write_y, s.even_);
 }
 
 pair_t read_x_y(SharedMem& s) {
 
-    while (!x.load(std::memory_order_seq_cst)) {
+    while (!x.load(std::memory_order_relaxed)) {
         std::this_thread::yield();
     };
     int k = s.odd_;
-    if (y.load(std::memory_order_seq_cst)) {
+    if (y.load(std::memory_order_relaxed)) {
         k = s.even_;
         ++z;
     }
