@@ -41,8 +41,21 @@ pair_t write_x(SharedMem& s) {
 
 pair_t write_y(SharedMem& s) {
 
+//#define REORDER_TUNNELLING
+#ifdef REORDER_TUNNELLING
+    const int N = 10;
+    volatile int a[N]{};
+#endif
+
     s.even_ = (int)id_write_y;
     y.store(true, std::memory_order_release);
+
+#ifdef REORDER_TUNNELLING
+    for (int j = 0; j < N; ++j) {
+        a[j] = (int)id_write_y + j + 10;
+        s.even_ = a[j];
+    }
+#endif
     return std::make_pair((int)id_write_y, s.even_);
 }
 
