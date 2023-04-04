@@ -102,10 +102,10 @@ struct SPSCRingBuffer {
 
     bool TryProduce(T value) {
 
-        const size_t curr_tail = tail_.load();
+        const size_t curr_tail = tail_.load(std::memory_order_relaxed);
 
         if (Next(curr_tail) == head_cached_) {
-            head_cached_ = head_.load();
+            head_cached_ = head_.load(std::memory_order_acquire);
         }
 
         const size_t curr_head = head_cached_;
@@ -115,16 +115,16 @@ struct SPSCRingBuffer {
         }
 
         buffer_[curr_tail].value = std::move(value);
-        tail_.store(Next(curr_tail));
+        tail_.store(Next(curr_tail), std::memory_order_release);
         return true;
     }
 
     bool TryConsume(T& value) {
 
-        const size_t curr_head = head_.load();
+        const size_t curr_head = head_.load(std::memory_order_relaxed);
 
         if (curr_head == tail_cached_) {
-            tail_cached_ = tail_.load();
+            tail_cached_ = tail_.load(std::memory_order_acquire);
         }
 
         const size_t curr_tail = tail_cached_;
@@ -134,7 +134,7 @@ struct SPSCRingBuffer {
         }
 
         value = std::move(buffer_[curr_head].value);
-        head_.store(Next(curr_head));
+        head_.store(Next(curr_head), std::memory_order_release);
         return true;
     }
 
