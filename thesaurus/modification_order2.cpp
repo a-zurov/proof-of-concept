@@ -65,9 +65,8 @@ pair_t read_x_y(SharedMem& s) {
         std::this_thread::yield();
     };
     std::atomic_thread_fence(std::memory_order_acquire);
-    while (!x.load(std::memory_order_relaxed)) {
-        std::this_thread::yield();
-    };
+    if (!x.load(std::memory_order_relaxed)) // never return
+        return std::make_pair((int)id_read_x_y, -1);
     int k = s.odd_;
     if (y.load(std::memory_order_acquire)) {
         k = s.even_;
