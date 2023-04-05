@@ -27,7 +27,7 @@ struct SharedMem {
     int even_{};
 };
 
-std::atomic<bool> x, x1, y;
+std::atomic<bool> x, x1, y, w;
 std::atomic<int> z;
 
 pair_t write_x(SharedMem& s) {
@@ -41,20 +41,13 @@ pair_t write_x(SharedMem& s) {
 
 pair_t write_y(SharedMem& s) {
 
-//#define REORDER_TUNNELLING
-#ifdef REORDER_TUNNELLING
-    const int N = 10;
-    volatile int a[N]{};
-#endif
-
     s.even_ = (int)id_write_y;
     y.store(true, std::memory_order_release);
 
+//#define REORDER_TUNNELLING
 #ifdef REORDER_TUNNELLING
-    for (int j = 0; j < N; ++j) {
-        a[j] = (int)id_write_y + j + 10;
-        s.even_ = a[j];
-    }
+    w.store(true, std::memory_order_relaxed);
+    s.even_ = (int)id_write_y + 10;
 #endif
     return std::make_pair((int)id_write_y, s.even_);
 }
@@ -68,10 +61,19 @@ pair_t read_x_y(SharedMem& s) {
     if (!x.load(std::memory_order_relaxed)) // never return
         return std::make_pair((int)id_read_x_y, -1);
     int k = s.odd_;
+
+#ifndef REORDER_TUNNELLING
     if (y.load(std::memory_order_acquire)) {
         k = s.even_;
         ++z;
     }
+#else
+    if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
+        k = s.even_;
+        assert(k != (int)id_write_y + 10);
+        ++z;
+    }
+#endif
     return std::make_pair((int)id_read_x_y, k);
 }
 
@@ -118,6 +120,7 @@ int main() {
         x = false;
         x1 = false;
         y = false;
+        w = false;
         z = 0;
         s.odd_ = 0;
         s.even_ = 0;
