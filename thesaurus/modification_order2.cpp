@@ -29,6 +29,7 @@ struct SharedMem {
 
 std::atomic<bool> x, x1, y, w;
 std::atomic<int> z;
+std::mutex test_mutex;
 
 pair_t write_x(SharedMem& s) {
 
@@ -44,11 +45,19 @@ pair_t write_y(SharedMem& s) {
     s.even_ = (int)id_write_y;
     y.store(true, std::memory_order_release);
 
-//#define REORDER_TUNNELLING
+#define REORDER_TUNNELLING
+#define  ADD_MUTEX
 #ifdef REORDER_TUNNELLING
+#ifdef   ADD_MUTEX
+    w.store(true, std::memory_order_relaxed);
+    test_mutex.lock();
+    s.even_ = (int)id_write_y + 10;
+    test_mutex.unlock();
+#else  // ADD_MUTEX
     w.store(true, std::memory_order_relaxed);
     s.even_ = (int)id_write_y + 10;
-#endif
+#endif // ADD_MUTEX
+#endif // REORDER_TUNNELLING
     return std::make_pair((int)id_write_y, s.even_);
 }
 
@@ -67,13 +76,33 @@ pair_t read_x_y(SharedMem& s) {
         k = s.even_;
         ++z;
     }
+#else // REORDER_TUNNELLING
+#ifdef   ADD_MUTEX
+#if 0
+    if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
+        test_mutex.lock();
+        k = s.even_;
+        test_mutex.unlock();
+        assert(k != (int)id_write_y + 10);
+        ++z;
+    }
 #else
+    test_mutex.lock();
     if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
         k = s.even_;
         assert(k != (int)id_write_y + 10);
         ++z;
     }
+    test_mutex.unlock();
 #endif
+#else  // ADD_MUTEX
+    if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
+        k = s.even_;
+        assert(k != (int)id_write_y + 10);
+        ++z;
+    }
+#endif // ADD_MUTEX
+#endif // REORDER_TUNNELLING
     return std::make_pair((int)id_read_x_y, k);
 }
 
@@ -110,7 +139,7 @@ int main() {
 
     std::vector<std::future<pair_t>> results;
 
-    const int M = 100'000;
+    const int M = 1'000'000;
     const int N = vecCalls.size();
 
     for (int k = 0; k < M; ++k) {
