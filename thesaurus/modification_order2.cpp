@@ -46,7 +46,7 @@ pair_t write_y(SharedMem& s) {
     y.store(true, std::memory_order_release);
 
 #define REORDER_TUNNELLING
-#define  ADD_MUTEX
+//#define  ADD_MUTEX
 #ifdef REORDER_TUNNELLING
 #ifdef   ADD_MUTEX
     w.store(true, std::memory_order_relaxed);
@@ -78,15 +78,7 @@ pair_t read_x_y(SharedMem& s) {
     }
 #else // REORDER_TUNNELLING
 #ifdef   ADD_MUTEX
-#if 0
-    if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
-        test_mutex.lock();
-        k = s.even_;
-        test_mutex.unlock();
-        assert(k != (int)id_write_y + 10);
-        ++z;
-    }
-#else
+#if 1
     test_mutex.lock();
     if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
         k = s.even_;
@@ -94,12 +86,20 @@ pair_t read_x_y(SharedMem& s) {
         ++z;
     }
     test_mutex.unlock();
+#else
+    if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
+        test_mutex.lock();
+        k = s.even_;
+        test_mutex.unlock();
+        assert(k != (int)id_write_y + 10);
+        ++z;
+    }
 #endif
 #else  // ADD_MUTEX
     if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
         k = s.even_;
-        assert(k != (int)id_write_y + 10);
         ++z;
+        //assert(k != (int)id_write_y + 10);
     }
 #endif // ADD_MUTEX
 #endif // REORDER_TUNNELLING
@@ -111,12 +111,12 @@ pair_t read_y_x(SharedMem& s) {
     while (!y.load(std::memory_order_acquire)) {
         std::this_thread::yield();
     };
-    int k = s.even_;
+    int j = s.even_;
     if (x.load(std::memory_order_relaxed)) {
-        k = s.odd_;
+        j = s.odd_;
         ++z;
     }
-    return std::make_pair((int)id_read_y_x, k);
+    return std::make_pair((int)id_read_y_x, j);
 }
 
 
