@@ -78,12 +78,12 @@ pair_t read_x_y(SharedMem& s) {
     }
 #else // REORDER_TUNNELLING
 #ifdef   ADD_MUTEX
-#if 0
+#if 1
     test_mutex.lock();
     if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
         k = s.even_;
-        assert(k != (int)id_write_y + 10);
         ++z;
+        assert(k != (int)id_write_y + 10);
     }
     test_mutex.unlock();
 #else
