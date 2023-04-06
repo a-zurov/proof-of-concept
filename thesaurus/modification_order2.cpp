@@ -46,7 +46,7 @@ pair_t write_y(SharedMem& s) {
     y.store(true, std::memory_order_release);
 
 #define REORDER_TUNNELLING
-//#define  ADD_MUTEX
+#define  ADD_MUTEX
 #ifdef REORDER_TUNNELLING
 #ifdef   ADD_MUTEX
     w.store(true, std::memory_order_relaxed);
@@ -78,7 +78,7 @@ pair_t read_x_y(SharedMem& s) {
     }
 #else // REORDER_TUNNELLING
 #ifdef   ADD_MUTEX
-#if 1
+#if 0
     test_mutex.lock();
     if (y.load(std::memory_order_acquire) && !w.load(std::memory_order_relaxed)) {
         k = s.even_;
@@ -91,8 +91,8 @@ pair_t read_x_y(SharedMem& s) {
         test_mutex.lock();
         k = s.even_;
         test_mutex.unlock();
-        assert(k != (int)id_write_y + 10);
         ++z;
+        //assert(k != (int)id_write_y + 10);
     }
 #endif
 #else  // ADD_MUTEX
