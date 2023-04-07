@@ -11,6 +11,10 @@
 #include <map>
 #include <set>
 
+#define DCL__
+#define FORWARD__
+#define REVERSE__
+
 using pair_t = std::pair<int, int>;
 
 enum ID {
@@ -34,8 +38,7 @@ pair_t write_x(SharedMem& s, std::once_flag& flag) {
 
     s.odd_ = (int)id_write_x + 10;
 
-//#define __DCL__
-#ifdef __DCL__
+#ifdef DCL__
     if (!s.shared_) {
         std::lock_guard lock(test_mutex);
         if (!s.shared_) {
@@ -43,14 +46,14 @@ pair_t write_x(SharedMem& s, std::once_flag& flag) {
             s.odd_ = s.shared_;
         }
     }
-#else
+#else // DCL__
     std::call_once(flag,
         [&s] {
             s.shared_ = (int)id_write_x;
             s.odd_ = s.shared_;
         }
     );
-#endif
+#endif // DCL__
 
     std::atomic_thread_fence(std::memory_order_release);
     x.store(true, std::memory_order_relaxed);
@@ -61,7 +64,7 @@ pair_t write_y(SharedMem& s, std::once_flag& flag) {
 
     s.even_ = (int)id_write_y + 10;
 
-#ifdef __DCL__
+#ifdef DCL__
     if (!s.shared_) {
         std::lock_guard lock(test_mutex);
         if (!s.shared_) {
@@ -69,14 +72,14 @@ pair_t write_y(SharedMem& s, std::once_flag& flag) {
             s.even_ = s.shared_;
         }
     }
-#else
+#else // DCL__
     std::call_once(flag,
         [&s] {
             s.shared_ = (int)id_write_y;
             s.even_ = s.shared_;
         }
     );
-#endif
+#endif // DCL__
 
     y.store(true, std::memory_order_release);
     return std::make_pair((int)id_write_y, s.even_);
@@ -84,20 +87,39 @@ pair_t write_y(SharedMem& s, std::once_flag& flag) {
 
 pair_t read_x_y(SharedMem& s, std::once_flag&) {
 
+    int k = 0;
     while (!x.load(std::memory_order_relaxed)) {
         std::this_thread::yield();
     };
     std::atomic_thread_fence(std::memory_order_acquire);
-    int k = s.even_;
+#ifdef FORWARD__
+    k = s.odd_;
+#endif // FORWARD__
+#ifdef REVERSE__
+    if (y.load(std::memory_order_acquire)) {
+        k = s.even_;
+        ++z;
+    }
+#endif // REVERSE__
     return std::make_pair((int)id_read_x_y, k);
 }
 
 pair_t read_y_x(SharedMem& s, std::once_flag&) {
 
+    int j = 0;
     while (!y.load(std::memory_order_acquire)) {
         std::this_thread::yield();
     };
-    int j = s.odd_;
+#ifdef FORWARD__
+    j = s.even_;
+#endif // FORWARD__
+#ifdef REVERSE__
+    if (x.load(std::memory_order_relaxed)) {
+        std::atomic_thread_fence(std::memory_order_acquire);
+        j = s.odd_;
+        ++z;
+    }
+#endif // REVERSE__
     return std::make_pair((int)id_read_y_x, j);
 }
 
@@ -153,9 +175,6 @@ int main() {
                 cout_dump_msg(ex.what());
             }
         }
-#if defined( SC_DRF__ ) // expectations formal declaration
-        assert(z.load() != 0);
-#endif
 
         finish = clock();
         total_time += finish - start;
