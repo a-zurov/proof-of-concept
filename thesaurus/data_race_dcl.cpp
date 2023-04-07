@@ -11,7 +11,7 @@
 #include <map>
 #include <set>
 
-#define DCL__
+//#define DCL__
 #define FORWARD__
 #define REVERSE__
 
@@ -42,15 +42,15 @@ pair_t write_x(SharedMem& s, std::once_flag& flag) {
     if (!s.shared_) {
         std::lock_guard lock(test_mutex);
         if (!s.shared_) {
-            s.shared_ = (int)id_write_x;
             s.odd_ = s.shared_;
+            s.shared_ = (int)id_write_x;
         }
     }
 #else // DCL__
     std::call_once(flag,
         [&s] {
-            s.shared_ = (int)id_write_x;
             s.odd_ = s.shared_;
+            s.shared_ = (int)id_write_x;
         }
     );
 #endif // DCL__
@@ -68,15 +68,15 @@ pair_t write_y(SharedMem& s, std::once_flag& flag) {
     if (!s.shared_) {
         std::lock_guard lock(test_mutex);
         if (!s.shared_) {
-            s.shared_ = (int)id_write_y;
             s.even_ = s.shared_;
+            s.shared_ = (int)id_write_y;
         }
     }
 #else // DCL__
     std::call_once(flag,
         [&s] {
-            s.shared_ = (int)id_write_y;
             s.even_ = s.shared_;
+            s.shared_ = (int)id_write_y;
         }
     );
 #endif // DCL__
@@ -143,55 +143,61 @@ int main() {
 
     std::vector<std::future<pair_t>> results;
 
+    const int L = 4;
     const int M = 1'000'000;
     const int N = vecCalls.size();
 
-    for (int k = 0; k < M; ++k) {
+    for (int l = 0; l < L; ++l) {
 
-        start = clock();
+        for (int k = 0; k < M; ++k) {
 
-        x = false;
-        y = false;
-        z = 0;
-        s.shared_ = 0;
-        s.even_ = 0;
-        s.odd_ = 0;
-        std::once_flag flag;
+            start = clock();
 
-        int offset = rand() % N;
+            x = false;
+            y = false;
+            z = 0;
+            s.shared_ = 0;
+            s.even_ = 0;
+            s.odd_ = 0;
+            std::once_flag flag;
 
-        for (int j = 0; j < N; ++j) {
-            results.emplace_back(
-                pool.enqueue(vecCalls[(offset + j) % N], std::ref(s), std::ref(flag))
-            );
-        }
+            int offset = rand() % N;
 
-        std::set<pair_t> set_result;
-        for (auto&& res : results) {
-            try {
-                set_result.insert(res.get());
+            for (int j = 0; j < N; ++j) {
+                results.emplace_back(
+                    pool.enqueue(vecCalls[(offset + j) % N], std::ref(s), std::ref(flag))
+                );
             }
-            catch (std::runtime_error& ex) {
-                cout_dump_msg(ex.what());
+
+            std::set<pair_t> set_result;
+            for (auto&& res : results) {
+                try {
+                    set_result.insert(res.get());
+                }
+                catch (std::runtime_error& ex) {
+                    cout_dump_msg(ex.what());
+                }
             }
+
+            finish = clock();
+            total_time += finish - start;
+
+            std::string str_result;
+            for (const auto& res : set_result) {
+                str_result.append('[' + std::to_string(res.first) + ',' + std::to_string(res.second) + ']');
+            }
+            str_result.append(':' + std::to_string(z.load()));
+
+            ++map_result[str_result];
+
+            results.clear();
         }
 
-        finish = clock();
-        total_time += finish - start;
-
-        std::string str_result;
-        for (const auto& res : set_result) {
-            str_result.append('[' + std::to_string(res.first) + ',' + std::to_string(res.second) + ']');
+        for (const auto& [key, val] : map_result) {
+            std::cout << key << ' ' << 100 * (double)val / M << '%' << '\n';
         }
-        str_result.append(':' + std::to_string(z.load()));
+        std::cout << "States = " << map_result.size() << " Time = " << (double)total_time / CLOCKS_PER_SEC << '\n';
 
-        ++map_result[str_result];
-
-        results.clear();
+        map_result.clear();
     }
-
-    for (const auto& [key, val] : map_result) {
-        std::cout << key << ' ' << 100 * (double)val / M << '%' << '\n';
-    }
-    std::cout << "States = " << map_result.size() << " Time = " << (double)total_time / CLOCKS_PER_SEC;
 }
