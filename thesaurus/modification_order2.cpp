@@ -112,7 +112,8 @@ pair_t read_y_x(SharedMem& s) {
         std::this_thread::yield();
     };
     int j = s.even_;
-    if (x.load(std::memory_order_relaxed)) {
+    if (x1.load(std::memory_order_relaxed)) {
+        std::atomic_thread_fence(std::memory_order_acquire);
         j = s.odd_;
         ++z;
     }
