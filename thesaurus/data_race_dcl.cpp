@@ -13,7 +13,7 @@
 
 //#define DCL__
 #define FORWARD__
-#define REVERSE__
+//#define REVERSE__
 
 using pair_t = std::pair<int, int>;
 
@@ -36,23 +36,28 @@ std::mutex test_mutex;
 
 pair_t write_x(SharedMem& s, std::once_flag& flag) {
 
-    s.odd_ = (int)id_write_x + 10;
+    s.odd_ = 0;
 
 #ifdef DCL__
+    s.odd_ = s.shared_;
     if (!s.shared_) {
+        s.odd_ = s.shared_;
         std::lock_guard lock(test_mutex);
         if (!s.shared_) {
-            s.odd_ = s.shared_;
             s.shared_ = (int)id_write_x;
         }
     }
+    if (!s.odd_) s.odd_ = s.shared_;
+    else s.odd_ += 10;
 #else // DCL__
+    s.odd_ = s.shared_;
     std::call_once(flag,
         [&s] {
-            s.odd_ = s.shared_;
             s.shared_ = (int)id_write_x;
         }
     );
+    if (!s.odd_) s.odd_ = s.shared_;
+    else s.odd_ += 10;
 #endif // DCL__
 
     std::atomic_thread_fence(std::memory_order_release);
@@ -62,23 +67,28 @@ pair_t write_x(SharedMem& s, std::once_flag& flag) {
 
 pair_t write_y(SharedMem& s, std::once_flag& flag) {
 
-    s.even_ = (int)id_write_y + 10;
+    s.even_ = 0;
 
 #ifdef DCL__
+    s.even_ = s.shared_;
     if (!s.shared_) {
+        s.even_ = s.shared_;
         std::lock_guard lock(test_mutex);
         if (!s.shared_) {
-            s.even_ = s.shared_;
             s.shared_ = (int)id_write_y;
         }
     }
+    if (!s.even_) s.even_ = s.shared_;
+    else s.even_ += 10;
 #else // DCL__
+    s.even_ = s.shared_;
     std::call_once(flag,
         [&s] {
-            s.even_ = s.shared_;
             s.shared_ = (int)id_write_y;
         }
     );
+    if (!s.even_) s.even_ = s.shared_;
+    else s.even_ += 10;
 #endif // DCL__
 
     y.store(true, std::memory_order_release);
