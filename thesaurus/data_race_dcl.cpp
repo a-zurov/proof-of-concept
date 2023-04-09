@@ -11,7 +11,7 @@
 #include <map>
 #include <set>
 
-//#define DCL__
+#define DCL__
 #define FORWARD__
 //#define REVERSE__
 
@@ -35,8 +35,6 @@ std::atomic<int> z;
 std::mutex test_mutex;
 
 pair_t write_x(SharedMem& s, std::once_flag& flag) {
-
-    s.odd_ = 0;
 
 #ifdef DCL__
     s.odd_ = s.shared_;
@@ -66,8 +64,6 @@ pair_t write_x(SharedMem& s, std::once_flag& flag) {
 }
 
 pair_t write_y(SharedMem& s, std::once_flag& flag) {
-
-    s.even_ = 0;
 
 #ifdef DCL__
     s.even_ = s.shared_;
