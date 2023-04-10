@@ -27,7 +27,6 @@ struct SharedMem {
 };
 
 std::atomic<bool> x, y;
-std::atomic<int> z;
 
 pair_t create(SharedMem& s, std::once_flag& flag) {
 
@@ -108,7 +107,6 @@ int main() {
 
             x = false;
             y = false;
-            z = 0;
             s.even_ = nullptr;
             s.odd_ = nullptr;
             std::once_flag flag;
