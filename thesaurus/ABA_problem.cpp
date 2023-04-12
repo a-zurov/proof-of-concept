@@ -42,6 +42,21 @@ public:
         }
         return depth;
     }
+
+    std::optional<T> pop_front() noexcept {
+
+        auto pTop = pHead_.load();
+        while (pTop && !pHead_.compare_exchange_weak( pTop          // expected node in head
+                                                    , pTop->pNext_) // desired new head node
+            ) {}
+
+        if (pTop) {
+            T value = pTop->value_;
+            delete pTop;
+            return std::optional<T>(value);
+        }
+        return std::nullopt;
+    }
 };
 
 int main() {
@@ -52,5 +67,7 @@ int main() {
     if (lfs.top()) {
         assert(lfs.top().value() == i);
         assert(lfs.size() == 1);
+        assert(lfs.pop_front());
+        assert(lfs.size() == 0);
     }
 }
