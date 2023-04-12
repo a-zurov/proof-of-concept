@@ -79,6 +79,28 @@ public:
         push_front(value);
         return std::optional<T>(-value);
     }
+
+
+#define ABA__
+#ifdef ABA__
+    std::optional<T> pop_front_ABA(std::once_flag& flag) noexcept {
+
+        auto pTop = pHead_.load();
+        while (pTop && !pHead_.compare_exchange_weak(pTop, pTop->pNext_)) {
+            std::call_once(flag, [] {
+                std::this_thread::yield();
+                }
+            );
+        }
+
+        if (pTop) {
+            T value = pTop->value_;
+            delete pTop;
+            return std::optional<T>(value);
+        }
+        return std::nullopt;
+    }
+#endif // ABA__
 };
 
 int main() {
