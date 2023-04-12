@@ -124,7 +124,7 @@ int main() {
     std::map<std::string, int> map_result;
 
     int L = 100'000;
-    int N = 10;
+    int N = 3;
 
     std::cout << "start size = " << lfs.size() << '\n';
 
@@ -133,12 +133,21 @@ int main() {
         lfs.clear();
         assert(!lfs.top());
 
+#ifdef ABA__
+        std::once_flag flag;
+        lfs.push_front_test(i);
+
+        results.emplace_back(
+            pool.enqueue(&lockfree_stack<int>::pop_front_ABA, std::ref(lfs), std::ref(flag))
+        );
+        results.emplace_back(
+            pool.enqueue(&lockfree_stack<int>::pop_front_ABA, std::ref(lfs), std::ref(flag))
+        );
+#endif ABA__
+
         for (int k = 0; k < N; ++k) {
             results.emplace_back(
                 pool.enqueue(&lockfree_stack<int>::push_front_test, std::ref(lfs), i)
-            );
-            results.emplace_back(
-                pool.enqueue(&lockfree_stack<int>::pop_front, std::ref(lfs))
             );
         }
 
