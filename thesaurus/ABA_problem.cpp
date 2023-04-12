@@ -31,6 +31,17 @@ public:
         auto pTop = pHead_.load();
         return pTop != nullptr ? std::optional<T>(pTop->value_) : std::nullopt;
     }
+
+    size_t size() const noexcept {
+
+        size_t depth = 0u;
+        auto pTop = pHead_.load();
+        while (pTop) {
+            ++depth;
+            pTop = pTop->pNext_;
+        }
+        return depth;
+    }
 };
 
 int main() {
@@ -40,5 +51,6 @@ int main() {
 
     if (lfs.top()) {
         assert(lfs.top().value() == i);
+        assert(lfs.size() == 1);
     }
 }
