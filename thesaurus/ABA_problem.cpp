@@ -62,6 +62,10 @@ public:
         return std::nullopt;
     }
 
+    void clear() {
+         while(pop_front()){}
+    }
+
     void push_front(const T& value) noexcept {
 
         auto pNewNode = new Node<T>{ value, pHead_.load() };
@@ -103,6 +107,9 @@ int main() {
     std::cout << "start size = " << lfs.size() << '\n';
 
     for (int l = 0; l < L; ++l) {
+
+        lfs.clear();
+        assert(!lfs.top());
 
         for (int k = 0; k < N; ++k) {
             results.emplace_back(
