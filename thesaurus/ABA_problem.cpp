@@ -1,10 +1,14 @@
 // ABA_problem.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // -------------------------------------
-// g++ -std=c++17 ABA_problem.cpp
+// g++ -std=c++17 -pthread ABA_problem.cpp
+
+#include "thread_pool.h"
 
 #include <atomic>
 #include <optional>
 #include <cassert>
+#include <sstream>
+#include <map>
 
 template <typename T>
 class lockfree_stack
@@ -65,6 +69,12 @@ public:
                                             , pNewNode)        // desired new head node
             ) {}
     }
+
+    std::optional<T> push_front_test(const T& value) noexcept {
+
+        push_front(value);
+        return std::optional<T>(-value);
+    }
 };
 
 int main() {
@@ -82,4 +92,47 @@ int main() {
         assert(lfs.pop_front());
         assert(!lfs.top());
     }
+
+    ThreadPool pool(4);
+    std::vector<std::future<std::optional<int>>> results;
+    std::map<std::string, int> map_result;
+
+    int L = 100'000;
+    int N = 10;
+
+    std::cout << "start size = " << lfs.size() << '\n';
+
+    for (int l = 0; l < L; ++l) {
+
+        for (int k = 0; k < N; ++k) {
+            results.emplace_back(
+                pool.enqueue(&lockfree_stack<int>::push_front_test, std::ref(lfs), i)
+            );
+            results.emplace_back(
+                pool.enqueue(&lockfree_stack<int>::pop_front, std::ref(lfs))
+            );
+        }
+
+        int success_sum = 0;
+
+        for (auto&& res : results) {
+            try {
+                auto opt = res.get();
+                if (opt) success_sum += opt.value();
+            }
+            catch (std::runtime_error& ex) {
+                cout_dump_msg(ex.what());
+            }
+        }
+        results.clear();
+
+        std::stringstream ss;
+        ss << '[' << success_sum << ',' << lfs.size() << ']';
+        ++map_result[ss.str()];
+    }
+
+    for (const auto& [key, val] : map_result) {
+        std::cout << key << ' ' << 100 * (double)val / L << '%' << '\n';
+    }
+    std::cout << "states = " << map_result.size() << " cycles = " << L << '\n';
 }
