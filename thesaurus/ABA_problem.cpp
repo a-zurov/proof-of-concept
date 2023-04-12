@@ -143,7 +143,7 @@ int main() {
         results.emplace_back(
             pool.enqueue(&lockfree_stack<int>::pop_front_ABA, std::ref(lfs), std::ref(flag))
         );
-#endif ABA__
+#endif // ABA__
 
         for (int k = 0; k < N; ++k) {
             results.emplace_back(
