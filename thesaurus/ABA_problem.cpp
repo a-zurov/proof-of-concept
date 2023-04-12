@@ -57,6 +57,14 @@ public:
         }
         return std::nullopt;
     }
+
+    void push_front(const T& value) noexcept {
+
+        auto pNewNode = new Node<T>{ value, pHead_.load() };
+        while (!pHead_.compare_exchange_weak( pNewNode->pNext_ // expected node in head
+                                            , pNewNode)        // desired new head node
+            ) {}
+    }
 };
 
 int main() {
@@ -69,5 +77,9 @@ int main() {
         assert(lfs.size() == 1);
         assert(lfs.pop_front());
         assert(lfs.size() == 0);
+        lfs.push_front(i);
+        assert(lfs.size() == 1);
+        assert(lfs.pop_front());
+        assert(!lfs.top());
     }
 }
