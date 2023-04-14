@@ -13,6 +13,7 @@
 #include <future>
 
 #define Cxx_17__ 201703L
+#define Cxx_20__ 202002L
 
 #if defined( _MSC_VER )
 #define __CXX_VER__ _MSVC_LANG
