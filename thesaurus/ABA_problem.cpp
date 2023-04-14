@@ -1,6 +1,6 @@
 // ABA_problem.cpp : This file contains the 'main' function. Program execution begins and ends there.
-// -------------------------------------
-// g++ -std=c++17 -pthread ABA_problem.cpp
+// ----------------------------------------------------------
+// g++ -std=c++17 -pthread -fsanitize=address ABA_problem.cpp
 
 #include "thread_pool.h"
 
@@ -105,7 +105,7 @@ public:
 
 int main() {
 
-    int i = 1;
+    int i = -1;
     lockfree_stack<int> lfs(i);
 
     if (lfs.top()) {
@@ -124,9 +124,7 @@ int main() {
     std::map<std::string, int> map_result;
 
     int L = 100'000;
-    int N = 3;
-
-    std::cout << "start size = " << lfs.size() << '\n';
+    int N = 2;
 
     for (int l = 0; l < L; ++l) {
 
@@ -151,7 +149,7 @@ int main() {
             );
         }
 
-        int success_sum = 0;
+        int success_sum = 1;
 
         for (auto&& res : results) {
             try {
