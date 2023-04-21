@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#if 1
+#if 0
 // Q3. Which of the following operator can be overloaded through friend function ->  =  ()  *
 
 struct S {
@@ -31,4 +31,24 @@ int main() {
 }
 // A1. Operators that cannot be overloaded are  .*  ::  ?:
 // Operators that cannot be overloaded when declaring that function as friend function are  =  ()  []  ->
+#endif
+
+//=======================================================================================================
+
+#if 1
+// Q4. What is the smallest size a variable of the type child_t may occupy in memory
+// 1 bit, 7 bits, 1 byte, 12 bytes
+
+typedef struct {
+    unsigned int  age : 4;
+    unsigned char gender : 1;
+    unsigned int  size : 2;
+} child_t;
+
+int main() {
+    std::cout << sizeof(child_t); // 12
+}
+
+// A4. 7 bits
+// https://en.cppreference.com/w/cpp/language/bit_field
 #endif
