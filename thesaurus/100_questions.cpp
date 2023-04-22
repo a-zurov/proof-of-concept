@@ -35,7 +35,7 @@ int main() {
 
 //=======================================================================================================
 
-#if 1
+#if 0
 // Q4. What is the smallest size a variable of the type child_t may occupy in memory
 // 1 bit, 7 bits, 1 byte, 12 bytes
 
@@ -51,4 +51,35 @@ int main() {
 
 // A4. 7 bits
 // https://en.cppreference.com/w/cpp/language/bit_field
+#endif
+
+//=======================================================================================================
+
+#if 1
+// Q6. Which of the following is not a consequence of declaring the member variable count of my_class as static
+/*
+* The variable cannot be modified by any part of the code in the same application or thread. However, other threads may modify it.
+
+The variable exists even when no objects of the class have been defined so it can be modified at any point in the source code.
+
+The variable is allocated only once, regardless of how many objects are instantiated because it is bound to the class itself, not its instances.
+
+All objects that try to access their count member variable actually refer to the only class - bound static count variable.
+*/
+
+class my_class {
+public:
+    static int count;
+};
+
+int my_class::count = 7;
+
+int main() {
+
+    std::cout << my_class::count << ' ';
+    my_class::count = 10;
+    std::cout << my_class::count;
+}
+
+// A6. The variable cannot be modified by any part of the code in the same application or thread. However, other threads may modify it.
 #endif
