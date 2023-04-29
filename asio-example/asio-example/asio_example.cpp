@@ -29,4 +29,29 @@ int main() {
         std::cout << "Connection success!\n";
     else
         std::cout << "Connection failed: " << ec.message() << '\n';
+
+    if (socket.is_open()) {
+
+        std::string szRequest =
+            "GET /index.html HTTP/1.1\r\n"
+            "Host: example.com\r\n"
+            "Connection: close\r\n\r\n";
+
+        socket.write_some(boost::asio::buffer(szRequest.data(), szRequest.size()), ec);
+
+        socket.wait(socket.wait_read);
+
+        size_t bytes = socket.available();
+        std::cout << "Socket has bytes availiable: " << bytes << '\n';
+
+        if (bytes > 0) {
+            std::vector<char> vecBuffer(bytes);
+            socket.read_some(boost::asio::buffer(vecBuffer.data(), vecBuffer.size()), ec);
+
+            for (auto ch : vecBuffer) {
+                std::cout << ch;
+            }
+            std::cout << std::endl;
+        }
+    }
 }
