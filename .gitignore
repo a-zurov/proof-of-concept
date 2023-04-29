@@ -31,6 +31,8 @@ Thumbs.db
 **/obj/
 **/build/
 **/debug/
+**/_compiled/
+**/__compiled/
 
 ## delete later
 /cross_template_kit/
