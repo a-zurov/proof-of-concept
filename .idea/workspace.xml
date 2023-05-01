@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="31be61d6-aab7-442d-a6d0-728ebd9ec80c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/asio-example/asio-example.sln" beforeDir="false" afterPath="$PROJECT_DIR$/asio-example/asio-example.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asio-example/asio-example/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/asio-example/asio-example/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asio-example/asio-example/asio-example.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/asio-example/asio-example/asio-example.vcxproj" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2PCcYPcRUD2UE3x6ZA7XmH10Rd0" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$USER_HOME$" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="31be61d6-aab7-442d-a6d0-728ebd9ec80c" name="Default Changelist" comment="" />
+      <created>1682964550507</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1682964550507</updated>
+    </task>
+    <servers />
+  </component>
+</project>
