@@ -25,6 +25,7 @@ Thumbs.db
 # You can prepend a pattern with a double asterisk (= two consecutive asterisks)
 # to match file or directory anywhere in the repository / in all directories.
 
+**/.idea/
 **/.vs/
 **/x64/
 **/x86/
