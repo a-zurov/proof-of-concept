@@ -1,22 +1,18 @@
-cmake_minimum_required(VERSION 3.10.0)
+﻿# CMakeList.txt : CMake project for NetServer, include source and define project specific logic here.
+#
+cmake_minimum_required (VERSION 3.8)
 
-project(NetServer)
+# Enable Hot Reload for MSVC compilers if supported.
+if (POLICY CMP0141)
+  cmake_policy(SET CMP0141 NEW)
+  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+endif()
 
-set(CMAKE_CXX_STANDARD 17)
+project ("NetServer")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_boost.cmake)
 
 set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
-
-set(OUTPUT_FOLDER "/../__compiled")
-
-set(OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}${OUTPUT_FOLDER}")
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_PATH})
-
-set(CMAKE_EXECUTABLE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}${OUTPUT_FOLDER}")
-
-set(EXECUTABLE_OUTPUT_PATH ${OUTPUT_PATH})
 
 get_property(NCD GLOBAL PROPERTY NETCOMMON_DEFINED)
 
@@ -37,3 +33,11 @@ target_link_libraries(
     "NetCommon${BUILD_SUFFIX}"
     ${REQUIRED_LIBS}
 )
+
+if (CMAKE_VERSION VERSION_GREATER 3.12)
+  set_property(TARGET ${MODULE_NAME} PROPERTY CXX_STANDARD 20)
+else()
+  set_property(TARGET ${MODULE_NAME} PROPERTY CXX_STANDARD 17)
+endif()
+
+# TODO: Add tests and install targets if needed.
