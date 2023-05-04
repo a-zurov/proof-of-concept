@@ -19,8 +19,12 @@ Thumbs.db
 
 /sfinae-Nicolai-Josuttis/sfinae
 /external_sdk/boost/
+/external_sdk/protobuf/
+/external_sdk/protobuf-all/
+/external_sdk/zlib/
 /pseudo-Com/_compiled_x64/
 /pseudo-Com/_compiled/
+/install/
 
 # You can prepend a pattern with a double asterisk (= two consecutive asterisks)
 # to match file or directory anywhere in the repository / in all directories.
