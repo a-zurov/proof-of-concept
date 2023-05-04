@@ -17,6 +17,7 @@ enum class CustomMsgTypes : uint32_t
     ServerPing,
     MessageAll,
     ServerMessage,
+    ProtobufTest
 };
 
 class CustomServer : public olc::net::server_interface<CustomMsgTypes>
@@ -66,6 +67,16 @@ protected:
 
         }
         break;
+
+        case CustomMsgTypes::ProtobufTest:
+        {
+            std::cout << "[" << client->GetID() << "]: ProtobufTest\n";
+
+            // Simply bounce message back to client
+            client->Send(msg);
+        }
+        break;
+
         }
     }
 };

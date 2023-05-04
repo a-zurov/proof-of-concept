@@ -1,62 +1,14 @@
-/*
-    MMO Client/Server Framework using ASIO
-    "Happy Birthday Mrs Javidx9!" - javidx9
+// Based on: David Barr, aka javidx9, OneLoneCoder 2020
+// Videos:
+// Part #1: https://youtu.be/2hNdkYInj4g
+// Part #2: https://youtu.be/UbjxGvrDrbw
 
-    Videos:
-    Part #1: https://youtu.be/2hNdkYInj4g
-    Part #2: https://youtu.be/UbjxGvrDrbw
-
-    License (OLC-3)
-    ~~~~~~~~~~~~~~~
-
-    Copyright 2018 - 2020 OneLoneCoder.com
-
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions
-    are met:
-
-    1. Redistributions or derivations of source code must retain the above
-    copyright notice, this list of conditions and the following disclaimer.
-
-    2. Redistributions or derivative works in binary form must reproduce
-    the above copyright notice. This list of conditions and the following
-    disclaimer must be reproduced in the documentation and/or other
-    materials provided with the distribution.
-
-    3. Neither the name of the copyright holder nor the names of its
-    contributors may be used to endorse or promote products derived
-    from this software without specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-    HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-    Links
-    ~~~~~
-    YouTube:    https://www.youtube.com/javidx9
-    Discord:    https://discord.gg/WhwHUMV
-    Twitter:    https://www.twitter.com/javidx9
-    Twitch:     https://www.twitch.tv/javidx9
-    GitHub:     https://www.github.com/onelonecoder
-    Homepage:   https://www.onelonecoder.com
-
-    Author
-    ~~~~~~
-    David Barr, aka javidx9, OneLoneCoder 2019, 2020
-
-*/
 
 #pragma once
 
 #include "net_common.h"
+
+#include "person.pb.h"
 
 namespace olc
 {
@@ -102,49 +54,74 @@ namespace olc
             // popping, so lets allow them all. NOTE: It assumes the data type is fundamentally
             // Plain Old Data (POD). TLDR: Serialise & Deserialise into/from a vector
 
-            // Pushes any POD-like data into the message buffer
-            template<typename DataType>
+            // Pushes any POD-like data and google::protobuf::Message derived data into the message buffer
+            template<typename DataType >
             friend message<T>& operator << (message<T>& msg, const DataType& data)
             {
-                // Check that the type of the data being pushed is trivially copyable
-                static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pushed into vector");
-
                 // Cache current size of vector, as this will be the point we insert the data
                 size_t i = msg.body.size();
 
-                // Resize the vector by the size of the data being pushed
-                msg.body.resize(msg.body.size() + sizeof(DataType));
+                // Check that the type of the data being pushed is trivially copyable..
+                if constexpr (std::is_standard_layout<DataType>::value) {
 
-                // Physically copy the data into the newly allocated vector space
-                std::memcpy(msg.body.data() + i, &data, sizeof(DataType));
+                    // Resize the vector by the size of the data being pushed
+                    msg.body.resize(msg.body.size() + sizeof(DataType));
+
+                    // Physically copy the data into the newly allocated vector space
+                    std::memcpy(msg.body.data() + i, &data, sizeof(DataType));
+                }
+                else
+                {
+                    static_assert(std::is_base_of_v< google::protobuf::Message, DataType>, "Data is too complex and not derived from google::protobuf::Message");
+
+                    assert( 0 == i );
+
+                    // Resize the vector by the size of the data being pushed
+                    msg.body.resize(data.ByteSizeLong());
+
+                    // Serialize google::protobuf::Message into the newly allocated vector space
+                    data.SerializeToArray(msg.body.data(), data.ByteSizeLong());
+                }
 
                 // Recalculate the message size
                 msg.header.size = msg.size();
 
-                // Return the target message so it can be "chained"
+                // Return the target message so it can be "chained" (by Plain Old Data only)
                 return msg;
             }
+
 
             // Pulls any POD-like data form the message buffer
             template<typename DataType>
             friend message<T>& operator >> (message<T>& msg, DataType& data)
             {
-                // Check that the type of the data being pushed is trivially copyable
-                static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pulled from vector");
+                // Check that the type of the data being pushed is trivially copyable..
+                if constexpr (std::is_standard_layout<DataType>::value) {
 
-                // Cache the location towards the end of the vector where the pulled data starts
-                size_t i = msg.body.size() - sizeof(DataType);
+                    // Cache the location towards the end of the vector where the pulled data starts
+                    size_t i = msg.body.size() - sizeof(DataType);
 
-                // Physically copy the data from the vector into the user variable
-                std::memcpy(&data, msg.body.data() + i, sizeof(DataType));
+                    // Physically copy the data from the vector into the user variable
+                    std::memcpy(&data, msg.body.data() + i, sizeof(DataType));
 
-                // Shrink the vector to remove read bytes, and reset end position
-                msg.body.resize(i);
+                    // Shrink the vector to remove read bytes, and reset end position
+                    msg.body.resize(i);
+                }
+                else
+                {
+                    static_assert(std::is_base_of_v< google::protobuf::Message, DataType>, "Data is too complex and not derived from google::protobuf::Message");
+
+                    // Desirialize the data from the vector into the user variable
+                    data.ParseFromArray(msg.body.data(), msg.body.size());
+
+                    // Shrink the vector to remove read bytes, and reset end position
+                    msg.body.resize(0);
+                }
 
                 // Recalculate the message size
                 msg.header.size = msg.size();
 
-                // Return the target message so it can be "chained"
+                // Return the target message so the extraction of data can be "chained"
                 return msg;
             }
         };

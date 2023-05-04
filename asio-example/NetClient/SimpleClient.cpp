@@ -23,6 +23,7 @@ enum class CustomMsgTypes : uint32_t
     ServerPing,
     MessageAll,
     ServerMessage,
+    ProtobufTest
 };
 
 class CustomClient : public olc::net::client_interface<CustomMsgTypes>
@@ -46,6 +47,28 @@ public:
         msg.header.id = CustomMsgTypes::MessageAll;
         Send(msg);
     }
+
+    void ProtobufTest()
+    {
+        olc::Person person;
+        person.set_name("Alice");
+        person.set_age(42);
+        person.add_phone_number("+7905905905");
+        person.add_phone_number("+1-399-399-399");
+
+        olc::Address address;
+        address.set_building(16);
+        address.set_street("Lva");
+        *(address.mutable_street()) += " Tolstogo";
+
+        *(person.mutable_address()) = address;
+        *(person.mutable_name()) += " Cooper";
+
+        olc::net::message<CustomMsgTypes> msg;
+        msg.header.id = CustomMsgTypes::ProtobufTest;
+        msg << person;
+        Send(msg);
+    }
 };
 
 
@@ -63,11 +86,11 @@ int main()
     bool bQuit = false;
 
     //setvbuf(stdout, NULL, _IONBF, 0); // Set stdout unbuffered
-    std::cout << "press: 1 = ping, 2 = msg, 3 = quit ..\n";
+    std::cout << "press: 1 = ping, 2 = msg all, 3 = proto test, 4 = quit ..\n";
 
     while (!bQuit)
     {
-//#define ASYNC_KEY_
+//#define ASYNC_KEY_ <- NOT ALLOWED NOW
 #ifdef ASYNC_KEY_
 
 #ifdef _WIN32
@@ -110,7 +133,9 @@ int main()
             c.PingServer();
         if ('2' == ch)
             c.MessageAll();
-        else if ('3' == ch)
+        if ('3' == ch)
+            c.ProtobufTest();
+        else if ('4' == ch)
             bQuit = true;
 
 
@@ -150,6 +175,17 @@ int main()
                     std::cout << "Hello from [" << clientID << "]\n";
                 }
                 break;
+
+
+                case CustomMsgTypes::ProtobufTest:
+                {
+                    olc::Person person;
+                    msg >> person;
+                    std::cout << "Name: " << person.name() << '\n';
+                    std::cout << "Street: " << person.address().street() << '\n';
+                }
+                break;
+
                 }
             }
         }
