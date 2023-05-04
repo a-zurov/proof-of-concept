@@ -42,12 +42,18 @@
     <ClInclude Include="net_server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="person.pb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NetCommon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="person.pb.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
