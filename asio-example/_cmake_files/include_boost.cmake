@@ -33,13 +33,14 @@ if(NOT BOOSTD STREQUAL "YES")
     #set(Boost_NO_BOOST_CMAKE ON)
 
     find_package(Boost 1.65.1 REQUIRED)
-    find_package(Boost COMPONENTS thread atomic system filesystem signals program_options asio)
+    #find_package(Boost COMPONENTS thread atomic system filesystem signals program_options asio)
+    find_package(Boost COMPONENTS asio)
 
     if(Boost_FOUND)
         #compare version
         string(COMPARE LESS "${Boost_VERSION}" 1.55.0 VersionIncompatible)
         if(VersionIncompatible)
-            message(FATAL_ERROR "Boost ${Boost_VERSION} not supported. Only 1.55.0 or highter version is supported.")
+            message(FATAL_ERROR "Boost ${Boost_VERSION} not supported : only 1.55.0 or highter.")
         else(VersionIncompatible)
             message(STATUS "Found Boost ${Boost_VERSION} --${Boost_LIBRARIES}")
             include_directories(${Boost_INCLUDE_DIRS})

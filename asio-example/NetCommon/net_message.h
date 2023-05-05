@@ -77,10 +77,10 @@ namespace olc
                     assert( 0 == i );
 
                     // Resize the vector by the size of the data being pushed
-                    msg.body.resize(data.ByteSizeLong());
+                    msg.body.resize(data.ByteSize());
 
                     // Serialize google::protobuf::Message into the newly allocated vector space
-                    data.SerializeToArray(msg.body.data(), data.ByteSizeLong());
+                    data.SerializeToArray(msg.body.data(), data.ByteSize());
                 }
 
                 // Recalculate the message size

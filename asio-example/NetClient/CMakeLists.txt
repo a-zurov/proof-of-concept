@@ -11,6 +11,7 @@ endif()
 project ("NetClient")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_boost.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_protobuf.cmake)
 
 set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
 

@@ -25,6 +25,7 @@ Thumbs.db
 /pseudo-Com/_compiled_x64/
 /pseudo-Com/_compiled/
 /install/
+/protobuf-example/
 
 # You can prepend a pattern with a double asterisk (= two consecutive asterisks)
 # to match file or directory anywhere in the repository / in all directories.

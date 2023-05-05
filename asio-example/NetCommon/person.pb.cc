@@ -3,355 +3,375 @@
 
 #include "pch.h"
 
+#define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
 #include "person.pb.h"
 
 #include <algorithm>
-#include "google/protobuf/io/coded_stream.h"
-#include "google/protobuf/extension_set.h"
-#include "google/protobuf/wire_format_lite.h"
-#include "google/protobuf/descriptor.h"
-#include "google/protobuf/generated_message_reflection.h"
-#include "google/protobuf/reflection_ops.h"
-#include "google/protobuf/wire_format.h"
+
+#include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/port.h>
+#include <google/protobuf/stubs/once.h>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/wire_format_lite_inl.h>
+#include <google/protobuf/descriptor.h>
+#include <google/protobuf/generated_message_reflection.h>
+#include <google/protobuf/reflection_ops.h>
+#include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-// Must be included last.
-#include "google/protobuf/port_def.inc"
-PROTOBUF_PRAGMA_INIT_SEG
-namespace _pb = ::PROTOBUF_NAMESPACE_ID;
-namespace _pbi = ::PROTOBUF_NAMESPACE_ID::internal;
 namespace olc {
-PROTOBUF_CONSTEXPR Address::Address(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.street_)*/ {
-    &::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized {}
-  }
 
-  , /*decltype(_impl_.building_)*/ 0
+namespace {
 
-  , /*decltype(_impl_._cached_size_)*/{}} {}
-struct AddressDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR AddressDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~AddressDefaultTypeInternal() {}
-  union {
-    Address _instance;
+const ::google::protobuf::Descriptor* Address_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Address_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Person_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Person_reflection_ = NULL;
+
+}  // namespace
+
+
+void protobuf_AssignDesc_person_2eproto() GOOGLE_ATTRIBUTE_COLD;
+void protobuf_AssignDesc_person_2eproto() {
+  protobuf_AddDesc_person_2eproto();
+  const ::google::protobuf::FileDescriptor* file =
+    ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
+      "person.proto");
+  GOOGLE_CHECK(file != NULL);
+  Address_descriptor_ = file->message_type(0);
+  static const int Address_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Address, street_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Address, building_),
   };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AddressDefaultTypeInternal _Address_default_instance_;
-PROTOBUF_CONSTEXPR Person::Person(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_._has_bits_)*/{}
-  , /*decltype(_impl_._cached_size_)*/{}
-  , /*decltype(_impl_.phone_number_)*/{}
-  , /*decltype(_impl_.name_)*/ {
-    &::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized {}
-  }
-
-  , /*decltype(_impl_.address_)*/nullptr
-  , /*decltype(_impl_.age_)*/ 0
-} {}
-struct PersonDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR PersonDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~PersonDefaultTypeInternal() {}
-  union {
-    Person _instance;
+  Address_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      Address_descriptor_,
+      Address::default_instance_,
+      Address_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(Address),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Address, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Address, _is_default_instance_));
+  Person_descriptor_ = file->message_type(1);
+  static const int Person_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, age_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, address_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, phone_number_),
   };
-};
+  Person_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      Person_descriptor_,
+      Person::default_instance_,
+      Person_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(Person),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, _is_default_instance_));
+}
 
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PersonDefaultTypeInternal _Person_default_instance_;
-}  // namespace olc
-static ::_pb::Metadata file_level_metadata_person_2eproto[2];
-static constexpr const ::_pb::EnumDescriptor**
-    file_level_enum_descriptors_person_2eproto = nullptr;
-static constexpr const ::_pb::ServiceDescriptor**
-    file_level_service_descriptors_person_2eproto = nullptr;
-const ::uint32_t TableStruct_person_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
-    protodesc_cold) = {
-    ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::olc::Address, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::olc::Address, _impl_.street_),
-    PROTOBUF_FIELD_OFFSET(::olc::Address, _impl_.building_),
-    PROTOBUF_FIELD_OFFSET(::olc::Person, _impl_._has_bits_),
-    PROTOBUF_FIELD_OFFSET(::olc::Person, _internal_metadata_),
-    ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
-    ~0u,  // no _weak_field_map_
-    ~0u,  // no _inlined_string_donated_
-    ~0u,  // no _split_
-    ~0u,  // no sizeof(Split)
-    PROTOBUF_FIELD_OFFSET(::olc::Person, _impl_.name_),
-    PROTOBUF_FIELD_OFFSET(::olc::Person, _impl_.age_),
-    PROTOBUF_FIELD_OFFSET(::olc::Person, _impl_.address_),
-    PROTOBUF_FIELD_OFFSET(::olc::Person, _impl_.phone_number_),
-    ~0u,
-    ~0u,
-    0,
-    ~0u,
-};
+namespace {
 
-static const ::_pbi::MigrationSchema
-    schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-        { 0, -1, -1, sizeof(::olc::Address)},
-        { 10, 22, -1, sizeof(::olc::Person)},
-};
+GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AssignDescriptors_once_);
+inline void protobuf_AssignDescriptorsOnce() {
+  ::google::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
+                 &protobuf_AssignDesc_person_2eproto);
+}
 
-static const ::_pb::Message* const file_default_instances[] = {
-    &::olc::_Address_default_instance_._instance,
-    &::olc::_Person_default_instance_._instance,
-};
-const char descriptor_table_protodef_person_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
+void protobuf_RegisterTypes(const ::std::string&) {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      Address_descriptor_, &Address::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      Person_descriptor_, &Person::default_instance());
+}
+
+}  // namespace
+
+void protobuf_ShutdownFile_person_2eproto() {
+  delete Address::default_instance_;
+  delete Address_reflection_;
+  delete Person::default_instance_;
+  delete Person_reflection_;
+}
+
+void protobuf_AddDesc_person_2eproto() GOOGLE_ATTRIBUTE_COLD;
+void protobuf_AddDesc_person_2eproto() {
+  static bool already_here = false;
+  if (already_here) return;
+  already_here = true;
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\014person.proto\022\003olc\"+\n\007Address\022\016\n\006street"
     "\030\001 \001(\t\022\020\n\010building\030\002 \001(\005\"X\n\006Person\022\014\n\004na"
     "me\030\001 \001(\t\022\013\n\003age\030\002 \001(\005\022\035\n\007address\030\003 \001(\0132\014"
     ".olc.Address\022\024\n\014phone_number\030\004 \003(\tb\006prot"
-    "o3"
-};
-static ::absl::once_flag descriptor_table_person_2eproto_once;
-const ::_pbi::DescriptorTable descriptor_table_person_2eproto = {
-    false,
-    false,
-    162,
-    descriptor_table_protodef_person_2eproto,
-    "person.proto",
-    &descriptor_table_person_2eproto_once,
-    nullptr,
-    0,
-    2,
-    schemas,
-    file_default_instances,
-    TableStruct_person_2eproto::offsets,
-    file_level_metadata_person_2eproto,
-    file_level_enum_descriptors_person_2eproto,
-    file_level_service_descriptors_person_2eproto,
-};
-
-// This function exists to be marked as weak.
-// It can significantly speed up compilation by breaking up LLVM's SCC
-// in the .pb.cc translation units. Large translation units see a
-// reduction of more than 35% of walltime for optimized builds. Without
-// the weak attribute all the messages in the file, including all the
-// vtables and everything they use become part of the same SCC through
-// a cycle like:
-// GetMetadata -> descriptor table -> default instances ->
-//   vtables -> GetMetadata
-// By adding a weak function here we break the connection from the
-// individual vtables back into the descriptor table.
-PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_person_2eproto_getter() {
-  return &descriptor_table_person_2eproto;
+    "o3", 162);
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
+    "person.proto", &protobuf_RegisterTypes);
+  Address::default_instance_ = new Address();
+  Person::default_instance_ = new Person();
+  Address::default_instance_->InitAsDefaultInstance();
+  Person::default_instance_->InitAsDefaultInstance();
+  ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_person_2eproto);
 }
-// Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY2
-static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_person_2eproto(&descriptor_table_person_2eproto);
-namespace olc {
+
+// Force AddDescriptors() to be called at static initialization time.
+struct StaticDescriptorInitializer_person_2eproto {
+  StaticDescriptorInitializer_person_2eproto() {
+    protobuf_AddDesc_person_2eproto();
+  }
+} static_descriptor_initializer_person_2eproto_;
+
 // ===================================================================
 
-class Address::_Internal {
- public:
-};
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Address::kStreetFieldNumber;
+const int Address::kBuildingFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-Address::Address(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:olc.Address)
+Address::Address()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:olc.Address)
 }
+
+void Address::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
 Address::Address(const Address& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  Address* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.street_) {}
-
-    , decltype(_impl_.building_) {}
-
-    , /*decltype(_impl_._cached_size_)*/{}};
-
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.street_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        _impl_.street_.Set("", GetArenaForAllocation());
-  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_street().empty()) {
-    _this->_impl_.street_.Set(from._internal_street(), _this->GetArenaForAllocation());
-  }
-  _this->_impl_.building_ = from._impl_.building_;
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:olc.Address)
 }
 
-inline void Address::SharedCtor(::_pb::Arena* arena) {
-  (void)arena;
-  new (&_impl_) Impl_{
-      decltype(_impl_.street_) {}
-
-    , decltype(_impl_.building_) { 0 }
-
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
-  _impl_.street_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        _impl_.street_.Set("", GetArenaForAllocation());
-  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+void Address::SharedCtor() {
+    _is_default_instance_ = false;
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  street_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  building_ = 0;
 }
 
 Address::~Address() {
   // @@protoc_insertion_point(destructor:olc.Address)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
   SharedDtor();
 }
 
-inline void Address::SharedDtor() {
-  ABSL_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.street_.Destroy();
+void Address::SharedDtor() {
+  street_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (this != default_instance_) {
+  }
 }
 
 void Address::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Address::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Address_descriptor_;
+}
+
+const Address& Address::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_person_2eproto();
+  return *default_instance_;
+}
+
+Address* Address::default_instance_ = NULL;
+
+Address* Address::New(::google::protobuf::Arena* arena) const {
+  Address* n = new Address;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void Address::Clear() {
 // @@protoc_insertion_point(message_clear_start:olc.Address)
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.street_.ClearToEmpty();
-  _impl_.building_ = 0;
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  street_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  building_ = 0;
 }
 
-const char* Address::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    ::uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // string street = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 10)) {
-          auto str = _internal_mutable_street();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "olc.Address.street"));
+bool Address::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:olc.Address)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string street = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_street()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->street().data(), this->street().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "olc.Address.street"));
         } else {
           goto handle_unusual;
         }
-        continue;
-      // int32 building = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 16)) {
-          _impl_.building_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
+        if (input->ExpectTag(16)) goto parse_building;
+        break;
+      }
+
+      // optional int32 building = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_building:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &building_)));
+
         } else {
           goto handle_unusual;
         }
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
     }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
-  return ptr;
+  }
+success:
+  // @@protoc_insertion_point(parse_success:olc.Address)
+  return true;
 failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
+  // @@protoc_insertion_point(parse_failure:olc.Address)
+  return false;
+#undef DO_
 }
 
-::uint8_t* Address::_InternalSerialize(
-    ::uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+void Address::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:olc.Address)
+  // optional string street = 1;
+  if (this->street().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->street().data(), this->street().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "olc.Address.street");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->street(), output);
+  }
+
+  // optional int32 building = 2;
+  if (this->building() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->building(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:olc.Address)
+}
+
+::google::protobuf::uint8* Address::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:olc.Address)
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // string street = 1;
-  if (!this->_internal_street().empty()) {
-    const std::string& _s = this->_internal_street();
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-        _s.data(), static_cast<int>(_s.length()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE, "olc.Address.street");
-    target = stream->WriteStringMaybeAliased(1, _s, target);
+  // optional string street = 1;
+  if (this->street().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->street().data(), this->street().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "olc.Address.street");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->street(), target);
   }
 
-  // int32 building = 2;
-  if (this->_internal_building() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(
-        2, this->_internal_building(), target);
+  // optional int32 building = 2;
+  if (this->building() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->building(), target);
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
-  }
   // @@protoc_insertion_point(serialize_to_array_end:olc.Address)
   return target;
 }
 
-::size_t Address::ByteSizeLong() const {
+int Address::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:olc.Address)
-  ::size_t total_size = 0;
+  int total_size = 0;
 
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // string street = 1;
-  if (!this->_internal_street().empty()) {
-    total_size += 1 + ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-                                    this->_internal_street());
+  // optional string street = 1;
+  if (this->street().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->street());
   }
 
-  // int32 building = 2;
-  if (this->_internal_building() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
-        this->_internal_building());
+  // optional int32 building = 2;
+  if (this->building() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->building());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Address::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    Address::MergeImpl
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Address::GetClassData() const { return &_class_data_; }
-
-
-void Address::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
-  auto* const _this = static_cast<Address*>(&to_msg);
-  auto& from = static_cast<const Address&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:olc.Address)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (!from._internal_street().empty()) {
-    _this->_internal_set_street(from._internal_street());
+void Address::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:olc.Address)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
   }
-  if (from._internal_building() != 0) {
-    _this->_internal_set_building(from._internal_building());
+  const Address* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const Address>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:olc.Address)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:olc.Address)
+    MergeFrom(*source);
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void Address::MergeFrom(const Address& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:olc.Address)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
+  if (from.street().size() > 0) {
+
+    street_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.street_);
+  }
+  if (from.building() != 0) {
+    set_building(from.building());
+  }
+}
+
+void Address::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:olc.Address)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
 }
 
 void Address::CopyFrom(const Address& from) {
@@ -362,315 +382,424 @@ void Address::CopyFrom(const Address& from) {
 }
 
 bool Address::IsInitialized() const {
+
   return true;
 }
 
+void Address::Swap(Address* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
 void Address::InternalSwap(Address* other) {
-  using std::swap;
-  auto* lhs_arena = GetArenaForAllocation();
-  auto* rhs_arena = other->GetArenaForAllocation();
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.street_, lhs_arena,
-                                       &other->_impl_.street_, rhs_arena);
-        swap(_impl_.building_, other->_impl_.building_);
+  street_.Swap(&other->street_);
+  std::swap(building_, other->building_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Address::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_person_2eproto_getter, &descriptor_table_person_2eproto_once,
-      file_level_metadata_person_2eproto[0]);
+::google::protobuf::Metadata Address::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Address_descriptor_;
+  metadata.reflection = Address_reflection_;
+  return metadata;
 }
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// Address
+
+// optional string street = 1;
+void Address::clear_street() {
+  street_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& Address::street() const {
+  // @@protoc_insertion_point(field_get:olc.Address.street)
+  return street_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void Address::set_street(const ::std::string& value) {
+  
+  street_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:olc.Address.street)
+}
+ void Address::set_street(const char* value) {
+  
+  street_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:olc.Address.street)
+}
+ void Address::set_street(const char* value, size_t size) {
+  
+  street_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:olc.Address.street)
+}
+ ::std::string* Address::mutable_street() {
+  
+  // @@protoc_insertion_point(field_mutable:olc.Address.street)
+  return street_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* Address::release_street() {
+  // @@protoc_insertion_point(field_release:olc.Address.street)
+  
+  return street_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void Address::set_allocated_street(::std::string* street) {
+  if (street != NULL) {
+    
+  } else {
+    
+  }
+  street_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), street);
+  // @@protoc_insertion_point(field_set_allocated:olc.Address.street)
+}
+
+// optional int32 building = 2;
+void Address::clear_building() {
+  building_ = 0;
+}
+ ::google::protobuf::int32 Address::building() const {
+  // @@protoc_insertion_point(field_get:olc.Address.building)
+  return building_;
+}
+ void Address::set_building(::google::protobuf::int32 value) {
+  
+  building_ = value;
+  // @@protoc_insertion_point(field_set:olc.Address.building)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
 // ===================================================================
 
-class Person::_Internal {
- public:
-  using HasBits = decltype(std::declval<Person>()._impl_._has_bits_);
-  static constexpr ::int32_t kHasBitsOffset =
-    8 * PROTOBUF_FIELD_OFFSET(Person, _impl_._has_bits_);
-  static const ::olc::Address& address(const Person* msg);
-  static void set_has_address(HasBits* has_bits) {
-    (*has_bits)[0] |= 1u;
-  }
-};
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Person::kNameFieldNumber;
+const int Person::kAgeFieldNumber;
+const int Person::kAddressFieldNumber;
+const int Person::kPhoneNumberFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-const ::olc::Address& Person::_Internal::address(const Person* msg) {
-  return *msg->_impl_.address_;
+Person::Person()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:olc.Person)
 }
-Person::Person(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:olc.Person)
+
+void Person::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+  address_ = const_cast< ::olc::Address*>(&::olc::Address::default_instance());
 }
+
 Person::Person(const Person& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  Person* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_._has_bits_){from._impl_._has_bits_}
-    , /*decltype(_impl_._cached_size_)*/{}
-    , decltype(_impl_.phone_number_){from._impl_.phone_number_}
-    , decltype(_impl_.name_) {}
-
-    , decltype(_impl_.address_){nullptr}
-    , decltype(_impl_.age_) {}
-  };
-
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.name_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        _impl_.name_.Set("", GetArenaForAllocation());
-  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_name().empty()) {
-    _this->_impl_.name_.Set(from._internal_name(), _this->GetArenaForAllocation());
-  }
-  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
-    _this->_impl_.address_ = new ::olc::Address(*from._impl_.address_);
-  }
-  _this->_impl_.age_ = from._impl_.age_;
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:olc.Person)
 }
 
-inline void Person::SharedCtor(::_pb::Arena* arena) {
-  (void)arena;
-  new (&_impl_) Impl_{
-      decltype(_impl_._has_bits_){}
-    , /*decltype(_impl_._cached_size_)*/{}
-    , decltype(_impl_.phone_number_){arena}
-    , decltype(_impl_.name_) {}
-
-    , decltype(_impl_.address_){nullptr}
-    , decltype(_impl_.age_) { 0 }
-
-  };
-  _impl_.name_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        _impl_.name_.Set("", GetArenaForAllocation());
-  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+void Person::SharedCtor() {
+    _is_default_instance_ = false;
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  age_ = 0;
+  address_ = NULL;
 }
 
 Person::~Person() {
   // @@protoc_insertion_point(destructor:olc.Person)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
   SharedDtor();
 }
 
-inline void Person::SharedDtor() {
-  ABSL_DCHECK(GetArenaForAllocation() == nullptr);
-  _internal_mutable_phone_number()->~RepeatedPtrField();
-  _impl_.name_.Destroy();
-  if (this != internal_default_instance()) delete _impl_.address_;
+void Person::SharedDtor() {
+  name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (this != default_instance_) {
+    delete address_;
+  }
 }
 
 void Person::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Person::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Person_descriptor_;
+}
+
+const Person& Person::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_person_2eproto();
+  return *default_instance_;
+}
+
+Person* Person::default_instance_ = NULL;
+
+Person* Person::New(::google::protobuf::Arena* arena) const {
+  Person* n = new Person;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void Person::Clear() {
 // @@protoc_insertion_point(message_clear_start:olc.Person)
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _internal_mutable_phone_number()->Clear();
-  _impl_.name_.ClearToEmpty();
-  cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    ABSL_DCHECK(_impl_.address_ != nullptr);
-    _impl_.address_->Clear();
-  }
-  _impl_.age_ = 0;
-  _impl_._has_bits_.Clear();
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  age_ = 0;
+  if (GetArenaNoVirtual() == NULL && address_ != NULL) delete address_;
+  address_ = NULL;
+  phone_number_.Clear();
 }
 
-const char* Person::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  _Internal::HasBits has_bits{};
-  while (!ctx->Done(&ptr)) {
-    ::uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // string name = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 10)) {
-          auto str = _internal_mutable_name();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "olc.Person.name"));
+bool Person::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:olc.Person)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string name = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "olc.Person.name"));
         } else {
           goto handle_unusual;
         }
-        continue;
-      // int32 age = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 16)) {
-          _impl_.age_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
+        if (input->ExpectTag(16)) goto parse_age;
+        break;
+      }
+
+      // optional int32 age = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_age:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &age_)));
+
         } else {
           goto handle_unusual;
         }
-        continue;
-      // .olc.Address address = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 26)) {
-          ptr = ctx->ParseMessage(_internal_mutable_address(), ptr);
-          CHK_(ptr);
+        if (input->ExpectTag(26)) goto parse_address;
+        break;
+      }
+
+      // optional .olc.Address address = 3;
+      case 3: {
+        if (tag == 26) {
+         parse_address:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_address()));
         } else {
           goto handle_unusual;
         }
-        continue;
+        if (input->ExpectTag(34)) goto parse_phone_number;
+        break;
+      }
+
       // repeated string phone_number = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::uint8_t>(tag) == 34)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            auto str = _internal_mutable_phone_number()->Add();
-            ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-            CHK_(ptr);
-            CHK_(::_pbi::VerifyUTF8(str, "olc.Person.phone_number"));
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
+      case 4: {
+        if (tag == 34) {
+         parse_phone_number:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_phone_number()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->phone_number(this->phone_number_size() - 1).data(),
+            this->phone_number(this->phone_number_size() - 1).length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "olc.Person.phone_number"));
         } else {
           goto handle_unusual;
         }
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
+        if (input->ExpectTag(34)) goto parse_phone_number;
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
     }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
-  _impl_._has_bits_.Or(has_bits);
-  return ptr;
+  }
+success:
+  // @@protoc_insertion_point(parse_success:olc.Person)
+  return true;
 failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
+  // @@protoc_insertion_point(parse_failure:olc.Person)
+  return false;
+#undef DO_
 }
 
-::uint8_t* Person::_InternalSerialize(
-    ::uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:olc.Person)
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // string name = 1;
-  if (!this->_internal_name().empty()) {
-    const std::string& _s = this->_internal_name();
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-        _s.data(), static_cast<int>(_s.length()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE, "olc.Person.name");
-    target = stream->WriteStringMaybeAliased(1, _s, target);
+void Person::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:olc.Person)
+  // optional string name = 1;
+  if (this->name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "olc.Person.name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->name(), output);
   }
 
-  // int32 age = 2;
-  if (this->_internal_age() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(
-        2, this->_internal_age(), target);
+  // optional int32 age = 2;
+  if (this->age() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->age(), output);
   }
 
-  cached_has_bits = _impl_._has_bits_[0];
-  // .olc.Address address = 3;
-  if (cached_has_bits & 0x00000001u) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(3, _Internal::address(this),
-        _Internal::address(this).GetCachedSize(), target, stream);
+  // optional .olc.Address address = 3;
+  if (this->has_address()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, *this->address_, output);
   }
 
   // repeated string phone_number = 4;
-  for (int i = 0, n = this->_internal_phone_number_size(); i < n; ++i) {
-    const auto& s = this->_internal_phone_number().Get(i);
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-        s.data(), static_cast<int>(s.length()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE, "olc.Person.phone_number");
-    target = stream->WriteString(4, s, target);
+  for (int i = 0; i < this->phone_number_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->phone_number(i).data(), this->phone_number(i).length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "olc.Person.phone_number");
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->phone_number(i), output);
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  // @@protoc_insertion_point(serialize_end:olc.Person)
+}
+
+::google::protobuf::uint8* Person::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:olc.Person)
+  // optional string name = 1;
+  if (this->name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "olc.Person.name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
   }
+
+  // optional int32 age = 2;
+  if (this->age() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->age(), target);
+  }
+
+  // optional .olc.Address address = 3;
+  if (this->has_address()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        3, *this->address_, false, target);
+  }
+
+  // repeated string phone_number = 4;
+  for (int i = 0; i < this->phone_number_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->phone_number(i).data(), this->phone_number(i).length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "olc.Person.phone_number");
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(4, this->phone_number(i), target);
+  }
+
   // @@protoc_insertion_point(serialize_to_array_end:olc.Person)
   return target;
 }
 
-::size_t Person::ByteSizeLong() const {
+int Person::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:olc.Person)
-  ::size_t total_size = 0;
+  int total_size = 0;
 
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
+  // optional string name = 1;
+  if (this->name().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->name());
+  }
+
+  // optional int32 age = 2;
+  if (this->age() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->age());
+  }
+
+  // optional .olc.Address address = 3;
+  if (this->has_address()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->address_);
+  }
 
   // repeated string phone_number = 4;
-  total_size += 1 * ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(_internal_phone_number().size());
-  for (int i = 0, n = _internal_phone_number().size(); i < n; ++i) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        _internal_phone_number().Get(i));
+  total_size += 1 * this->phone_number_size();
+  for (int i = 0; i < this->phone_number_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->phone_number(i));
   }
 
-  // string name = 1;
-  if (!this->_internal_name().empty()) {
-    total_size += 1 + ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-                                    this->_internal_name());
-  }
-
-  // .olc.Address address = 3;
-  cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *_impl_.address_);
-  }
-
-  // int32 age = 2;
-  if (this->_internal_age() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
-        this->_internal_age());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Person::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    Person::MergeImpl
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Person::GetClassData() const { return &_class_data_; }
-
-
-void Person::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
-  auto* const _this = static_cast<Person*>(&to_msg);
-  auto& from = static_cast<const Person&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:olc.Person)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  _this->_internal_mutable_phone_number()->MergeFrom(from._internal_phone_number());
-  if (!from._internal_name().empty()) {
-    _this->_internal_set_name(from._internal_name());
+void Person::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:olc.Person)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
   }
-  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
-    _this->_internal_mutable_address()->::olc::Address::MergeFrom(
-        from._internal_address());
+  const Person* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const Person>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:olc.Person)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:olc.Person)
+    MergeFrom(*source);
   }
-  if (from._internal_age() != 0) {
-    _this->_internal_set_age(from._internal_age());
+}
+
+void Person::MergeFrom(const Person& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:olc.Person)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  phone_number_.MergeFrom(from.phone_number_);
+  if (from.name().size() > 0) {
+
+    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  }
+  if (from.age() != 0) {
+    set_age(from.age());
+  }
+  if (from.has_address()) {
+    mutable_address()->::olc::Address::MergeFrom(from.address());
+  }
+}
+
+void Person::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:olc.Person)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
 }
 
 void Person::CopyFrom(const Person& from) {
@@ -681,43 +810,189 @@ void Person::CopyFrom(const Person& from) {
 }
 
 bool Person::IsInitialized() const {
+
   return true;
 }
 
+void Person::Swap(Person* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
 void Person::InternalSwap(Person* other) {
-  using std::swap;
-  auto* lhs_arena = GetArenaForAllocation();
-  auto* rhs_arena = other->GetArenaForAllocation();
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
-  _internal_mutable_phone_number()->InternalSwap(
-      other->_internal_mutable_phone_number());
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, lhs_arena,
-                                       &other->_impl_.name_, rhs_arena);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Person, _impl_.age_)
-      + sizeof(Person::_impl_.age_)
-      - PROTOBUF_FIELD_OFFSET(Person, _impl_.address_)>(
-          reinterpret_cast<char*>(&_impl_.address_),
-          reinterpret_cast<char*>(&other->_impl_.address_));
+  name_.Swap(&other->name_);
+  std::swap(age_, other->age_);
+  std::swap(address_, other->address_);
+  phone_number_.UnsafeArenaSwap(&other->phone_number_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Person::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_person_2eproto_getter, &descriptor_table_person_2eproto_once,
-      file_level_metadata_person_2eproto[1]);
+::google::protobuf::Metadata Person::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Person_descriptor_;
+  metadata.reflection = Person_reflection_;
+  return metadata;
 }
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// Person
+
+// optional string name = 1;
+void Person::clear_name() {
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& Person::name() const {
+  // @@protoc_insertion_point(field_get:olc.Person.name)
+  return name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void Person::set_name(const ::std::string& value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:olc.Person.name)
+}
+ void Person::set_name(const char* value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:olc.Person.name)
+}
+ void Person::set_name(const char* value, size_t size) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:olc.Person.name)
+}
+ ::std::string* Person::mutable_name() {
+  
+  // @@protoc_insertion_point(field_mutable:olc.Person.name)
+  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* Person::release_name() {
+  // @@protoc_insertion_point(field_release:olc.Person.name)
+  
+  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void Person::set_allocated_name(::std::string* name) {
+  if (name != NULL) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:olc.Person.name)
+}
+
+// optional int32 age = 2;
+void Person::clear_age() {
+  age_ = 0;
+}
+ ::google::protobuf::int32 Person::age() const {
+  // @@protoc_insertion_point(field_get:olc.Person.age)
+  return age_;
+}
+ void Person::set_age(::google::protobuf::int32 value) {
+  
+  age_ = value;
+  // @@protoc_insertion_point(field_set:olc.Person.age)
+}
+
+// optional .olc.Address address = 3;
+bool Person::has_address() const {
+  return !_is_default_instance_ && address_ != NULL;
+}
+void Person::clear_address() {
+  if (GetArenaNoVirtual() == NULL && address_ != NULL) delete address_;
+  address_ = NULL;
+}
+const ::olc::Address& Person::address() const {
+  // @@protoc_insertion_point(field_get:olc.Person.address)
+  return address_ != NULL ? *address_ : *default_instance_->address_;
+}
+::olc::Address* Person::mutable_address() {
+  
+  if (address_ == NULL) {
+    address_ = new ::olc::Address;
+  }
+  // @@protoc_insertion_point(field_mutable:olc.Person.address)
+  return address_;
+}
+::olc::Address* Person::release_address() {
+  // @@protoc_insertion_point(field_release:olc.Person.address)
+  
+  ::olc::Address* temp = address_;
+  address_ = NULL;
+  return temp;
+}
+void Person::set_allocated_address(::olc::Address* address) {
+  delete address_;
+  address_ = address;
+  if (address) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:olc.Person.address)
+}
+
+// repeated string phone_number = 4;
+int Person::phone_number_size() const {
+  return phone_number_.size();
+}
+void Person::clear_phone_number() {
+  phone_number_.Clear();
+}
+ const ::std::string& Person::phone_number(int index) const {
+  // @@protoc_insertion_point(field_get:olc.Person.phone_number)
+  return phone_number_.Get(index);
+}
+ ::std::string* Person::mutable_phone_number(int index) {
+  // @@protoc_insertion_point(field_mutable:olc.Person.phone_number)
+  return phone_number_.Mutable(index);
+}
+ void Person::set_phone_number(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:olc.Person.phone_number)
+  phone_number_.Mutable(index)->assign(value);
+}
+ void Person::set_phone_number(int index, const char* value) {
+  phone_number_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:olc.Person.phone_number)
+}
+ void Person::set_phone_number(int index, const char* value, size_t size) {
+  phone_number_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:olc.Person.phone_number)
+}
+ ::std::string* Person::add_phone_number() {
+  // @@protoc_insertion_point(field_add_mutable:olc.Person.phone_number)
+  return phone_number_.Add();
+}
+ void Person::add_phone_number(const ::std::string& value) {
+  phone_number_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:olc.Person.phone_number)
+}
+ void Person::add_phone_number(const char* value) {
+  phone_number_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:olc.Person.phone_number)
+}
+ void Person::add_phone_number(const char* value, size_t size) {
+  phone_number_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:olc.Person.phone_number)
+}
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
+Person::phone_number() const {
+  // @@protoc_insertion_point(field_list:olc.Person.phone_number)
+  return phone_number_;
+}
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
+Person::mutable_phone_number() {
+  // @@protoc_insertion_point(field_mutable_list:olc.Person.phone_number)
+  return &phone_number_;
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
 // @@protoc_insertion_point(namespace_scope)
+
 }  // namespace olc
-PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::olc::Address*
-Arena::CreateMaybeMessage< ::olc::Address >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::olc::Address >(arena);
-}
-template<> PROTOBUF_NOINLINE ::olc::Person*
-Arena::CreateMaybeMessage< ::olc::Person >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::olc::Person >(arena);
-}
-PROTOBUF_NAMESPACE_CLOSE
+
 // @@protoc_insertion_point(global_scope)
-#include "google/protobuf/port_undef.inc"

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////
-Boost: getting started with Windows project
+// Boost : getting started with Windows project
 ////////////////////////////////////////////
 0.0 Download http://www.boost.org/users/download/
 1.0 Extract \proof-of-concept\external_sdk\boost\boost_1_XX_0
@@ -21,3 +21,13 @@ P.S.File \proof-of-concept\pseudo-Com\_inherited_property\boost.vsprops should b
         Value="$(BOOST_ROOT)"
     />
 https://learn.microsoft.com/en-us/cpp/build/project-property-inheritance?view=msvc-170
+
+
+////////////////////////////////////////////
+// Protobuf : getting started with..
+////////////////////////////////////////////
+cmake .. -Dprotobuf_BUILD_TESTS=OFF
+
+git submodule update --init --recursive
+cmake ../.. -G "Visual Studio 11 2012" -Dprotobuf_BUILD_TESTS=OFF
+dir /a /-p /o:gen >files.txt
