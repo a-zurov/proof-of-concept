@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="net_common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,19 +36,8 @@
     <ClInclude Include="net_server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="person.pb.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NetCommon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="person.pb.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <CustomBuild Include="person.proto" />
   </ItemGroup>
 </Project>

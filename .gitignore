@@ -13,6 +13,7 @@ Thumbs.db
 # Compiled Object files
 *.o
 *.obj
+*.pb.*
 
 # Executables
 *.exe

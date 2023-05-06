@@ -16,6 +16,12 @@ set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_boost.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_protobuf.cmake)
 
+protobuf_generate_cpp(
+    PROTO_SRCS
+    PROTO_HDRS
+    person.proto
+)
+
 aux_source_directory(. SRC_LIST)
 # Header without source here (additional to aux_source_directory command)
 set(SRC_LIST ${SRC_LIST} "./net_client.h")
@@ -29,7 +35,7 @@ set(SRC_LIST ${SRC_LIST} "./olc_net.h")
 get_property(ncdef GLOBAL PROPERTY NetCommon_DEFINED)
 if(NOT ncdef STREQUAL "YES")
     set_property(GLOBAL PROPERTY NetCommon_DEFINED "YES")
-    add_library(${MODULE_NAME} STATIC ${SRC_LIST})
+    add_library(${MODULE_NAME} STATIC ${PROTO_SRCS} ${SRC_LIST})
 endif()
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
