@@ -20,6 +20,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetServer", "NetServer\NetS
 		{6BDC77BE-5F51-482A-83E3-00730C02A8A4} = {6BDC77BE-5F51-482A-83E3-00730C02A8A4}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "protobuf-example", "protobuf-example\protobuf-example.vcxproj", "{85E31FF4-6C54-4880-B16C-E8C998650CB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -60,6 +62,14 @@ Global
 		{BAEFD9A3-D569-4793-9D18-D3204E329F8F}.Release|x64.Build.0 = Release|x64
 		{BAEFD9A3-D569-4793-9D18-D3204E329F8F}.Release|x86.ActiveCfg = Release|Win32
 		{BAEFD9A3-D569-4793-9D18-D3204E329F8F}.Release|x86.Build.0 = Release|Win32
+		{85E31FF4-6C54-4880-B16C-E8C998650CB6}.Debug|x64.ActiveCfg = Debug|x64
+		{85E31FF4-6C54-4880-B16C-E8C998650CB6}.Debug|x64.Build.0 = Debug|x64
+		{85E31FF4-6C54-4880-B16C-E8C998650CB6}.Debug|x86.ActiveCfg = Debug|Win32
+		{85E31FF4-6C54-4880-B16C-E8C998650CB6}.Debug|x86.Build.0 = Debug|Win32
+		{85E31FF4-6C54-4880-B16C-E8C998650CB6}.Release|x64.ActiveCfg = Release|x64
+		{85E31FF4-6C54-4880-B16C-E8C998650CB6}.Release|x64.Build.0 = Release|x64
+		{85E31FF4-6C54-4880-B16C-E8C998650CB6}.Release|x86.ActiveCfg = Release|Win32
+		{85E31FF4-6C54-4880-B16C-E8C998650CB6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,14 +10,14 @@ endif()
 
 project ("NetCommon")
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/set_build_type.cmake)
+set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_boost.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_protobuf.cmake)
 
-set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
-
 aux_source_directory(. SRC_LIST)
-# Header without source (additional to aux_source_directory command)
-
+# Header without source here (additional to aux_source_directory command)
 set(SRC_LIST ${SRC_LIST} "./net_client.h")
 set(SRC_LIST ${SRC_LIST} "./net_common.h")
 set(SRC_LIST ${SRC_LIST} "./net_connection.h")
@@ -26,17 +26,15 @@ set(SRC_LIST ${SRC_LIST} "./net_server.h")
 set(SRC_LIST ${SRC_LIST} "./net_tsqueue.h")
 set(SRC_LIST ${SRC_LIST} "./olc_net.h")
 
-get_property(NCD GLOBAL PROPERTY NETCOMMON_DEFINED)
-
-if(NOT NCD STREQUAL "YES")
-    set_property(GLOBAL PROPERTY NETCOMMON_DEFINED "YES")
+get_property(ncdef GLOBAL PROPERTY NetCommon_DEFINED)
+if(NOT ncdef STREQUAL "YES")
+    set_property(GLOBAL PROPERTY NetCommon_DEFINED "YES")
     add_library(${MODULE_NAME} STATIC ${SRC_LIST})
 endif()
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${MODULE_NAME} PROPERTY CXX_STANDARD 20)
+  # TODO: Add tests and install targets if needed..
 else()
   set_property(TARGET ${MODULE_NAME} PROPERTY CXX_STANDARD 17)
 endif()
-
-# TODO: Add tests and install targets if needed.
