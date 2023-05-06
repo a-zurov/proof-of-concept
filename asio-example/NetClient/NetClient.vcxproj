@@ -92,7 +92,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libprotobufd.lib;NetCommon.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProtoPathLib); ./../Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProtoLibPath); ./../Debug</AdditionalLibraryDirectories>
       <AdditionalOptions> /ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>

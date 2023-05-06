@@ -5,7 +5,8 @@
   <PropertyGroup Label="UserMacros">
     <ProtoPath>$(PROTO_ROOT)</ProtoPath>
     <ProtoIncludePath>$(ProtoPath)/include</ProtoIncludePath>
-    <ProtoPathLib>$(ProtoPath)/lib</ProtoPathLib>
+    <ProtoLibPath>$(ProtoPath)/lib</ProtoLibPath>
+    <ProtoBinPath>$(ProtoPath)/bin</ProtoBinPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -19,8 +20,11 @@
     <BuildMacro Include="ProtoIncludePath">
       <Value>$(ProtoIncludePath)</Value>
     </BuildMacro>
-    <BuildMacro Include="ProtoPathLib">
-      <Value>$(ProtoPathLib)</Value>
+    <BuildMacro Include="ProtoLibPath">
+      <Value>$(ProtoLibPath)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ProtoBinPath">
+      <Value>$(ProtoBinPath)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

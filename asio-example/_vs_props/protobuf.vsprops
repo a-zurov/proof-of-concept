@@ -13,7 +13,11 @@
         Value="$(ProtoPath)/include"
     />
     <UserMacro
-        Name="ProtoPathLib"
+        Name="ProtoLibPath"
         Value="$(ProtoPath)/lib"
-    />    
+    />
+    <UserMacro
+        Name="ProtoBinPath"
+        Value="$(ProtoPath)/bin"
+    />
 </VisualStudioPropertySheet>

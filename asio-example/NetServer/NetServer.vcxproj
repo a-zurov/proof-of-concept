@@ -92,7 +92,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libprotobufd.lib;NetCommon.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProtoPathLib); ./../Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProtoLibPath); ./../Debug</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
