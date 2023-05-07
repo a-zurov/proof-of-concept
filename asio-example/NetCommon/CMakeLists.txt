@@ -17,18 +17,14 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_boost.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_protobuf.cmake)
 
 file(GLOB PROTO_LIST "${CMAKE_CURRENT_SOURCE_DIR}/*.proto")
-foreach(PROTO_FILE ${PROTO_LIST})
-    if(EXISTS ${PROTO_FILE})
-        MESSAGE(STATUS "Protoc assined:\n   ${PROTO_FILE}")
-    endif()
-endforeach()
+message(STATUS "Protoc input:\n   ${PROTO_LIST}")
 
 protobuf_generate_cpp(
     PROTO_SRCS
     PROTO_HDRS
     ${PROTO_LIST}
 )
-message(STATUS "Protoc generated:\n   ${PROTO_SRCS}")
+message(STATUS "Protoc output:\n   ${PROTO_SRCS}")
 
 aux_source_directory(. SRC_LIST)
 # Header without source here (additional to aux_source_directory command)
@@ -45,6 +41,13 @@ if(NOT ncdef STREQUAL "YES")
     set_property(GLOBAL PROPERTY NetCommon_DEFINED "YES")
     add_library(${MODULE_NAME} STATIC ${PROTO_SRCS} ${SRC_LIST})
 endif()
+
+foreach(PROTO_FILE ${PROTO_SRCS} ${PROTO_HDRS})
+    add_custom_command( TARGET ${MODULE_NAME} PRE_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_FILE} ${CMAKE_CURRENT_SOURCE_DIR}
+                      )
+    message(STATUS "Copy assined:\n   ${PROTO_FILE}")
+endforeach()
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${MODULE_NAME} PROPERTY CXX_STANDARD 20)
