@@ -19,13 +19,21 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_protobuf.cmake)
 get_property(ncdef GLOBAL PROPERTY NetCommon_DEFINED)
 if(NOT ncdef STREQUAL "YES")
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon" "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/${BUILD_MODIFIER}")
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/person.proto DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
+    protobuf_generate_cpp(
+        PROTO_SRCS
+        PROTO_HDRS
+        person.proto
+    )
+    file(COPY ${PROTO_SRCS} ${PROTO_HDRS} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/)
+    #file(REMOVE ${CMAKE_CURRENT_SOURCE_DIR}/person.proto)
 endif()
 
 aux_source_directory(. SRC_LIST)
 # Header without source here
 set(SRC_LIST ${SRC_LIST} "./../NetCommon/olc_net.h")
 
-add_executable(${MODULE_NAME} ${SRC_LIST})
+add_executable(${MODULE_NAME} ${PROTO_HDRS} ${SRC_LIST})
 
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}${OUTPUT_FOLDER})
 
