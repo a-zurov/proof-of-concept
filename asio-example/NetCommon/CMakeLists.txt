@@ -1,5 +1,5 @@
 ﻿# CMakeList.txt : CMake project for NetCommon, include source and define project specific logic here.
-#
+# ---------------------------------------------------------------------------------------------------
 cmake_minimum_required (VERSION 3.8)
 
 # Enable Hot Reload for MSVC compilers if supported.
@@ -16,11 +16,19 @@ set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_boost.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_protobuf.cmake)
 
+file(GLOB PROTO_LIST "${CMAKE_CURRENT_SOURCE_DIR}/*.proto")
+foreach(PROTO_FILE ${PROTO_LIST})
+    if(EXISTS ${PROTO_FILE})
+        MESSAGE(STATUS "Protoc assined:\n   ${PROTO_FILE}")
+    endif()
+endforeach()
+
 protobuf_generate_cpp(
     PROTO_SRCS
     PROTO_HDRS
-    person.proto
+    ${PROTO_LIST}
 )
+message(STATUS "Protoc generated:\n   ${PROTO_SRCS}")
 
 aux_source_directory(. SRC_LIST)
 # Header without source here (additional to aux_source_directory command)

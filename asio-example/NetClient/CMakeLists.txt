@@ -13,20 +13,30 @@ project ("NetClient")
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/set_build_type.cmake)
 set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
 
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_boost.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_protobuf.cmake)
 
 get_property(ncdef GLOBAL PROPERTY NetCommon_DEFINED)
 if(NOT ncdef STREQUAL "YES")
+
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon" "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/${BUILD_MODIFIER}")
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/person.proto DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
+
+    file(GLOB PROTO_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/*.proto")
+    foreach(PROTO_FILE ${PROTO_LIST})
+        if(EXISTS ${PROTO_FILE})
+            MESSAGE(STATUS "Protoc assined:\n   ${PROTO_FILE}")
+        endif()
+    endforeach()
+
     protobuf_generate_cpp(
         PROTO_SRCS
         PROTO_HDRS
-        person.proto
+        ${PROTO_LIST}
     )
+    message(STATUS "Protoc generated:\n   ${PROTO_SRCS}")
+
     file(COPY ${PROTO_SRCS} ${PROTO_HDRS} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/)
-    #file(REMOVE ${CMAKE_CURRENT_SOURCE_DIR}/person.proto)
 endif()
 
 aux_source_directory(. SRC_LIST)
