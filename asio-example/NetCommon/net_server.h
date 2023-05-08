@@ -170,9 +170,9 @@ namespace olc
                             std::cout << "[SERVER] New Connection Error: " << ec.message() << "\n";
                         }
 
-                // Prime the asio context with more work - again simply wait for
-                // another connection...
-                WaitForClientConnection();
+                        // Prime the asio context with more work - again simply wait for
+                        // another connection...
+                        WaitForClientConnection();
                     });
             }
 
