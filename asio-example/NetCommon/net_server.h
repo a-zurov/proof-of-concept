@@ -74,11 +74,12 @@ namespace olc
             server_interface(uint16_t port)
                 : m_asioAcceptor(m_asioContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
             {
-
+                DBG_DUMP();
             }
 
             virtual ~server_interface()
             {
+                DBG_DUMP();
                 // May as well try and tidy up
                 Stop();
             }
@@ -86,6 +87,8 @@ namespace olc
             // Starts the server!
             bool Start()
             {
+                DBG_DUMP();
+
                 try
                 {
                     // Issue a task to the asio context - This is important
@@ -105,13 +108,14 @@ namespace olc
                     return false;
                 }
 
-                std::cout << "[SERVER] Started!\n";
+                DBG_MSG("[SERVER] Started!");
                 return true;
             }
 
             // Stops the server!
             void Stop()
             {
+                DBG_DUMP();
                 // Request the context to close
                 m_asioContext.stop();
 
@@ -119,29 +123,32 @@ namespace olc
                 if (m_threadContext.joinable()) m_threadContext.join();
 
                 // Inform someone, anybody, if they care...
-                std::cout << "[SERVER] Stopped!\n";
+                DBG_MSG("[SERVER] Stopped!");
             }
 
             // ASYNC - Instruct asio to wait for connection
             void WaitForClientConnection()
             {
+                DBG_DUMP();
                 // Prime context with an instruction to wait until a socket connects. This
                 // is the purpose of an "acceptor" object. It will provide a unique socket
                 // for each incoming connection attempt
                 m_asioAcceptor.async_accept(
                     [this](std::error_code ec, boost::asio::ip::tcp::socket socket)
                     {
+                        DBG_DUMP();
                         // Triggered by incoming connection request
                         if (!ec)
                         {
                             // Display some useful(?) information
-                            std::cout << "[SERVER] New Connection: " << socket.remote_endpoint() << "\n";
+                            std::stringstream ss;
+                            ss << "[SERVER] New Connection: " << socket.remote_endpoint();
+                            DBG_MSG(ss.str());
 
                             // Create a new connection to handle this client
                             std::shared_ptr<connection<T>> newconn =
                                 std::make_shared<connection<T>>(connection<T>::owner::server,
                                     m_asioContext, std::move(socket), m_qMessagesIn);
-
 
 
                             // Give the user server a chance to deny connection
@@ -154,7 +161,8 @@ namespace olc
                                 // asio context to sit and wait for bytes to arrive!
                                 m_deqConnections.back()->ConnectToClient(nIDCounter++);
 
-                                std::cout << "[" << m_deqConnections.back()->GetID() << "] Connection Approved\n";
+                                ss << " [" << m_deqConnections.back()->GetID() << "] Connection Approved";
+                                DBG_MSG(ss.str());
                             }
                             else
                             {
@@ -179,6 +187,7 @@ namespace olc
             // Send a message to a specific client
             void MessageClient(std::shared_ptr<connection<T>> client, const message<T>& msg)
             {
+                DBG_DUMP();
                 // Check client is legitimate...
                 if (client && client->IsConnected())
                 {
@@ -204,6 +213,8 @@ namespace olc
             // Send message to all clients
             void MessageAllClients(const message<T>& msg, std::shared_ptr<connection<T>> pIgnoreClient = nullptr)
             {
+                DBG_DUMP();
+
                 bool bInvalidClientExists = false;
 
                 // Iterate through all clients in container
@@ -238,6 +249,8 @@ namespace olc
             // Force server to respond to incoming messages
             void Update(size_t nMaxMessages = -1, bool bWait = false)
             {
+                DBG_DUMP();
+
                 if (bWait) m_qMessagesIn.wait();
 
                 // Process as many messages as you can up to the value
@@ -256,7 +269,7 @@ namespace olc
             }
 
         protected:
-            // This server class should override thse functions to implement
+            // This server class should override these functions to implement
             // customised functionality
 
             // Called when a client connects, you can veto the connection by returning false

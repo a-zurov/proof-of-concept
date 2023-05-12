@@ -28,6 +28,8 @@ public:
 protected:
     bool OnClientConnect(std::shared_ptr<olc::net::connection<CustomMsgTypes>> client) override
     {
+        DBG_DUMP();
+
         olc::net::message<CustomMsgTypes> msg;
         msg.header.id = CustomMsgTypes::ServerAccept;
         client->Send(msg);
@@ -44,6 +46,8 @@ protected:
     void OnMessage( std::shared_ptr<olc::net::connection<CustomMsgTypes>> client
                   , olc::net::message<CustomMsgTypes>& msg ) override
     {
+        DBG_DUMP();
+
         switch (msg.header.id)
         {
         case CustomMsgTypes::ServerPing:

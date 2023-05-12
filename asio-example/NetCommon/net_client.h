@@ -69,10 +69,13 @@ namespace olc
         {
         public:
             client_interface()
-            {}
+            {
+                DBG_DUMP();
+            }
 
             virtual ~client_interface()
             {
+                DBG_DUMP();
                 // If the client is destroyed, always try and disconnect from server
                 Disconnect();
             }
@@ -81,6 +84,8 @@ namespace olc
             // Connect to server with hostname/ip-address and port
             bool Connect(const std::string& host, const uint16_t port)
             {
+                DBG_DUMP();
+
                 try
                 {
                     // Resolve hostname/ip-address into tangiable physical address
@@ -107,6 +112,8 @@ namespace olc
             // Disconnect from server
             void Disconnect()
             {
+                DBG_DUMP();
+
                 // If connection exists, and it's connected then...
                 if (IsConnected())
                 {
@@ -127,6 +134,8 @@ namespace olc
             // Check if client is actually connected to a server
             bool IsConnected()
             {
+                DBG_DUMP();
+
                 if (m_connection)
                     return m_connection->IsConnected();
                 else
@@ -137,6 +146,8 @@ namespace olc
             // Send message to server
             void Send(const message<T>& msg)
             {
+                DBG_DUMP();
+
                 if (IsConnected())
                     m_connection->Send(msg);
             }
@@ -144,6 +155,8 @@ namespace olc
             // Retrieve queue of messages from server
             tsqueue<owned_message<T>>& Incoming()
             {
+                DBG_DUMP();
+
                 return m_qMessagesIn;
             }
 

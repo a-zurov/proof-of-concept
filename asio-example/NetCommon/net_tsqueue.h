@@ -75,6 +75,7 @@ namespace olc
             // Returns and maintains item at front of Queue
             const T& front()
             {
+                DBG_DUMP();
                 std::scoped_lock lock(muxQueue);
                 return deqQueue.front();
             }
@@ -82,6 +83,7 @@ namespace olc
             // Returns and maintains item at back of Queue
             const T& back()
             {
+                DBG_DUMP();
                 std::scoped_lock lock(muxQueue);
                 return deqQueue.back();
             }
@@ -89,6 +91,7 @@ namespace olc
             // Removes and returns item from front of Queue
             T pop_front()
             {
+                DBG_DUMP();
                 std::scoped_lock lock(muxQueue);
                 auto t = std::move(deqQueue.front());
                 deqQueue.pop_front();
@@ -98,6 +101,7 @@ namespace olc
             // Removes and returns item from back of Queue
             T pop_back()
             {
+                DBG_DUMP();
                 std::scoped_lock lock(muxQueue);
                 auto t = std::move(deqQueue.back());
                 deqQueue.pop_back();
@@ -107,6 +111,7 @@ namespace olc
             // Adds an item to back of Queue
             void push_back(const T& item)
             {
+                DBG_DUMP();
                 std::scoped_lock lock(muxQueue);
                 deqQueue.emplace_back(std::move(item));
 
@@ -117,6 +122,7 @@ namespace olc
             // Adds an item to front of Queue
             void push_front(const T& item)
             {
+                DBG_DUMP();
                 std::scoped_lock lock(muxQueue);
                 deqQueue.emplace_front(std::move(item));
 
@@ -127,6 +133,7 @@ namespace olc
             // Returns true if Queue has no items
             bool empty()
             {
+                DBG_DUMP();
                 std::scoped_lock lock(muxQueue);
                 return deqQueue.empty();
             }
@@ -134,6 +141,7 @@ namespace olc
             // Returns number of items in Queue
             size_t count()
             {
+                DBG_DUMP();
                 std::scoped_lock lock(muxQueue);
                 return deqQueue.size();
             }
@@ -141,12 +149,14 @@ namespace olc
             // Clears Queue
             void clear()
             {
+                DBG_DUMP();
                 std::scoped_lock lock(muxQueue);
                 deqQueue.clear();
             }
 
             void wait()
             {
+                DBG_DUMP();
                 while (empty())
                 {
                     std::unique_lock<std::mutex> ul(muxBlocking);

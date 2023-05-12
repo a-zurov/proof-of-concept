@@ -83,11 +83,15 @@ namespace olc
             connection(owner parent, boost::asio::io_context& asioContext, boost::asio::ip::tcp::socket socket, tsqueue<owned_message<T>>& qIn)
                 : m_asioContext(asioContext), m_socket(std::move(socket)), m_qMessagesIn(qIn)
             {
+                DBG_DUMP();
+
                 m_nOwnerType = parent;
             }
 
             virtual ~connection()
-            {}
+            {
+                DBG_DUMP();
+            }
 
             // This ID is used system wide - its how clients will understand other clients
             // exist across the whole system.
@@ -99,6 +103,8 @@ namespace olc
         public:
             void ConnectToClient(uint32_t uid = 0)
             {
+                DBG_DUMP();
+
                 if (m_nOwnerType == owner::server)
                 {
                     if (m_socket.is_open())
@@ -111,6 +117,8 @@ namespace olc
 
             void ConnectToServer(const boost::asio::ip::tcp::resolver::results_type& endpoints)
             {
+                DBG_DUMP();
+
                 // Only clients can connect to servers
                 if (m_nOwnerType == owner::client)
                 {
@@ -118,6 +126,8 @@ namespace olc
                     boost::asio::async_connect(m_socket, endpoints,
                         [this](std::error_code ec, boost::asio::ip::tcp::endpoint endpoint)
                         {
+                            DBG_DUMP();
+
                             if (!ec)
                             {
                                 ReadHeader();
@@ -129,6 +139,8 @@ namespace olc
 
             void Disconnect()
             {
+                DBG_DUMP();
+
                 if (IsConnected())
                     boost::asio::post(m_asioContext, [this]() { m_socket.close(); });
             }
@@ -149,20 +161,23 @@ namespace olc
             // the target, for a client, the target is the server and vice versa
             void Send(const message<T>& msg)
             {
+                DBG_DUMP();
+
                 boost::asio::post(m_asioContext,
                     [this, msg]()
                     {
+                        DBG_DUMP();
                         // If the queue has a message in it, then we must
                         // assume that it is in the process of asynchronously being written.
                         // Either way add the message to the queue to be output. If no messages
                         // were available to be written, then start the process of writing the
                         // message at the front of the queue.
                         bool bWritingMessage = !m_qMessagesOut.empty();
-                m_qMessagesOut.push_back(msg);
-                if (!bWritingMessage)
-                {
-                    WriteHeader();
-                }
+                        m_qMessagesOut.push_back(msg);
+                        if (!bWritingMessage)
+                        {
+                            WriteHeader();
+                        }
                     });
             }
 
@@ -172,12 +187,14 @@ namespace olc
             // ASYNC - Prime context to write a message header
             void WriteHeader()
             {
+                DBG_DUMP();
                 // If this function is called, we know the outgoing message queue must have
                 // at least one message to send. So allocate a transmission buffer to hold
                 // the message, and issue the work - asio, send these bytes
                 boost::asio::async_write(m_socket, boost::asio::buffer(&m_qMessagesOut.front().header, sizeof(message_header<T>)),
                     [this](std::error_code ec, std::size_t length)
                     {
+                        DBG_DUMP();
                         // asio has now sent the bytes - if there was a problem
                         // an error would be available...
                         if (!ec)
@@ -218,12 +235,15 @@ namespace olc
             // ASYNC - Prime context to write a message body
             void WriteBody()
             {
+                DBG_DUMP();
                 // If this function is called, a header has just been sent, and that header
                 // indicated a body existed for this message. Fill a transmission buffer
                 // with the body data, and send it!
                 boost::asio::async_write(m_socket, boost::asio::buffer(m_qMessagesOut.front().body.data(), m_qMessagesOut.front().body.size()),
                     [this](std::error_code ec, std::size_t length)
                     {
+                        DBG_DUMP();
+
                         if (!ec)
                         {
                             // Sending was successful, so we are done with the message
@@ -249,6 +269,7 @@ namespace olc
             // ASYNC - Prime context ready to read a message header
             void ReadHeader()
             {
+                DBG_DUMP();
                 // If this function is called, we are expecting asio to wait until it receives
                 // enough bytes to form a header of a message. We know the headers are a fixed
                 // size, so allocate a transmission buffer large enough to store it. In fact,
@@ -257,6 +278,8 @@ namespace olc
                 boost::asio::async_read(m_socket, boost::asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
                     [this](std::error_code ec, std::size_t length)
                     {
+                        DBG_DUMP();
+
                         if (!ec)
                         {
                             // A complete message header has been read, check if this message
@@ -288,12 +311,14 @@ namespace olc
             // ASYNC - Prime context ready to read a message body
             void ReadBody()
             {
+                DBG_DUMP();
                 // If this function is called, a header has already been read, and that header
                 // request we read a body, The space for that body has already been allocated
                 // in the temporary message object, so just wait for the bytes to arrive...
                 boost::asio::async_read(m_socket, boost::asio::buffer(m_msgTemporaryIn.body.data(), m_msgTemporaryIn.body.size()),
                     [this](std::error_code ec, std::size_t length)
                     {
+                        DBG_DUMP();
                         if (!ec)
                         {
                             // ...and they have! The message is now complete, so add
@@ -312,6 +337,7 @@ namespace olc
             // Once a full message is received, add it to the incoming queue
             void AddToIncomingMessageQueue()
             {
+                DBG_DUMP();
                 // Shove it in queue, converting it to an "owned message", by initialising
                 // with the a shared pointer from this connection object
                 if (m_nOwnerType == owner::server)
