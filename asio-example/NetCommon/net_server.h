@@ -99,7 +99,12 @@ namespace olc
                     WaitForClientConnection();
 
                     // Launch the asio context in its own thread
-                    m_threadContext = std::thread([this]() { m_asioContext.run(); });
+                    m_threadContext = std::thread(
+                        [this]() {
+                            DBG_MSG("[SERVER] Asynchronous Operation Processor thread started");
+                            m_asioContext.run();
+                        }
+                    );
                 }
                 catch (std::exception& e)
                 {
@@ -108,7 +113,7 @@ namespace olc
                     return false;
                 }
 
-                DBG_MSG("[SERVER] Started!");
+                DBG_MSG("[SERVER] Init completed");
                 return true;
             }
 
@@ -141,9 +146,7 @@ namespace olc
                         if (!ec)
                         {
                             // Display some useful(?) information
-                            std::stringstream ss;
-                            ss << "[SERVER] New Connection: " << socket.remote_endpoint();
-                            DBG_MSG(ss.str());
+                            DBG_MSG_EX("[async_accept] Completion Handler: New Connection " << socket.remote_endpoint());
 
                             // Create a new connection to handle this client
                             std::shared_ptr<connection<T>> newconn =
@@ -157,17 +160,16 @@ namespace olc
                                 // Connection allowed, so add to container of new connections
                                 m_deqConnections.push_back(std::move(newconn));
 
+                                DBG_MSG_EX("[async_accept] Completion Handler: Connection [" <<
+                                    m_deqConnections.back()->GetID() << "] approved - ConnectToClient()");
+
                                 // And very important! Issue a task to the connection's
                                 // asio context to sit and wait for bytes to arrive!
                                 m_deqConnections.back()->ConnectToClient(nIDCounter++);
-
-                                ss << " [" << m_deqConnections.back()->GetID() << "] Connection Approved";
-                                DBG_MSG(ss.str());
                             }
                             else
                             {
-                                std::cout << "[-----] Connection Denied\n";
-
+                                DBG_MSG("[async_accept] Completion Handler: connection [-----] denied");
                                 // Connection will go out of scope with no pending tasks, so will
                                 // get destroyed automagically due to the wonder of smart pointers
                             }
@@ -182,16 +184,18 @@ namespace olc
                         // another connection...
                         WaitForClientConnection();
                     });
+
+                DBG_MSG("[SERVER] [async_accept] Completion Handler for ConnectToClient() registered");
             }
 
             // Send a message to a specific client
             void MessageClient(std::shared_ptr<connection<T>> client, const message<T>& msg)
             {
                 DBG_DUMP();
-                // Check client is legitimate...
+                // Check client is legitimate..
                 if (client && client->IsConnected())
                 {
-                    // ...and post the message via the connection
+                    // ..and post the message via the connection
                     client->Send(msg);
                 }
                 else
@@ -220,7 +224,7 @@ namespace olc
                 // Iterate through all clients in container
                 for (auto& client : m_deqConnections)
                 {
-                    // Check client is connected...
+                    // Check client is connected..
                     if (client && client->IsConnected())
                     {
                         // ..it is!

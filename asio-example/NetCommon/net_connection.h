@@ -133,6 +133,8 @@ namespace olc
                                 ReadHeader();
                             }
                         });
+
+                    DBG_MSG("[SERVER] [async_connect] Completion Handler for ReadHeader() registered");
                 }
             }
 
@@ -283,17 +285,20 @@ namespace olc
                         if (!ec)
                         {
                             // A complete message header has been read, check if this message
-                            // has a body to follow...
+                            // has a body to follow..
                             if (m_msgTemporaryIn.header.size > 0)
                             {
-                                // ...it does, so allocate enough space in the messages' body
+                                DBG_MSG_EX("[async_read] Completion Handler: message has a body " <<
+                                    m_msgTemporaryIn.header.size << " bytes - ReadBody()");
+                                // ..it does, so allocate enough space in the messages' body
                                 // vector, and issue asio with the task to read the body.
                                 m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size);
                                 ReadBody();
                             }
                             else
                             {
-                                // it doesn't, so add this bodyless message to the connections
+                                DBG_MSG("[async_read] Completion Handler: message has no body");
+                                // ..it doesn't, so add this bodyless message to the connections
                                 // incoming message queue
                                 AddToIncomingMessageQueue();
                             }
@@ -306,6 +311,8 @@ namespace olc
                             m_socket.close();
                         }
                     });
+
+                DBG_MSG("[SERVER] [async_read] Completion Handler for ReadBody() registered");
             }
 
             // ASYNC - Prime context ready to read a message body
@@ -319,6 +326,7 @@ namespace olc
                     [this](std::error_code ec, std::size_t length)
                     {
                         DBG_DUMP();
+
                         if (!ec)
                         {
                             // ...and they have! The message is now complete, so add
@@ -332,6 +340,8 @@ namespace olc
                             m_socket.close();
                         }
                     });
+
+                DBG_MSG("[SERVER] [async_read] Completion Handler for AddToIncomingMessageQueue() registered");
             }
 
             // Once a full message is received, add it to the incoming queue

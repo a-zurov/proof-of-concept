@@ -28,9 +28,9 @@ namespace olc
         CLog() {}
 
         void FireLogMessage(const std::string& msg) {
-        
+
             std::unique_lock<std::mutex> lock(mtxFireLog_);
-            std::cout << msg << '\n';        
+            std::cout << msg << '\n';
         }
 
     private:
@@ -39,42 +39,44 @@ namespace olc
 
     typedef singleton< CLog > SLog;
 
-	class DbgDump
-	{
-		std::string file_;
-		std::string func_;
+    class DbgDump
+    {
+        std::string file_;
+        std::string func_;
 
-		int line_;
+        int line_;
 
-	public:
-		DbgDump(const char* file, const char* func, int line)
-			: file_(file)
-			, func_(func)
-			, line_(line)
-		{
-			std::stringstream ss;
-			ss << std::this_thread::get_id() << " >> ";
-			ss << file_ << " ( " << line_ << " ) " << func_;
+    public:
+        DbgDump(const char* file, const char* func, int line)
+            : file_(file)
+            , func_(func)
+            , line_(line)
+        {
+            std::stringstream ss;
+            ss << std::this_thread::get_id() << " >> ";
+            ss << file_ << " ( " << line_ << " ) " << func_;
 
-			SLog::instance().FireLogMessage(ss.str());
-		}
+            SLog::instance().FireLogMessage(ss.str());
+        }
 
-		~DbgDump()
-		{
-			std::stringstream ss;
-			ss << std::this_thread::get_id() << " << ";
-			ss << file_ << " ( " << line_ << " ) " << func_;
+        ~DbgDump()
+        {
+            std::stringstream ss;
+            ss << std::this_thread::get_id() << " << ";
+            ss << file_ << " ( " << line_ << " ) " << func_;
 
-			SLog::instance().FireLogMessage(ss.str());
-		}
-	};
+            SLog::instance().FireLogMessage(ss.str());
+        }
+    };
 }
 
 #define ALLOW_DBG_DUMP_
 #ifdef ALLOW_DBG_DUMP_
-#define DBG_DUMP() olc::DbgDump dbg_dump( __FILENAME__, __PRETTY_FUNCTION__, __LINE__ )
-#define DBG_MSG(x) olc::SLog::instance().FireLogMessage(x)
+#define DBG_DUMP()      olc::DbgDump dbg_dump( __FILENAME__, __PRETTY_FUNCTION__, __LINE__ )
+#define DBG_MSG(x)      olc::SLog::instance().FireLogMessage(x)
+#define DBG_MSG_EX(x)   std::stringstream ss__; ss__ << x; olc::SLog::instance().FireLogMessage(ss__.str())
 #else
 #define DBG_DUMP()
-#define DBG_MSG()
+#define DBG_MSG(x)
+#define DBG_MSG_EX(x)
 #endif
