@@ -134,7 +134,7 @@ namespace olc
                             }
                         });
 
-                    DBG_MSG("[SERVER] [async_connect] Completion Handler for ReadHeader() registered");
+                    DBG_MSG_CNN(id, "async_connect completion handler with ReadHeader() submitted");
                 }
             }
 
@@ -164,7 +164,7 @@ namespace olc
             void Send(const message<T>& msg)
             {
                 DBG_DUMP();
-
+                // Post submits a completion token or function object for execution
                 boost::asio::post(m_asioContext,
                     [this, msg]()
                     {
@@ -181,9 +181,9 @@ namespace olc
                             WriteHeader();
                         }
                     });
+
+                DBG_MSG_CNN(id, "post completion handler with WriteHeader() submitted");
             }
-
-
 
         private:
             // ASYNC - Prime context to write a message header
@@ -232,6 +232,8 @@ namespace olc
                             m_socket.close();
                         }
                     });
+
+                DBG_MSG_CNN(id, "async_write completion handler with WriteBody()/WriteHeader() submitted");
             }
 
             // ASYNC - Prime context to write a message body
@@ -256,6 +258,8 @@ namespace olc
                             // send the next messages' header.
                             if (!m_qMessagesOut.empty())
                             {
+                                DBG_MSG_CNN(id, "async_write completion handler: has a next message " <<
+                                    m_qMessagesOut.front().body.size() << " bytes, WriteHeader() next");
                                 WriteHeader();
                             }
                         }
@@ -266,6 +270,8 @@ namespace olc
                             m_socket.close();
                         }
                     });
+
+                DBG_MSG_CNN(id, "async_write completion handler with WriteHeader() submitted");
             }
 
             // ASYNC - Prime context ready to read a message header
@@ -288,8 +294,8 @@ namespace olc
                             // has a body to follow..
                             if (m_msgTemporaryIn.header.size > 0)
                             {
-                                DBG_MSG_EX("[async_read] Completion Handler: message has a body " <<
-                                    m_msgTemporaryIn.header.size << " bytes - ReadBody()");
+                                DBG_MSG_CNN(id, "async_read completion handler: message has a body " <<
+                                    m_msgTemporaryIn.header.size << " bytes, next ReadBody()");
                                 // ..it does, so allocate enough space in the messages' body
                                 // vector, and issue asio with the task to read the body.
                                 m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size);
@@ -297,7 +303,7 @@ namespace olc
                             }
                             else
                             {
-                                DBG_MSG("[async_read] Completion Handler: message has no body");
+                                DBG_MSG_CNN(id, "async_read completion handler: message has no body, AddToIncomingMessageQueue() next");
                                 // ..it doesn't, so add this bodyless message to the connections
                                 // incoming message queue
                                 AddToIncomingMessageQueue();
@@ -312,7 +318,7 @@ namespace olc
                         }
                     });
 
-                DBG_MSG("[SERVER] [async_read] Completion Handler for ReadBody() registered");
+                DBG_MSG_CNN(id, "async_read completion handler with ReadBody()/AddToIncomingMessageQueue() submitted");
             }
 
             // ASYNC - Prime context ready to read a message body
@@ -341,7 +347,7 @@ namespace olc
                         }
                     });
 
-                DBG_MSG("[SERVER] [async_read] Completion Handler for AddToIncomingMessageQueue() registered");
+                DBG_MSG_CNN(id, "async_read completion handler with AddToIncomingMessageQueue() submitted");
             }
 
             // Once a full message is received, add it to the incoming queue

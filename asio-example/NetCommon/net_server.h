@@ -101,7 +101,7 @@ namespace olc
                     // Launch the asio context in its own thread
                     m_threadContext = std::thread(
                         [this]() {
-                            DBG_MSG("[SERVER] Asynchronous Operation Processor thread started");
+                            DBG_MSG_SRV("io_service thread started");
                             m_asioContext.run();
                         }
                     );
@@ -113,7 +113,7 @@ namespace olc
                     return false;
                 }
 
-                DBG_MSG("[SERVER] Init completed");
+                DBG_MSG_SRV("init completed");
                 return true;
             }
 
@@ -146,7 +146,7 @@ namespace olc
                         if (!ec)
                         {
                             // Display some useful(?) information
-                            DBG_MSG_EX("[async_accept] Completion Handler: New Connection " << socket.remote_endpoint());
+                            DBG_MSG_SRV("async_accept completion handler : new connection " << socket.remote_endpoint());
 
                             // Create a new connection to handle this client
                             std::shared_ptr<connection<T>> newconn =
@@ -160,16 +160,16 @@ namespace olc
                                 // Connection allowed, so add to container of new connections
                                 m_deqConnections.push_back(std::move(newconn));
 
-                                DBG_MSG_EX("[async_accept] Completion Handler: Connection [" <<
-                                    m_deqConnections.back()->GetID() << "] approved - ConnectToClient()");
-
                                 // And very important! Issue a task to the connection's
                                 // asio context to sit and wait for bytes to arrive!
                                 m_deqConnections.back()->ConnectToClient(nIDCounter++);
+
+                                DBG_MSG_SRV("async_accept completion handler: connection [" <<
+                                    m_deqConnections.back()->GetID() << "] approved");
                             }
                             else
                             {
-                                DBG_MSG("[async_accept] Completion Handler: connection [-----] denied");
+                                DBG_MSG_SRV("async_accept completion handler: connection [-----] denied");
                                 // Connection will go out of scope with no pending tasks, so will
                                 // get destroyed automagically due to the wonder of smart pointers
                             }
@@ -185,7 +185,7 @@ namespace olc
                         WaitForClientConnection();
                     });
 
-                DBG_MSG("[SERVER] [async_accept] Completion Handler for ConnectToClient() registered");
+                DBG_MSG_SRV("async_accept completion handler with ConnectToClient() submitted");
             }
 
             // Send a message to a specific client

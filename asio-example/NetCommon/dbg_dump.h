@@ -15,7 +15,7 @@
 #endif
 
 #define __FILENAME__ ( std::strrchr( "/" __FILE__, __DELIM__ ) + 1 )
-#define __MAKE_DUMP__ __FILENAME__ << " : " << __LINE__ << " | " << __PRETTY_FUNCTION__
+#define __MAKE_DUMP__ __FILENAME__ << " ( " << __LINE__ << " ) " << __PRETTY_FUNCTION__
 
 
 namespace olc
@@ -75,8 +75,18 @@ namespace olc
 #define DBG_DUMP()      olc::DbgDump dbg_dump( __FILENAME__, __PRETTY_FUNCTION__, __LINE__ )
 #define DBG_MSG(x)      olc::SLog::instance().FireLogMessage(x)
 #define DBG_MSG_EX(x)   std::stringstream ss__; ss__ << x; olc::SLog::instance().FireLogMessage(ss__.str())
+#define DBG_MSG_EX2(y, x)   std::stringstream ss__;                     \
+                        ss__ << std::this_thread::get_id() << " | ";    \
+                        ss__ << __MAKE_DUMP__ << "\n " << y << " " << x;\
+                        olc::SLog::instance().FireLogMessage(ss__.str())
+#define DBG_MSG_SRV(x)  DBG_MSG_EX2("[SERVER]", x)
+#define DBG_MSG_CLT(x)  DBG_MSG_EX2("[CLIENT]", x)
+#define DBG_MSG_CNN(y, x)  DBG_MSG_EX2("[CONNECT " << y << "] ", x)
 #else
 #define DBG_DUMP()
 #define DBG_MSG(x)
 #define DBG_MSG_EX(x)
+#define DBG_MSG_SRV(x)
+#define DBG_MSG_CLT(x)
+#define DBG_MSG_CNN(x)
 #endif
