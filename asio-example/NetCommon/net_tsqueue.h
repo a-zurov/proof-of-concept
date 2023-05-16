@@ -57,7 +57,7 @@
 #pragma once
 
 #include "net_common.h"
-
+#include <shared_mutex>
 
 namespace olc
 {
@@ -73,18 +73,18 @@ namespace olc
 
         public:
             // Returns and maintains item at front of Queue
-            const T& front()
+            const T& front() const
             {
                 DBG_DUMP();
-                std::scoped_lock lock(muxQueue);
+                std::shared_lock lock(mtxQueue_);
                 return deqQueue.front();
             }
 
             // Returns and maintains item at back of Queue
-            const T& back()
+            const T& back() const
             {
                 DBG_DUMP();
-                std::scoped_lock lock(muxQueue);
+                std::shared_lock lock(mtxQueue_);
                 return deqQueue.back();
             }
 
@@ -92,7 +92,7 @@ namespace olc
             T pop_front()
             {
                 DBG_DUMP();
-                std::scoped_lock lock(muxQueue);
+                std::unique_lock<std::shared_mutex> lock(mtxQueue_);
                 auto t = std::move(deqQueue.front());
                 deqQueue.pop_front();
                 return t;
@@ -102,7 +102,7 @@ namespace olc
             T pop_back()
             {
                 DBG_DUMP();
-                std::scoped_lock lock(muxQueue);
+                std::unique_lock<std::shared_mutex> lock(mtxQueue_);
                 auto t = std::move(deqQueue.back());
                 deqQueue.pop_back();
                 return t;
@@ -112,7 +112,7 @@ namespace olc
             void push_back(const T& item)
             {
                 DBG_DUMP();
-                std::scoped_lock lock(muxQueue);
+                std::unique_lock<std::shared_mutex> lock(mtxQueue_);
                 deqQueue.emplace_back(std::move(item));
 
                 std::unique_lock<std::mutex> ul(muxBlocking);
@@ -123,7 +123,7 @@ namespace olc
             void push_front(const T& item)
             {
                 DBG_DUMP();
-                std::scoped_lock lock(muxQueue);
+                std::unique_lock<std::shared_mutex> lock(mtxQueue_);
                 deqQueue.emplace_front(std::move(item));
 
                 std::unique_lock<std::mutex> ul(muxBlocking);
@@ -131,18 +131,18 @@ namespace olc
             }
 
             // Returns true if Queue has no items
-            bool empty()
+            bool empty() const
             {
                 DBG_DUMP();
-                std::scoped_lock lock(muxQueue);
+                std::shared_lock lock(mtxQueue_);
                 return deqQueue.empty();
             }
 
             // Returns number of items in Queue
-            size_t count()
+            size_t count() const
             {
                 DBG_DUMP();
-                std::scoped_lock lock(muxQueue);
+                std::shared_lock lock(mtxQueue_);
                 return deqQueue.size();
             }
 
@@ -150,7 +150,7 @@ namespace olc
             void clear()
             {
                 DBG_DUMP();
-                std::scoped_lock lock(muxQueue);
+                std::unique_lock<std::shared_mutex> lock(mtxQueue_);
                 deqQueue.clear();
             }
 
@@ -165,7 +165,7 @@ namespace olc
             }
 
         protected:
-            std::mutex muxQueue;
+            mutable std::shared_mutex mtxQueue_;
             std::deque<T> deqQueue;
             std::condition_variable cvBlocking;
             std::mutex muxBlocking;

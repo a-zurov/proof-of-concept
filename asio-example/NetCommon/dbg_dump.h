@@ -88,5 +88,5 @@ namespace olc
 #define DBG_MSG_EX(x)
 #define DBG_MSG_SRV(x)
 #define DBG_MSG_CLT(x)
-#define DBG_MSG_CNN(x)
+#define DBG_MSG_CNN(y, x)
 #endif
