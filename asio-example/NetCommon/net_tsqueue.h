@@ -84,7 +84,7 @@ namespace olc
             tsqueue(const tsqueue<T>&) = delete;
 
         public:
-            void push_back(const T& item) override {
+            void push_back_notify(const T& item) {
 
                 DBG_DUMP();
                 base::push_back(item);

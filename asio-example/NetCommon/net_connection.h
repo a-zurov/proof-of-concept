@@ -357,7 +357,7 @@ namespace olc
                 // Shove it in queue, converting it to an "owned message", by initialising
                 // with the a shared pointer from this connection object
                 if (m_nOwnerType == owner::server)
-                    m_qMessagesIn.push_back({ this->shared_from_this(), m_msgTemporaryIn });
+                    m_qMessagesIn.push_back_notify({ this->shared_from_this(), m_msgTemporaryIn });
                 else
                     m_qMessagesIn.push_back({ nullptr, m_msgTemporaryIn });
 
