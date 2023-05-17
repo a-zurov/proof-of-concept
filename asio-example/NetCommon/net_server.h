@@ -255,15 +255,13 @@ namespace olc
             {
                 DBG_DUMP();
 
-                if (bWait) m_qMessagesIn.wait();
-
                 // Process as many messages as you can up to the value
                 // specified
                 size_t nMessageCount = 0;
-                while (nMessageCount < nMaxMessages && !m_qMessagesIn.empty())
+                while (nMessageCount < nMaxMessages)
                 {
                     // Grab the front message
-                    auto msg = m_qMessagesIn.pop_front();
+                    auto msg = m_qMessagesIn.pop_n_wait_front();
 
                     // Pass to message handler
                     OnMessage(msg.remote, msg.msg);
