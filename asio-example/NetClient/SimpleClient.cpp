@@ -156,14 +156,13 @@ int main()
                 }
                 break;
 
-
                 case CustomMsgTypes::ServerPing:
                 {
                     // Server has responded to a ping request
                     std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
                     std::chrono::system_clock::time_point timeThen;
                     msg >> timeThen;
-                    std::cout << "Ping: " << std::chrono::duration<double>(timeNow - timeThen).count() << "\n";
+                    DBG_MSG_CLT("Ping: " << std::chrono::duration<double>(timeNow - timeThen).count());
                 }
                 break;
 
@@ -172,7 +171,7 @@ int main()
                     // Server has responded to a ping request
                     uint32_t clientID;
                     msg >> clientID;
-                    std::cout << "Hello from [" << clientID << "]\n";
+                    DBG_MSG_CLT("Hello from [" << clientID << "]");
                 }
                 break;
 
@@ -181,8 +180,7 @@ int main()
                 {
                     olc::Person person;
                     msg >> person;
-                    std::cout << "Name: " << person.name() << '\n';
-                    std::cout << "Street: " << person.address().street() << '\n';
+                    DBG_MSG_CLT("Name: " << person.name() << " Street: " << person.address().street());
                 }
                 break;
 
@@ -191,7 +189,7 @@ int main()
         }
         else
         {
-            std::cout << "Server Down\n";
+            DBG_MSG_CLT("Shut Down");
             bQuit = true;
         }
     }

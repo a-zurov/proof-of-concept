@@ -70,7 +70,7 @@ namespace olc
         {
         public:
             // A connection is "owned" by either a server or a client, and its
-            // behaviour is slightly different bewteen the two.
+            // behaviour is slightly different bewteen the two
             enum class owner
             {
                 server,
@@ -80,8 +80,13 @@ namespace olc
         public:
             // Constructor: Specify Owner, connect to context, transfer the socket
             //              Provide reference to incoming message queue
-            connection(owner parent, boost::asio::io_context& asioContext, boost::asio::ip::tcp::socket socket, tsqueue<owned_message<T>>& qIn)
-                : m_asioContext(asioContext), m_socket(std::move(socket)), m_qMessagesIn(qIn)
+            connection( owner parent,
+                        boost::asio::io_context& asioContext,
+                        boost::asio::ip::tcp::socket socket,
+                        tsqueue<owned_message<T>>& qIn)
+                : m_asioContext(asioContext)
+                , m_socket(std::move(socket))
+                , m_qMessagesIn(qIn)
             {
                 DBG_DUMP();
 
@@ -93,8 +98,8 @@ namespace olc
                 DBG_DUMP();
             }
 
-            // This ID is used system wide - its how clients will understand other clients
-            // exist across the whole system.
+            // This ID is used system wide - its how clients will understand
+            // other clients exist across the whole system
             uint32_t GetID() const
             {
                 return id;
@@ -123,8 +128,9 @@ namespace olc
                 if (m_nOwnerType == owner::client)
                 {
                     // Request asio attempts to connect to an endpoint
-                    boost::asio::async_connect(m_socket, endpoints,
-                        [this](std::error_code ec, boost::asio::ip::tcp::endpoint endpoint)
+                    boost::asio::async_connect( m_socket
+                        , endpoints
+                        , [this](std::error_code ec, boost::asio::ip::tcp::endpoint endpoint)
                         {
                             DBG_DUMP();
 
@@ -132,7 +138,7 @@ namespace olc
                             {
                                 ReadHeader();
                             }
-                        });
+                        } );
 
                     DBG_MSG_CNN(id, "async_connect completion handler with ReadHeader() submitted");
                 }
@@ -389,7 +395,6 @@ namespace olc
             owner m_nOwnerType = owner::server;
 
             uint32_t id = 0;
-
         };
     }
 }

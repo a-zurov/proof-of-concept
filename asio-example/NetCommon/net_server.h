@@ -72,7 +72,8 @@ namespace olc
         public:
             // Create a server, ready to listen on specified port
             server_interface(uint16_t port)
-                : m_asioAcceptor(m_asioContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+                    : m_asioAcceptor(m_asioContext
+                    , boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
             {
                 DBG_DUMP();
             }
@@ -255,8 +256,7 @@ namespace olc
             {
                 DBG_DUMP();
 
-                // Process as many messages as you can up to the value
-                // specified
+                // Process as many messages as you can up to the value specified
                 size_t nMessageCount = 0;
                 while (nMessageCount < nMaxMessages)
                 {
@@ -305,7 +305,7 @@ namespace olc
             std::thread m_threadContext;
 
             // These things need an asio context
-            boost::asio::ip::tcp::acceptor m_asioAcceptor; // Handles new incoming connection attempts...
+            boost::asio::ip::tcp::acceptor m_asioAcceptor; // Handles new incoming connection attempts..
 
             // Clients will be identified in the "wider system" via an ID
             uint32_t nIDCounter = 10000;

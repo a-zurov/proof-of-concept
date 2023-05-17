@@ -55,7 +55,7 @@ namespace olc
             // Plain Old Data (POD). TLDR: Serialise & Deserialise into/from a vector
 
             // Pushes any POD-like data and google::protobuf::Message derived data into the message buffer
-            template<typename DataType >
+            template<typename DataType>
             friend message<T>& operator << (message<T>& msg, const DataType& data)
             {
                 // Cache current size of vector, as this will be the point we insert the data

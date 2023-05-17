@@ -39,7 +39,7 @@ protected:
     // Called when a client appears to have disconnected
     void OnClientDisconnect(std::shared_ptr<olc::net::connection<CustomMsgTypes>> client) override
     {
-        std::cout << "Removing client [" << client->GetID() << "]\n";
+        DBG_MSG_SRV("Removing client [" << client->GetID() << "]");
     }
 
     // Called when a message arrives
@@ -52,8 +52,7 @@ protected:
         {
         case CustomMsgTypes::ServerPing:
         {
-            std::cout << "[" << client->GetID() << "]: Server Ping\n";
-
+            DBG_MSG_CNN(client->GetID(), "Server Ping");
             // Simply bounce message back to client
             client->Send(msg);
         }
@@ -61,8 +60,7 @@ protected:
 
         case CustomMsgTypes::MessageAll:
         {
-            std::cout << "[" << client->GetID() << "]: Message All\n";
-
+            DBG_MSG_CNN(client->GetID(), "Message All");
             // Construct a new message and send it to all clients
             olc::net::message<CustomMsgTypes> msg;
             msg.header.id = CustomMsgTypes::ServerMessage;
@@ -74,8 +72,7 @@ protected:
 
         case CustomMsgTypes::ProtobufTest:
         {
-            std::cout << "[" << client->GetID() << "]: ProtobufTest\n";
-
+            DBG_MSG_CNN(client->GetID(), "Protobuf Test");
             // Simply bounce message back to client
             client->Send(msg);
         }
