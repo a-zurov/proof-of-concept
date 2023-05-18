@@ -21,6 +21,7 @@ namespace unitTestNetLog
 			olc2::NetLog::instance().FireLogMessage("Hello World!");
 			olc2::NetLog::instance().Init();
 			olc2::NetLog::instance().PingServer();
+			olc2::NetLog::instance().Stop();
 		}
 
 	};

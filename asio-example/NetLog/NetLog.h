@@ -20,14 +20,20 @@ namespace olc2
 			spNetLogImpl_ = std::make_unique<NetLogImpl>();
 		}
 
-		void PingServer()
-		{
+		void PingServer() {
+
 			spNetLogImpl_->PingServer();
 		}
 
 		void FireLogMessage(const std::string& msg) {
 
 			spNetLogImpl_->FireLogMessage(msg);
+		}
+
+		// FOR TESTS ONLY
+		void Stop() {
+
+			spNetLogImpl_->Stop();
 		}
 	};
 

@@ -313,7 +313,7 @@ namespace olc
                 if (m_nOwnerType == owner::server)
                     m_qMessagesIn.push_back_notify({ this->shared_from_this(), m_msgTemporaryIn });
                 else
-                    m_qMessagesIn.push_back({ nullptr, m_msgTemporaryIn });
+                    m_qMessagesIn.push_back_notify({ nullptr, m_msgTemporaryIn });
 
                 // We must now prime the asio context to receive the next message. It
                 // wil just sit and wait for bytes to arrive, and the message construction
