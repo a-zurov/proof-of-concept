@@ -7,10 +7,10 @@
 
 namespace olc2
 {
-	// TODO: This is an example of a library function
-	int Add(int x, int y)
-	{
-		return x + y;
-	}
+    // TODO: This is an example of a library function
+    int Add(int x, int y)
+    {
+        return x + y;
+    }
 
 }

@@ -3,13 +3,20 @@ syntax = "proto2";
 package olc;
 
 message Address {
-  optional string street = 1;
-  optional int32 building = 2;
+    optional string street = 1;
+    optional int32 building = 2;
 }
 
 message Person {
-  required string name = 1;
-  optional int32 age = 2;
-  optional Address address = 3;
-  repeated string phone_number = 4;
+    required string name = 1;
+    optional int32 age = 2;
+    optional Address address = 3;
+    repeated string phone_number = 4;
+}
+
+message DbgLog {
+    required int32 line = 1;
+    required string file = 2;
+    required string func = 3;
+    optional string msg = 4;
 }

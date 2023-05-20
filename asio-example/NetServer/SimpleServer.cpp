@@ -17,7 +17,8 @@ enum class CustomMsgTypes : uint32_t
     ServerPing,
     MessageAll,
     ServerMessage,
-    ProtobufTest
+    ProtobufTest,
+    ProtobufTest2
 };
 
 class CustomServer : public olc::net::server_interface<CustomMsgTypes>
@@ -43,8 +44,8 @@ protected:
     }
 
     // Called when a message arrives
-    void OnMessage( std::shared_ptr<olc::net::connection<CustomMsgTypes>> client
-                  , olc::net::message<CustomMsgTypes>& msg ) override
+    void OnMessage(std::shared_ptr<olc::net::connection<CustomMsgTypes>> client
+        , olc::net::message<CustomMsgTypes>& msg) override
     {
         DBG_DUMP();
 
@@ -75,6 +76,16 @@ protected:
             DBG_MSG_CNN(client->GetID(), "Protobuf Test");
             // Simply bounce message back to client
             client->Send(msg);
+        }
+        break;
+
+        case CustomMsgTypes::ProtobufTest2:
+        {
+            olc::DbgLog log;
+            msg >> log;
+            std::stringstream ss;
+            ss << log.file() << " ( " << log.line() << " ) " << log.func();
+            DBG_MSG_CNN(client->GetID(), ss.str());
         }
         break;
 
