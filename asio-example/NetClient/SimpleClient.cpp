@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include "../NetCommon/olc_net.h"
+#include "../NetLog/NetLog.h"
 
 
 enum class CustomMsgTypes : uint32_t
@@ -79,6 +80,10 @@ int main()
 
     CustomClient c;
     c.Connect("127.0.0.1", 60000);
+
+#ifdef ALLOW_NET_DUMP_
+    olc2::NetLog::instance().Init();
+#endif
 
     char ch;
     bool key[3] = { false, false, false };
@@ -152,7 +157,8 @@ int main()
                 case CustomMsgTypes::ServerAccept:
                 {
                     // Server has responded to a ping request
-                    std::cout << "Server Accepted Connection\n";
+                    DBG_MSG_CLT("Server Accepted Connection");
+                    NET_MSG("Server Accepted Connection");
                 }
                 break;
 
@@ -163,6 +169,7 @@ int main()
                     std::chrono::system_clock::time_point timeThen;
                     msg >> timeThen;
                     DBG_MSG_CLT("Ping: " << std::chrono::duration<double>(timeNow - timeThen).count());
+                    NET_MSG("Ping: " << std::chrono::duration<double>(timeNow - timeThen).count());
                 }
                 break;
 
@@ -172,6 +179,7 @@ int main()
                     uint32_t clientID;
                     msg >> clientID;
                     DBG_MSG_CLT("Hello from [" << clientID << "]");
+                    NET_MSG("Hello from [" << clientID << "]");
                 }
                 break;
 
@@ -181,6 +189,7 @@ int main()
                     olc::Person person;
                     msg >> person;
                     DBG_MSG_CLT("Name: " << person.name() << " Street: " << person.address().street());
+                    NET_MSG("Name: " << person.name() << " Street: " << person.address().street());
                 }
                 break;
 

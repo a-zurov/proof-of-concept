@@ -38,3 +38,12 @@ namespace olc2
 
     typedef olc::singleton< INetLog > NetLog;
 }
+
+#define ALLOW_NET_DUMP_
+#ifdef ALLOW_NET_DUMP_
+#define NET_DUMP()      olc2:: NetLog::instance().FireLogMessage(__LINE__, __FILENAME__, __PRETTY_FUNCTION__)
+#define NET_MSG(x)      std::stringstream ss2__; ss2__ << x; olc2::NetLog::instance().FireLogMessage(__LINE__, __FILENAME__, __PRETTY_FUNCTION__, ss2__.str().c_str())
+#else
+#define NET_DUMP()
+#define NET_MSG(x)
+#endif
