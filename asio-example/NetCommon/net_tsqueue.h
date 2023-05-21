@@ -1,7 +1,6 @@
 #pragma once
 
 #include "net_common.h"
-#include <shared_mutex>
 
 namespace olc
 {

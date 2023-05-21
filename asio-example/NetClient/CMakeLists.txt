@@ -29,8 +29,6 @@ if(NOT netlogdef STREQUAL "YES")
 aux_source_directory(. SRC_LIST)
 # Header without source here
 set(SRC_LIST ${SRC_LIST} "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/olc_net.h")
-#set(SRC_LIST ${SRC_LIST} "${CMAKE_CURRENT_SOURCE_DIR}/../NetLog/NetLog.cpp")
-#set(SRC_LIST ${SRC_LIST} "${CMAKE_CURRENT_SOURCE_DIR}/../NetLog/NetLogImpl.cpp")
 
 add_executable(${MODULE_NAME} ${PROTO_HDRS} ${SRC_LIST})
 
