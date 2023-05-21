@@ -21,9 +21,16 @@ if(NOT ncdef STREQUAL "YES")
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon" "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/out/build/linux-${BUILD_MODIFIER}")
  endif()
 
+ get_property(netlogdef GLOBAL PROPERTY NetLog_DEFINED)
+if(NOT netlogdef STREQUAL "YES")
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../NetLog" "${CMAKE_CURRENT_SOURCE_DIR}/../NetLog/out/build/linux-${BUILD_MODIFIER}")
+ endif()
+
 aux_source_directory(. SRC_LIST)
 # Header without source here
-set(SRC_LIST ${SRC_LIST} "./../NetCommon/olc_net.h")
+set(SRC_LIST ${SRC_LIST} "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/olc_net.h")
+#set(SRC_LIST ${SRC_LIST} "${CMAKE_CURRENT_SOURCE_DIR}/../NetLog/NetLog.cpp")
+#set(SRC_LIST ${SRC_LIST} "${CMAKE_CURRENT_SOURCE_DIR}/../NetLog/NetLogImpl.cpp")
 
 add_executable(${MODULE_NAME} ${PROTO_HDRS} ${SRC_LIST})
 
@@ -31,9 +38,9 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}${OUTPUT_FOLDER})
 
 target_link_libraries( ${MODULE_NAME}
     "NetCommon${BUILD_SUFFIX}"
+    "NetLog${BUILD_SUFFIX}"
     ${Boost_LIBRARIES}
     ${Protobuf_LIBRARIES}
-    #${REQUIRED_LIBS}
 )
 
 file(GLOB PROTO_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/out/build/linux-${BUILD_MODIFIER}/*.pb.*")

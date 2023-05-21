@@ -85,6 +85,7 @@ protected:
             msg >> log;
             std::stringstream ss;
             ss << log.file() << " ( " << log.line() << " ) " << log.func();
+            if (log.has_msg()) ss << ' ' << log.msg();
             DBG_MSG_CNN(client->GetID(), ss.str());
         }
         break;

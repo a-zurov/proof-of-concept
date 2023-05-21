@@ -1,4 +1,4 @@
-﻿# CMakeList.txt : CMake project for NetServer, include source and define project specific logic here.
+﻿# CMakeList.txt : CMake project for NetLog, include source and define project specific logic here.
 # ---------------------------------------------------------------------------------------------------
 cmake_minimum_required (VERSION 3.8)
 
@@ -8,32 +8,45 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("NetServer")
+project ("NetLog")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/set_build_type.cmake)
 set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_boost.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/include_protobuf.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../_cmake_files/pch_support.cmake)
 
 get_property(ncdef GLOBAL PROPERTY NetCommon_DEFINED)
 if(NOT ncdef STREQUAL "YES")
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon" "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/${BUILD_MODIFIER}")
-endif()
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon" "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/out/build/linux-${BUILD_MODIFIER}")
+ endif()
 
 aux_source_directory(. SRC_LIST)
 # Header without source here
 set(SRC_LIST ${SRC_LIST} "./../NetCommon/olc_net.h")
 
-add_executable(${MODULE_NAME} ${SRC_LIST})
-
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}${OUTPUT_FOLDER})
+
+if(NOT netlogdef STREQUAL "YES")
+    set_property(GLOBAL PROPERTY NetLog_DEFINED "YES")
+    add_library(${MODULE_NAME} STATIC ${SRC_LIST})    
+    add_precompiled_header(${MODULE_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/pch.h)
+endif()
 
 target_link_libraries( ${MODULE_NAME}
     "NetCommon${BUILD_SUFFIX}"
     ${Boost_LIBRARIES}
     ${Protobuf_LIBRARIES}
 )
+
+file(GLOB PROTO_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon/out/build/linux-${BUILD_MODIFIER}/*.pb.*")
+foreach(PROTO_FILE ${PROTO_LIST})
+    add_custom_command( TARGET ${MODULE_NAME} PRE_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon
+                      )
+    message(STATUS "Copy assined:\n   ${PROTO_FILE}")
+endforeach()
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${MODULE_NAME} PROPERTY CXX_STANDARD 20)

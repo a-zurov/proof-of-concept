@@ -14,26 +14,14 @@ namespace olc2
         std::unique_ptr< NetLogImpl> spNetLogImpl_;
 
     public:
-        void Init()
-        {
-            spNetLogImpl_ = std::make_unique<NetLogImpl>();
-        }
+        void Init();
 
-        void PingServer()
-        {
-            spNetLogImpl_->PingServer();
-        }
+        void PingServer();
 
-        void FireLogMessage(int line, const char* file, const char* func, const char* pMsg = nullptr)
-        {
-            spNetLogImpl_->FireLogMessage(line, file, func, pMsg);
-        }
+        void FireLogMessage(int line, const char* file, const char* func, const char* pMsg = nullptr);
 
         // FOR TESTS ONLY
-        void Stop()
-        {
-            spNetLogImpl_->Stop();
-        }
+        void Stop();
     };
 
     typedef olc::singleton< INetLog > NetLog;
@@ -41,7 +29,7 @@ namespace olc2
 
 #define ALLOW_NET_DUMP_
 #ifdef ALLOW_NET_DUMP_
-#define NET_DUMP()      olc2:: NetLog::instance().FireLogMessage(__LINE__, __FILENAME__, __PRETTY_FUNCTION__)
+#define NET_DUMP()      olc2::NetLog::instance().FireLogMessage(__LINE__, __FILENAME__, __PRETTY_FUNCTION__)
 #define NET_MSG(x)      std::stringstream ss2__; ss2__ << x; olc2::NetLog::instance().FireLogMessage(__LINE__, __FILENAME__, __PRETTY_FUNCTION__, ss2__.str().c_str())
 #else
 #define NET_DUMP()

@@ -13,8 +13,8 @@
 #endif
 
 #include <iostream>
-#include "../NetCommon/olc_net.h"
-#include "../NetLog/NetLog.h"
+#include "./../NetCommon/olc_net.h"
+#include "./../NetLog/NetLog.h"
 
 
 enum class CustomMsgTypes : uint32_t
