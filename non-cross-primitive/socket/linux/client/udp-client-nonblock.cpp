@@ -92,7 +92,7 @@ int main(void)
 
     // Receive response cycle
     struct sockaddr_in addr_from;
-    socklen_t size = sizeof(addr_from);
+    socklen_t size;
 
     for (int k = 0; k < 1000; ++k) {
 

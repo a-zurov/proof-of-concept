@@ -37,7 +37,6 @@ int main(void)
         , (char*)&opt
         , sizeof(opt));
 
-
     struct sockaddr_in addr_this;           // Address format:
     addr_this.sin_family = AF_INET;         // IPv4 Internet protocol
     addr_this.sin_port = htons(PORT_THIS);  // port in network byte order

@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.8)
+
+project(server)
+
+set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
+
+#set(SRC_LIST "udp-server-zero.cpp")
+set(SRC_LIST "udp-server-nonblock.cpp")
+
+add_executable(${MODULE_NAME} ${SRC_LIST})
