@@ -5,6 +5,7 @@ project(client)
 set(MODULE_NAME "${PROJECT_NAME}${BUILD_SUFFIX}")
 
 #set(SRC_LIST "udp-client-zero.cpp")
-set(SRC_LIST "udp-client-nonblock.cpp")
+#set(SRC_LIST "udp-client-nonblock.cpp")
+set(SRC_LIST "tcp-client-zero.cpp")
 
 add_executable(${MODULE_NAME} ${SRC_LIST})

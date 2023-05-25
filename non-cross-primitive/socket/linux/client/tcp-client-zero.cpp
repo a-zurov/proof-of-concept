@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <string.h>
 
-#define PORT_THIS   5556
 #define PORT_TO     5555
 #define BUFF_LEN    512
 
@@ -18,9 +17,9 @@ int main(void)
 {
     int nSocket, err;
 
-    // Create IP socket for UDP
-    nSocket = socket(PF_INET    // PF_INET = AF_INET
-        , SOCK_DGRAM            // Supports datagrams = UDP
+    // Create IP socket for TCP
+    nSocket = socket(PF_INET  // PF_INET = AF_INET
+        , SOCK_STREAM       // Supports TCP connection
         , 0);
 
     if (nSocket < 0) {
@@ -36,22 +35,6 @@ int main(void)
         , (char*)&opt
         , sizeof(opt));
 
-    struct sockaddr_in addr_this;           // Address format:
-    addr_this.sin_family = AF_INET;         // IPv4 Internet protocol
-    addr_this.sin_port = htons(PORT_THIS);  // port in network byte order
-    addr_this.sin_addr.s_addr = INADDR_ANY; // (0.0.0.0) means any address for binding
-
-    // Bind sockaddr to the socket
-    err = bind(nSocket, (struct sockaddr*)&addr_this, sizeof(addr_this));
-
-    if (err < 0) {
-        perror("cannot bind socket");
-        exit(EXIT_FAILURE);
-    }
-
-    // Enter message
-    printf("Enter message: ");
-    fgets(buff, BUFF_LEN, stdin);
 
     struct hostent* hostinfo;
     hostinfo = gethostbyname("127.0.0.1");
@@ -65,14 +48,26 @@ int main(void)
     addr_to.sin_port = htons(PORT_TO);                  // port in network byte order
     addr_to.sin_addr = *(in_addr*)(hostinfo->h_addr);   // IP host address
 
-    // Send UDP message
-    int nBytes;
-    nBytes = sendto(nSocket
-        , buff
-        , strlen(buff) + 1
-        , 0
+     // Create TCP connection
+    err = connect(nSocket
         , (struct sockaddr*)&addr_to
         , sizeof(addr_to));
+
+    if (err < 0) {
+        perror("cannot create connection");
+        exit(EXIT_FAILURE);
+    }
+
+    // Enter message
+    printf("Enter message: ");
+    fgets(buff, BUFF_LEN, stdin);
+
+    // Send TCP data
+    int nBytes;
+    nBytes = send(nSocket
+        , buff
+        , strlen(buff) + 1
+        , 0);
 
     if (nBytes < 0) {
         perror("cannot send data");
@@ -81,22 +76,12 @@ int main(void)
     }
     else
     {
-        printf("sending %d bytes\n\n", nBytes);
+        printf("sending message of %d bytes\n", nBytes);
     }
 
-    // Receive response
-    struct sockaddr_in addr_from;
-    socklen_t size;
+    nBytes = recv(nSocket, buff, BUFF_LEN, 0);
 
-    nBytes = recvfrom(nSocket
-        , buff
-        , BUFF_LEN
-        , 0
-        , (struct sockaddr*)&addr_from
-        , &size);
-
-    PrintAddr(addr_from, "Receive message from");
-    printf("received %d bytes:\n%s\n", nBytes, buff);
+    printf("received %d bytes :\n%s\n", nBytes, buff);
 
     close(nSocket);
 }
