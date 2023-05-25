@@ -84,6 +84,7 @@ void ProcessRequest(int nSocket, ClientsInfo& clients)
 
     for (int k = 0; true; ++k) {
 
+        size = sizeof(addr_from);
         // Read message        
         nBytes = recvfrom(nSocket
             , buff

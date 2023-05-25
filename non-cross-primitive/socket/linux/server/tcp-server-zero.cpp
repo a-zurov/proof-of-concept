@@ -60,11 +60,19 @@ int main(void)
 
     PrintAddr(addr_this, "TCP server started");
 
-    socklen_t size;
     sockaddr_in addr_from;
+    socklen_t size = sizeof(addr_from);
     int nNewSocket = accept(nSocket
         , (struct sockaddr*)&addr_from
         , &size);
+
+    if (nNewSocket < 0) {
+        perror("accept");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(stdout, "Server: connect from host %s, port %hu.\n"
+        , inet_ntoa(addr_from.sin_addr)
+        , ntohs(addr_from.sin_port));
 
     int nBytes;
     // Read message

@@ -65,6 +65,7 @@ void ProcessRequest(int nSocket)
 
     while (true) {
 
+        size = sizeof(addr_from);
         // Read message
         nBytes = recvfrom(nSocket
             , buff
