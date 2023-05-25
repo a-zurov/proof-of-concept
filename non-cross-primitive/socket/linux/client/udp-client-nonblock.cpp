@@ -96,6 +96,8 @@ int main(void)
 
     for (int k = 0; k < 1000; ++k) {
 
+        size = sizeof(addr_from);
+
         nBytes = recvfrom(nSocket
             , buff
             , BUFF_LEN

@@ -86,7 +86,7 @@ int main(void)
 
     // Receive response
     struct sockaddr_in addr_from;
-    socklen_t size;
+    socklen_t size = sizeof(addr_from);
 
     nBytes = recvfrom(nSocket
         , buff
