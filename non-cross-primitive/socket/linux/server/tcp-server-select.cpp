@@ -82,7 +82,7 @@ int  main(void)
             if (FD_ISSET(j, &read_set)) {
                 if (j == nSocket) {
 
-                    size = sizeof(sockaddr_in);
+                    size = sizeof(client);
                     nNewSocket = accept(nSocket, (sockaddr*)&client, &size);
                     if (nNewSocket < 0) {
                         perror("accept");
