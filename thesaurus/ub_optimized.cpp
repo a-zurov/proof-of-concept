@@ -1,6 +1,7 @@
 // ub_optimized.cpp : This file contains the 'main' function.
 //-----------------------------------------------------------
 // NB! Try: clang -O2 ub_optimized.cpp
+// VS clang -O2 -fsanitize=undefined ub_optimized.cpp
 
 #include <stdlib.h>
 #include <stdio.h>
