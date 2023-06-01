@@ -1,7 +1,8 @@
 #include <stdio.h>
 
-extern int c1;
+extern const int c1;
+extern int c2;
 
 int main() {
-	printf("%d\n", ++c1);
+    printf("%d %d\n", c1, ++c2);
 }
