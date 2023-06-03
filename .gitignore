@@ -17,6 +17,7 @@ Thumbs.db
 
 # Executables
 *.exe
+*.out
 
 /sfinae-Nicolai-Josuttis/sfinae
 /external_sdk/boost/
