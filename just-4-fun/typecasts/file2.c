@@ -11,6 +11,8 @@ extern const unsigned char c2;
 
 int func1();
 int func2();
+int func3();
+
 
 #ifdef __cplusplus
     }
@@ -21,4 +23,5 @@ int main() {
 
     printf("%d %hu\n", func1(), c1);
     printf("%d %c\n", func2(), c2);
+    printf("%d\n", func3());
 }

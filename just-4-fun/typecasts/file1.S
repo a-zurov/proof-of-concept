@@ -20,3 +20,8 @@ func2:
     movzb c2, %eax
     ret
 
+   .align 16
+func3:
+// signed short -> int
+    movsx c1, %eax
+    ret
