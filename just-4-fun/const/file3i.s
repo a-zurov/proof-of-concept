@@ -1,4 +1,4 @@
-    .att_syntax
+    .intel_syntax noprefix
     .text
     .global func1
     .align 16
@@ -8,17 +8,17 @@ func1:
     .global func2
     .align 16
 func2:
-    movl $42, %eax
+    mov eax, 42
     ret
 
     .global func3
     .align 16
 func3:
-    movq $q1, %rax
+    mov rax, q1
     ret
 
     .global func4
     .align 16
 func4:
-    movl q1, %eax
+    mov eax, [q1]
     ret
