@@ -1,4 +1,4 @@
-// gcc -m32 test.S
+// gcc -m32 test_io.S
 
 #include "simple_io.S"
 
@@ -7,7 +7,7 @@
         .global main
         .align 16
 main:
-        call    readi32 // eax, edx, ecx - may be overriten!
+        call    readi32 // eax, edx, ecx - may be overwritten!
         mov     eax, ebx
         call    readi32
         add     ebx, eax
