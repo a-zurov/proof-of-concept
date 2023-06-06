@@ -16,6 +16,8 @@ struct Args {
 };
 int func5(struct Args x);
 
+int func6(int a);
+
 #ifdef __cplusplus
     }
 #endif
@@ -34,4 +36,7 @@ int main() {
     struct Args args = {1234, 4747};
     int res3 = func5(args);
     printf("%d\n", res3); // 5981
+
+    int res4 = func6(100500);
+    printf("%d\n", res4); // 100500 + scanf("%d", &b);
 }

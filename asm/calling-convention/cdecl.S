@@ -111,3 +111,98 @@ func5:
         add 8(%esp), %eax
 
         ret
+
+        .global func6
+        .align 16
+func6:
+        /*
+        a = 100500      4(%esp)
+        ret address     <- esp
+        */
+
+        // Prologue { Standard Prologue {
+
+        push %ebp
+        /*
+        a = 100500      8(%esp)
+        ret address     4(%esp)
+        previous ebp    <- esp
+        */
+
+        mov %esp, %ebp
+        /*
+        a = 100500      8(%esp), 8(%ebp)
+        ret address     4(%esp), 4(%ebp)
+        previous ebp    <- esp , <- ebp
+        */
+        // } Standard Prologue
+
+        push %ebx
+        push %esi
+        push %edi
+        /*
+        a = 100500      20(%esp),   8(%ebp)
+        ret address     16(%esp),   4(%ebp)
+        previous ebp    12(%esp),   <- ebp
+        saved ebx                  -4(%ebp)
+        saved esi       4(%esp),   -8(%ebp)
+        saved edi       <- esp,   -12(%ebp)
+        */
+
+        sub $4, %esp // int b; local variable
+        /*
+        a = 100500      24(%esp),   8(%ebp)
+        ret address     20(%esp),   4(%ebp)
+        previous ebp    12(%esp),   <- ebp
+        saved ebx                  -4(%ebp)
+        saved esi       8(%esp),   -8(%ebp)
+        saved edi       4(%esp),  -12(%ebp)
+        int b           <- esp,   -16(%ebp)
+        */
+
+        sub $8, %esp // stack alignment
+        /*
+        a = 100500      32(%esp),   8(%ebp)
+        ret address     28(%esp),   4(%ebp)
+        previous ebp    24(%esp),   <- ebp
+        saved ebx                  -4(%ebp)
+        saved esi       16(%esp),  -8(%ebp)
+        saved edi       12(%esp), -12(%ebp)
+        int b            8(%esp), -16(%ebp)
+        padding 8       <- esp
+        */
+        // } Prologue
+
+        // scanf("%d", &b);
+        sub $8, %esp
+        lea -16(%ebp), %eax
+        push %eax
+        push $fmt
+        call scanf
+        add $16, %esp
+
+        mov 8(%ebp), %eax
+        add -16(%ebp), %eax
+
+        // Epilogue {
+        // revert all
+
+        add $12, %esp
+
+        /*
+        saved ebx
+        saved esi
+        saved edi
+        */
+        pop %edi
+        pop %esi
+        pop %ebx
+
+        // Standard Epilogue {
+
+        pop %ebp
+        ret
+
+        // } Standard Epilogue } Epilogue
+
+fmt:    .asciz "%d"
