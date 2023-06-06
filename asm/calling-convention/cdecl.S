@@ -86,3 +86,28 @@ func3:
         ret
 
 str:    .asciz "Hello, %d, %c\n"
+
+
+        .global func4
+        .align 16
+func4:
+        // b = 4747
+        // a = 1234
+        // ret address <- esp
+
+        mov 4(%esp), %eax
+        add 8(%esp), %eax
+
+        ret
+
+        .global func5
+        .align 16
+func5:
+        // b = 4747
+        // a = 1234
+        // ret address <- esp
+
+        mov 4(%esp), %eax
+        add 8(%esp), %eax
+
+        ret
