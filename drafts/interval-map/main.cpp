@@ -76,10 +76,14 @@ public:
             return;
         }
         auto itEnd = map_.upper_bound(keyEnd);
-        if (map_.begin() == itEnd) {
-            map_.insert( std::pair(keyBegin, std::optional<V>(val)) );
-            map_.insert( std::pair(keyEnd, std::nullopt) );
+        if (map_.begin() != itEnd) {
+
+            auto itBegin = map_.lower_bound(keyBegin);
+            map_.erase(itBegin, itEnd);
         }
+
+        map_.insert(std::pair(keyBegin, std::optional<V>(val)));
+        map_.insert(std::pair(keyEnd, std::nullopt));
     }
 };
 
@@ -93,10 +97,31 @@ int main()
     */
 
     interval_map<int, int> imap;
-    imap.assign(2, 4, 10);
 
-    for (int j = 0; j < 5; ++j) {
+    imap.assign(2, 6, 10);
+
+    std::cout << "imap.assign(2, 6, 10)\n";
+    for (int j = 0; j < 10; ++j) {
         auto opt = imap[j];
         std::cout << j << ':' << (opt.has_value() ? opt.value() : -1) << ' ';
     }
+    std::cout << '\n';
+
+    imap.assign(4, 8, 20);
+
+    std::cout << "imap.assign(4, 8, 20)\n";
+    for (int j = 0; j < 10; ++j) {
+        auto opt = imap[j];
+        std::cout << j << ':' << (opt.has_value() ? opt.value() : -1) << ' ';
+    }
+    std::cout << '\n';
+
+    imap.assign(3, 7, 30);
+
+    std::cout << "imap.assign(3, 7, 30)\n";
+    for (int j = 0; j < 10; ++j) {
+        auto opt = imap[j];
+        std::cout << j << ':' << (opt.has_value() ? opt.value() : -1) << ' ';
+    }
+    std::cout << '\n';
 }
