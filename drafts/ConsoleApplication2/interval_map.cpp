@@ -4,6 +4,41 @@
 #include <vector>
 #include <sstream>
 
+
+template<typename T>
+class ThinkCellKey : std::numeric_limits<T> {
+	T v;
+
+public:
+	ThinkCellKey(T const& val) {
+		v = val;
+	}
+
+	// overloaded < operator
+	bool operator <(const ThinkCellKey& d) const {
+		return v < d.v;
+	}
+
+	ThinkCellKey operator ++(int) {
+		this->v++;
+		return *this;
+	}
+
+	ThinkCellKey operator --(int) {
+		this->v--;
+		return *this;
+	}
+
+	friend std::ostream& operator << (std::ostream& out, const ThinkCellKey<T>& c) {
+		out << c.v;
+		return out;
+	}
+
+	static const ThinkCellKey<T> lowest() {
+		return std::numeric_limits<T>::lowest();
+	}
+};
+
 //------------------------------------------------------------------
 #include <map>
 template<typename K, typename V>
@@ -52,14 +87,14 @@ public:
 		}
 
 		// keyEnd == keyStart
-		if (!(keyEnd < keyStart) && !(keyEnd > keyStart)) {
+		if (!(keyEnd < keyStart) && !(keyStart < keyEnd)) {
 
 			m_map.insert({ keyBegin, val });
 			return;
 		}
 
 		// keyFinish == keyBegin
-		if (!(keyFinish < keyBegin) && !(keyFinish > keyBegin)) {
+		if (!(keyFinish < keyBegin) && !(keyBegin < keyFinish)) {
 
 			m_map.insert_or_assign(itFinish, keyBegin, val);
 			m_map.insert({ keyEnd, m_valBegin });
@@ -67,7 +102,7 @@ public:
 		}
 
 		// keyBegin <= keyStart && keyFinish <= keyEnd
-		if (!(keyBegin > keyStart) && !(keyFinish > keyEnd)) {
+		if (!(keyStart < keyBegin) && !(keyEnd < keyFinish)) {
 
 			m_map.clear();
 			m_map.insert({ keyBegin, val });
@@ -76,11 +111,11 @@ public:
 		}
 
 		// keyBegin <= keyStart && keyEnd < keyFinish
-		if (!(keyBegin > keyStart) && (keyEnd < keyFinish)) {
+		if (!(keyStart < keyBegin ) && (keyEnd < keyFinish)) {
 
 			auto itEnd = m_map.lower_bound(keyEnd);
 			V old_val = itEnd->second;
-			if (itEnd->first != keyEnd) {
+			if ((itEnd->first < keyEnd) || (keyEnd < itEnd->first)) {
 				auto it = itEnd;
 				old_val = (--it)->second;
 			}
@@ -92,17 +127,18 @@ public:
 		}
 
 		// keyStart <= keyBegin && keyEnd < keyFinish
-		if (!(keyStart > keyBegin) && (keyEnd < keyFinish)) {
+		if (!(keyBegin < keyStart ) && (keyEnd < keyFinish)) {
 
 			auto itBegin = m_map.lower_bound(keyBegin);
 			auto itEnd = m_map.lower_bound(keyEnd);
+
 			V old_val = itEnd->second;
-			if (itEnd->first != keyEnd) {
+			if (itEnd->first < keyEnd || keyEnd < itEnd->first) {
 				auto it = itEnd;
 				old_val = (--it)->second;
 			}
 
-			if ( itBegin->first < itEnd->first)
+			if (!(itEnd->first < itBegin->first))
 				m_map.erase(itBegin, itEnd);
 			else m_map.clear();
 			m_map.insert_or_assign(keyBegin, val);
@@ -111,7 +147,7 @@ public:
 		}
 
 		// keyStart <= keyBegin && keyFinish <= keyEnd
-		if (!(keyStart > keyBegin) && !(keyFinish > keyEnd)) {
+		if (!(keyBegin < keyStart) && !(keyEnd < keyFinish)) {
 
 			auto itBegin = m_map.lower_bound(keyBegin);
 
@@ -119,37 +155,6 @@ public:
 			m_map.insert_or_assign(keyBegin, val);
 			m_map.insert_or_assign(keyEnd, m_valBegin);
 		}
-
-
-		/*
-		auto itBegin = m_map.lower_bound(keyBegin);
-
-		if ( keyEnd < keyFinish) {
-
-			auto itEnd = m_map.lower_bound(keyEnd);
-
-			V old_val = itEnd->second;
-			if (itEnd->first != keyEnd) {
-				auto it = itEnd;
-				old_val = (--it)->second;
-			}
-
-			if (itBegin->first < itEnd->first)
-				m_map.erase(itBegin, itEnd);
-			else m_map.clear();
-
-			m_map.insert_or_assign( keyEnd, old_val );
-		}
-		else {
-
-			m_map.erase(itBegin, m_map.end());
-
-			m_map.insert_or_assign( keyEnd, m_valBegin );
-		}
-
-		m_map.insert_or_assign( keyBegin, val );
-		*/
-
 	}
 
 	// look-up of the value associated with key
@@ -163,6 +168,7 @@ public:
 	}
 
 	void print() {
+		std::cout << "map\n";
 		for (const auto& p : m_map) {
 			std::cout << p.first << ":" << p.second << ' ';
 		}
@@ -212,11 +218,14 @@ void AssignTogether(std::vector<T>& v1, interval_map<Key, T>& map, Key keyStart,
 
 	std::fill(v1.begin() + keyStart, v1.begin() + keyEnd, val);
 
+	/*
 	int j = 0;
+	std::cout << "vec\n";
 	for (auto& item : v1) {
 		std::cout << j++ << ':' << item << ' ';
 	}
 	std::cout << '\n';
+	*/
 }
 
 template<class T>
@@ -247,7 +256,7 @@ void TestComparison2() {
 	for (int N = 1; N < 40; ++N) {
 
 		interval_map<int, int> imap(std::numeric_limits<int>::lowest());
-		std::vector<int> v1(N, std::numeric_limits<int>::lowest());
+		std::vector<int> v1(N + 1, std::numeric_limits<int>::lowest());
 
 		int keyBegin, keyEnd;
 
@@ -266,6 +275,8 @@ void TestComparison2() {
 			AssignTogether(v1, imap, keyBegin, keyEnd, j);
 
 			imap.print();
+
+			//std::cout << "-----------------------------\n";
 		}
 
 		Compare(v1, imap, 0);
@@ -274,6 +285,11 @@ void TestComparison2() {
 
 int main()
 {
+	interval_map<ThinkCellKey<int>, int> imapX(std::numeric_limits<int>::lowest());
+
+	imapX.assign(3, 7, 10);
+
+	/*
 	interval_map<int, int> imap(std::numeric_limits<int>::lowest());
 
 	imap.assign(3, 7, 10);
@@ -320,21 +336,26 @@ int main()
 		std::cout << j << ':' << imap[j] << ' ';
 	}
 	std::cout << '\n';
+	*/
 
-	/*
 	interval_map<int, int> imap2(std::numeric_limits<int>::lowest());
 
-	imap2.assign(0, 3, 2);
-	imap2.assign(3, 4, 5);
+	imap2.assign(0, 2, 98);
+	imap2.assign(2, 3, 84);
 
 	for (int j = 0; j < 10; ++j) {
 		std::cout << j << ':' << imap2[j] << ' ';
 	}
 	std::cout << '\n';
 
-	imap2.assign(1, 2, 6);
+	imap2.assign(1, 2, 99);
+
+	for (int j = 0; j < 10; ++j) {
+		std::cout << j << ':' << imap2[j] << ' ';
+	}
+	std::cout << '\n';
 
 	TestRunner tr;
 	RUN_TEST(tr, TestComparison2);
-	*/
+
 }
