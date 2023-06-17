@@ -38,6 +38,7 @@ public:
         if (map_.empty()) {
             map_.insert(std::pair<Key, pair_t>(keyBegin, pair_t(min_, value)));
             map_.insert(std::pair<Key, pair_t>(keyEnd, std::make_pair(value, min_)));
+            return;
         }
 
         auto itStart = map_.begin();
@@ -69,6 +70,7 @@ public:
             map_.clear();
             map_.insert_or_assign(keyBegin, pair_t(min_, value));
             map_.insert_or_assign(keyEnd, pair_t(value, min_));
+            return;
         }
 
         if (keyBegin <= keyStart && keyEnd < keyFinish ) {
@@ -77,6 +79,7 @@ public:
             map_.erase(itStart, itEnd);
             map_.insert(std::pair<Key, pair_t>(keyBegin, pair_t(min_, value)));
             map_.insert_or_assign(keyEnd, pair_t(value, old_val));
+            return;
         }
 
         if (keyStart < keyBegin && keyFinish <= keyEnd) {
@@ -185,33 +188,33 @@ void Compare(const std::vector<T>& v, interval_map<Key, T>& map, Key keyStart) {
 
 void TestComparison2() {
 
-    int N = 40;
-    interval_map<int, int> imap;
-    std::vector<int> v1(N, std::numeric_limits<int>::lowest());
+    for (int N = 1; N < 40; ++N) {
 
-    int keyBegin, keyEnd;
+        interval_map<int, int> imap;
+        std::vector<int> v1(N, std::numeric_limits<int>::lowest());
 
-    for (int j = 0; j < 10000; ++j) {
+        int keyBegin, keyEnd;
 
-        keyBegin = rand() % N;
-        keyEnd = rand() % N;
+        for (int j = 0; j < 100; ++j) {
 
-        if (keyEnd <= keyBegin) {
-            continue;
+            keyBegin = rand() % N;
+            keyEnd = rand() % N;
+
+            if (keyEnd <= keyBegin) {
+                continue;
+            }
+
+            std::cout << '[' << keyBegin << ',' << keyEnd << ") = " << j << '\n';
+
+            AssignTogether(v1, imap, keyBegin, keyEnd, j);
+
+            imap.print();
         }
 
-        std::cout << '[' << keyBegin << ',' << keyEnd << ") = " << j << '\n';
-
-        AssignTogether(v1, imap, keyBegin, keyEnd, j);
-
-        imap.print();
+        Compare(v1, imap, 0);
     }
-
-    Compare(v1, imap, 0);
-
-
-
 }
+
 int main()
 {
 
