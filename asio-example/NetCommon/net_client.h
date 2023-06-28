@@ -56,6 +56,8 @@
 
 #pragma once
 
+#include <mutex>
+
 #include "net_common.h"
 #include "net_tsqueue.h"
 #include "net_connection.h"
@@ -92,6 +94,8 @@ namespace olc
                     boost::asio::ip::tcp::resolver resolver(m_context);
                     boost::asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(host, std::to_string(port));
 
+                    std::lock_guard<std::mutex> lock(mutex_);
+
                     // Create connection
                     m_connection = std::make_unique<connection<T>>( connection<T>::owner::client
                                             , m_context
@@ -104,11 +108,12 @@ namespace olc
                     // Start Context Thread
                     thrContext = std::thread([this]() { m_context.run(); });
                 }
-                catch (std::exception& e)
+                catch (std::exception& ex)
                 {
-                    std::cerr << "Client Exception: " << e.what() << "\n";
+                    std::cerr << ex.what();
                     return false;
                 }
+
                 return true;
             }
 
@@ -138,6 +143,8 @@ namespace olc
             bool IsConnected()
             {
                 DBG_DUMP();
+
+                std::lock_guard<std::mutex> lock(mutex_);
 
                 if (m_connection)
                     return m_connection->IsConnected();
@@ -174,6 +181,8 @@ namespace olc
         private:
             // This is the thread safe queue of incoming messages from server
             tsqueue<owned_message<T>> m_qMessagesIn;
+
+            std::mutex mutex_;
         };
     }
 }

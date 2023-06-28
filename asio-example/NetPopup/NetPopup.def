@@ -1,0 +1,7 @@
+LIBRARY	"NetPopup"
+
+EXPORTS 
+
+NetPopupInit
+NetPopupPing
+NetPopupFree
