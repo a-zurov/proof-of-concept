@@ -3,5 +3,6 @@ LIBRARY	"NetPopup"
 EXPORTS 
 
 NetPopupInit
+NetPopupBindPingCallback
 NetPopupPing
 NetPopupFree

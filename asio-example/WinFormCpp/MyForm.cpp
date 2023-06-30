@@ -7,6 +7,14 @@
 using namespace System;
 using namespace System::Windows::Forms;
 
+
+void OnPingResponse(const std::string& s) {
+
+    s + " is timeout!";
+    return;
+}
+
+
 [STAThreadAttribute]
 void main(array<String^>^ args) {
 
@@ -19,11 +27,15 @@ void main(array<String^>^ args) {
 
     if (hLib)
     {
-        typedef bool(__stdcall* NetPopupInit)(void);
-        NetPopupInit pfarInit = (NetPopupInit)GetProcAddress(hLib, "NetPopupInit");
+        typedef bool(__stdcall* FARProcInit)(void);
+        FARProcInit pfarInit = (FARProcInit)GetProcAddress(hLib, "NetPopupInit");
 
-        typedef void(__stdcall* NetPopupFree)(void);
-        NetPopupFree pfarFree = (NetPopupFree)GetProcAddress(hLib, "NetPopupFree");
+        typedef void(__stdcall* FARProcBindPingCallback)(void*);
+        FARProcBindPingCallback pfarBindPingCallback =
+            (FARProcBindPingCallback)GetProcAddress(hLib, "NetPopupBindPingCallback");
+
+        typedef void(__stdcall* FARProcFree)(void);
+        FARProcFree pfarFree = (FARProcFree)GetProcAddress(hLib, "NetPopupFree");
 
         if (pfarInit)
         {
@@ -34,7 +46,9 @@ void main(array<String^>^ args) {
 
                 WinFormCpp::MyForm form;
 
-                form.SetFarProcPing(GetProcAddress(hLib, "NetPopupPing"));
+                pfarBindPingCallback(&OnPingResponse);
+
+                form.SetFARProcPing(GetProcAddress(hLib, "NetPopupPing"));
 
                 Application::Run(% form);
             }

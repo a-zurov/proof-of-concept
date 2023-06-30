@@ -14,8 +14,8 @@ namespace WinFormCpp {
     /// </summary>
     public ref class MyForm : public System::Windows::Forms::Form
     {
-        typedef void(__stdcall* NetPopupPing)(void);
-        NetPopupPing pfarPing_;
+        typedef void(__stdcall* FARProcPing)(void);
+        FARProcPing pfarPing_;
 
     public:
         MyForm(void)
@@ -26,8 +26,8 @@ namespace WinFormCpp {
             //
         }
 
-        void SetFarProcPing(FARPROC pfarPing) {
-            pfarPing_ = (NetPopupPing)pfarPing;
+        void SetFARProcPing(FARPROC pfarPing) {
+            pfarPing_ = (FARProcPing)pfarPing;
         }
 
     protected:
@@ -42,6 +42,7 @@ namespace WinFormCpp {
             }
         }
     private: System::Windows::Forms::Button^ button1;
+    private: System::Windows::Forms::Label^ label1;
 
     protected:
 
@@ -59,10 +60,11 @@ namespace WinFormCpp {
         void InitializeComponent(void)
         {
             this->button1 = (gcnew System::Windows::Forms::Button());
+            this->label1 = (gcnew System::Windows::Forms::Label());
             this->SuspendLayout();
             // 
             // button1
-            // 
+            //
             this->button1->Location = System::Drawing::Point(82, 148);
             this->button1->Name = L"button1";
             this->button1->Size = System::Drawing::Size(103, 53);
@@ -71,16 +73,28 @@ namespace WinFormCpp {
             this->button1->UseVisualStyleBackColor = true;
             this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
             // 
+            // label1
+            //
+            this->label1->AutoSize = true;
+            this->label1->Location = System::Drawing::Point(82, 55);
+            this->label1->Name = L"label1";
+            this->label1->Size = System::Drawing::Size(51, 20);
+            this->label1->TabIndex = 1;
+            this->label1->Text = L"label1";
+            this->label1->Click += gcnew System::EventHandler(this, &MyForm::label1_Click);
+            //
             // MyForm
             // 
             this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
             this->ClientSize = System::Drawing::Size(278, 244);
+            this->Controls->Add(this->label1);
             this->Controls->Add(this->button1);
             this->Name = L"MyForm";
             this->Text = L"MyForm";
             this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
             this->ResumeLayout(false);
+            this->PerformLayout();
 
         }
 #pragma endregion
@@ -90,7 +104,13 @@ namespace WinFormCpp {
         pfarPing_();
     }
 
-    private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
+    private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e)
+    {
     }
+
+    private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e)
+    {
+    }
+
     };
 }

@@ -6,6 +6,11 @@ NETPOPUP_API bool npdll::NetPopupInit()
     return NetPopup::instance().Init();
 }
 
+NETPOPUP_API void npdll::NetPopupBindPingCallback(void* p)
+{
+    return NetPopup::instance().BindPingCallback(p);
+}
+
 NETPOPUP_API void npdll::NetPopupPing()
 {
     return NetPopup::instance().Ping();

@@ -24,6 +24,11 @@ namespace npdll
             return spNetPopupImpl_->Init();
         }
 
+        void BindPingCallback(void* p) {
+
+            spNetPopupImpl_->BindPingCallback(p);
+        }
+
         void Ping() {
 
             spNetPopupImpl_->PingServer();
@@ -38,6 +43,8 @@ namespace npdll
     typedef olc::singleton< INetPopup > NetPopup;
 
     NETPOPUP_API bool NetPopupInit();
+
+    NETPOPUP_API void NetPopupBindPingCallback(void*);
 
     NETPOPUP_API void NetPopupPing();
 

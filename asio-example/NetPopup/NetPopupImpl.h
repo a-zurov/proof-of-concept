@@ -19,6 +19,9 @@ namespace npdll {
 
     class NetPopupImpl : public olc::net::client_interface<CustomMsgTypes>
     {
+        typedef void(__cdecl* FARProcPingCallback)(const std::string& );
+        FARProcPingCallback pfarOnPingResponse_{ nullptr };
+
         int count_{ 5 };
         std::thread th_;
 
@@ -68,7 +71,10 @@ namespace npdll {
                             std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
                             std::chrono::system_clock::time_point timeThen;
                             msg >> timeThen;
-                            //DBG_MSG_CLT("Ping: " << std::chrono::duration<double>(timeNow - timeThen).count());
+
+                            std::stringstream ss;
+                            ss << std::chrono::duration<double>(timeNow - timeThen).count();
+                            pfarOnPingResponse_(ss.str());
                         }
                         break;
 
@@ -113,6 +119,11 @@ namespace npdll {
         bool Init() {
 
             return Connect("127.0.0.1", 60000);
+        }
+
+        void BindPingCallback(void* p) {
+
+            pfarOnPingResponse_ = reinterpret_cast<FARProcPingCallback>(p);
         }
 
         void PingServer()
