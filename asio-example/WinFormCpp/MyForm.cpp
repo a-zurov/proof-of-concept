@@ -7,11 +7,13 @@
 using namespace System;
 using namespace System::Windows::Forms;
 
+delegate void MyCallback(String^ str);
 
 void OnPingResponse(const std::string& s) {
 
-    s + " is timeout!";
-    return;
+    MyCallback^ callback = gcnew MyCallback(&WinFormCpp::MyForm::OnPingResponse);
+    System::String^ s1 = gcnew String(s.c_str());
+    callback(s1);
 }
 
 

@@ -112,5 +112,10 @@ namespace WinFormCpp {
     {
     }
 
+    public: static void OnPingResponse(String^ str) {
+
+        MessageBox::Show(str);
+    }
+
     };
 }
