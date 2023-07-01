@@ -106,8 +106,9 @@ namespace WinFormCpp {
         this->label1->Text =
             System::String::IsNullOrEmpty(LabelText_) ? L"no ping" : L"old ping = " + LabelText_;
         //this->label1->Refresh();
-
         pfarPing_();
+        delete LabelText_;
+        LabelText_ = nullptr;
     }
 
     private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e)
@@ -125,7 +126,7 @@ namespace WinFormCpp {
             , L"Ping"
             , MessageBoxButtons::OK
             , MessageBoxIcon::Information);
-        LabelText_ = gcnew String(str);
+        LabelText_ = str;
     }
 
     };
