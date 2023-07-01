@@ -14,6 +14,8 @@ namespace WinFormCpp {
     /// </summary>
     public ref class MyForm : public System::Windows::Forms::Form
     {
+        static String^ LabelText_;
+
         typedef void(__stdcall* FARProcPing)(void);
         FARProcPing pfarPing_;
 
@@ -62,7 +64,7 @@ namespace WinFormCpp {
             this->button1 = (gcnew System::Windows::Forms::Button());
             this->label1 = (gcnew System::Windows::Forms::Label());
             this->SuspendLayout();
-            // 
+            //
             // button1
             //
             this->button1->Location = System::Drawing::Point(82, 148);
@@ -72,19 +74,19 @@ namespace WinFormCpp {
             this->button1->Text = L"Ping";
             this->button1->UseVisualStyleBackColor = true;
             this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
-            // 
+            //
             // label1
             //
             this->label1->AutoSize = true;
-            this->label1->Location = System::Drawing::Point(82, 55);
+            this->label1->Location = System::Drawing::Point(31, 73);
             this->label1->Name = L"label1";
-            this->label1->Size = System::Drawing::Size(51, 20);
+            this->label1->Size = System::Drawing::Size(39, 20);
             this->label1->TabIndex = 1;
-            this->label1->Text = L"label1";
+            this->label1->Text = L"Text1";
             this->label1->Click += gcnew System::EventHandler(this, &MyForm::label1_Click);
             //
             // MyForm
-            // 
+            //
             this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
             this->ClientSize = System::Drawing::Size(278, 244);
@@ -101,11 +103,16 @@ namespace WinFormCpp {
 
     private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e)
     {
+        this->label1->Text =
+            System::String::IsNullOrEmpty(LabelText_) ? L"no ping" : L"old ping = " + LabelText_;
+        //this->label1->Refresh();
+
         pfarPing_();
     }
 
     private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e)
     {
+
     }
 
     private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e)
@@ -114,7 +121,11 @@ namespace WinFormCpp {
 
     public: static void OnPingResponse(String^ str) {
 
-        MessageBox::Show(str);
+        MessageBox::Show(L"new ping = " + str
+            , L"Ping"
+            , MessageBoxButtons::OK
+            , MessageBoxIcon::Information);
+        LabelText_ = gcnew String(str);
     }
 
     };
